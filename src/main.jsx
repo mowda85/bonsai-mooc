@@ -5,6 +5,7 @@ import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
 import './course-info.css';
+import './learner-dashboard.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
