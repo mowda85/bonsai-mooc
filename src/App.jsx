@@ -6,48 +6,109 @@ const mockUsers = [
   { id: 'BNS-9001', username: 'admin', name: 'BONSAI Administrator', role: 'admin' },
 ];
 
-const specializationTracks = [
-  {
+const learningAreas = {
+  foundation: {
+    slug: 'foundation',
+    kind: 'foundation',
+    eyebrow: 'Common core',
+    title: 'Foundation',
+    description: 'The shared starting point for every BONSAI learner before choosing an area of specialization.',
+    prerequisite: 'Starting point — complete the Foundation before moving into a specialization.',
+    duration: 'To be confirmed',
+    courses: [
+      {
+        slug: 'introduction-flood-defences-dike-systems',
+        title: 'Introduction to Flood Defences and Dike Systems',
+        description: 'An introduction to flood defences and dike systems.',
+      },
+      {
+        slug: 'information-systems-knowledge-dissemination',
+        title: 'Information Systems and Knowledge Dissemination',
+        description: 'Data, information, knowledge and knowledge dissemination in the BONSAI context.',
+        pilot: true,
+      },
+      {
+        slug: 'numerical-modelling-fundamentals',
+        title: 'Numerical Modelling Fundamentals',
+        description: 'Foundational concepts in numerical modelling.',
+      },
+      {
+        slug: 'risk-assessment-decision-making',
+        title: 'Risk Assessment and Decision Making',
+        description: 'Foundational concepts in risk assessment and decision making.',
+      },
+    ],
+  },
+  'dike-stability-erosion': {
     slug: 'dike-stability-erosion',
-    title: 'Dike Stability and Erosion',
+    kind: 'track',
     eyebrow: 'Specialization 01',
-    description: 'Explore the behaviour, assessment and resilience of flood-defence structures under changing conditions.',
+    title: 'Dike Stability and Erosion',
+    description: 'Explore dike stability, erosion assessment, erosion properties and numerical modelling for flood and erosion.',
+    prerequisite: 'Foundation should be completed first.',
+    duration: 'To be confirmed',
+    courses: [
+      { slug: 'dike-stability', title: 'Dike Stability', description: 'Core concepts in dike stability.' },
+      { slug: 'soil-erosion-assessment', title: 'Soil Erosion Assessment', description: 'Methods and concepts for assessing soil erosion.' },
+      { slug: 'predicting-erosion-properties', title: 'Predicting Erosion Properties', description: 'Approaches to predicting erosion properties.' },
+      { slug: 'numerical-modelling-flood-erosion', title: 'Numerical Modelling for Flood and Erosion', description: 'Numerical modelling applied to flood and erosion problems.' },
+    ],
   },
-  {
+  'animal-activities-burrows': {
     slug: 'animal-activities-burrows',
-    title: 'Animal Activities and Burrows',
+    kind: 'track',
     eyebrow: 'Specialization 02',
-    description: 'Study how animal activity can affect levees and how flood managers can monitor and respond to those risks.',
+    title: 'Animal Activities and Burrows',
+    description: 'Study burrow management, levee safety, non-destructive geophysical methods and animal risk assessment.',
+    prerequisite: 'Foundation should be completed first.',
+    duration: 'To be confirmed',
+    courses: [
+      { slug: 'burrows-levee-management', title: 'Burrows and Levee Management', description: 'Management of burrows in levee systems.' },
+      { slug: 'burrows-levee-safety', title: 'Burrows and Levee Safety', description: 'How burrows relate to levee safety.' },
+      { slug: 'non-destructive-geophysical-methods', title: 'Non-destructive Geophysical Methods', description: 'Introduction to non-destructive geophysical methods.' },
+      { slug: 'animal-risk-assessment', title: 'Animal Risk Assessment', description: 'Assessing risk associated with animal activity.' },
+    ],
   },
-  {
+  'vegetation-nature-based-solutions': {
     slug: 'vegetation-nature-based-solutions',
-    title: 'Vegetation and Nature-based Solutions',
+    kind: 'track',
     eyebrow: 'Specialization 03',
-    description: 'Learn how vegetation, biodiversity and nature-based approaches can contribute to resilient flood defences.',
+    title: 'Vegetation and Nature-based Solutions',
+    description: 'Explore vegetation for dike safety, biodiversity, vegetation management and climate change.',
+    prerequisite: 'Foundation should be completed first.',
+    duration: 'To be confirmed',
+    courses: [
+      { slug: 'vegetation-dike-safety', title: 'Vegetation for Dike Safety', description: 'The role of vegetation in dike safety.' },
+      { slug: 'biodiversity-dike-vegetation', title: 'Biodiversity of Dike Vegetation', description: 'Biodiversity in dike vegetation.' },
+      { slug: 'vegetation-management', title: 'Vegetation Management', description: 'Approaches to vegetation management.' },
+      { slug: 'climate-change-dike-vegetation', title: 'Climate Change and Dike Vegetation', description: 'Climate change and its relationship with dike vegetation.' },
+    ],
   },
-  {
+  'flood-risk-emergency-management': {
     slug: 'flood-risk-emergency-management',
-    title: 'Flood Risk and Emergency Management',
+    kind: 'track',
     eyebrow: 'Specialization 04',
-    description: 'Build knowledge in preparedness, disaster management, response planning and flood-resilience practice.',
+    title: 'Flood Risk and Emergency Management',
+    description: 'Build knowledge in flood risk management, emergency response, crisis management and AI for flood forecasting.',
+    prerequisite: 'Foundation should be completed first.',
+    duration: 'To be confirmed',
+    courses: [
+      { slug: 'flood-risk-management', title: 'Flood Risk Management', description: 'Foundations of flood risk management.' },
+      { slug: 'emergency-response', title: 'Emergency Response', description: 'Principles and practice of emergency response.' },
+      { slug: 'crisis-management', title: 'Crisis Management', description: 'Foundations of crisis management in flood contexts.' },
+      { slug: 'ai-flood-forecasting', title: 'AI for Flood Forecasting', description: 'Use of AI for flood forecasting.' },
+    ],
   },
-];
+};
 
-const mockCourses = [
-  { title: 'Information Systems and Knowledge Dissemination', area: 'Foundation', description: 'Data, information, knowledge and knowledge sharing in the BONSAI context.' },
-  { title: 'Introduction to Flood Resilience', area: 'Foundation', description: 'Core concepts that support later BONSAI learning pathways.' },
-  { title: 'Levee Stability Fundamentals', area: 'Dike Stability and Erosion', description: 'An introduction to flood-defence stability and failure mechanisms.' },
-  { title: 'Erosion and Levee Covers', area: 'Dike Stability and Erosion', description: 'How soil, climate and surface conditions influence erosion resistance.' },
-  { title: 'Animal Activity in Flood Defences', area: 'Animal Activities and Burrows', description: 'Monitoring and managing the effects of burrowing animals on levees.' },
-  { title: 'Vegetation for Resilient Levees', area: 'Vegetation and Nature-based Solutions', description: 'Vegetation, biodiversity and resilience in flood-defence systems.' },
-  { title: 'Nature-based Flood Defence', area: 'Vegetation and Nature-based Solutions', description: 'Nature-based approaches for resilient estuarine systems.' },
-  { title: 'Flood Emergency Preparedness', area: 'Flood Risk and Emergency Management', description: 'Preparedness, communication and response during flood threats.' },
-];
+const specializationTracks = Object.values(learningAreas).filter((area) => area.kind === 'track');
+const allCourses = Object.values(learningAreas).flatMap((area) => area.courses.map((course) => ({ ...course, area: area.title, areaSlug: area.slug })));
 
 function navigate(path) {
   if (window.location.pathname === path) return;
   window.history.pushState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function Header({ path, user, onLogout }) {
@@ -102,7 +163,7 @@ function Homepage() {
   const results = useMemo(() => {
     const normalized = submittedQuery.trim().toLowerCase();
     if (!normalized) return [];
-    return mockCourses.filter((course) => `${course.title} ${course.area} ${course.description}`.toLowerCase().includes(normalized));
+    return allCourses.filter((course) => `${course.title} ${course.area} ${course.description}`.toLowerCase().includes(normalized));
   }, [submittedQuery]);
 
   function search(event) {
@@ -144,7 +205,7 @@ function Homepage() {
           <div className="search-results" aria-live="polite">
             <div className="search-results-head"><strong>{results.length} result{results.length === 1 ? '' : 's'}</strong><button type="button" className="text-link" onClick={() => { setQuery(''); setSubmittedQuery(''); }}>Clear search</button></div>
             {results.length ? results.map((course) => (
-              <button className="search-result-card" type="button" key={course.title} onClick={() => navigate('/courses')}>
+              <button className="search-result-card" type="button" key={course.slug} onClick={() => navigate(`/courses/${course.slug}`)}>
                 <span>{course.area}</span><strong>{course.title}</strong><p>{course.description}</p>
               </button>
             )) : <div className="empty-result">No prototype courses match “{submittedQuery}”. Try a broader keyword.</div>}
@@ -157,7 +218,7 @@ function Homepage() {
           <span className="section-kicker">Your starting point</span>
           <h2 id="foundation-heading">Foundation</h2>
           <p>The Foundation is the shared core of BONSAI-MOOC. It gives every learner the common concepts and context needed before moving into a specialization.</p>
-          <div className="foundation-meta"><span>Common core</span><span>Recommended first</span><span>For every learner</span></div>
+          <div className="foundation-meta"><span>Common core</span><span>Complete first</span><span>4 courses</span></div>
           <button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>Explore the Foundation</button>
         </div>
         <div className="foundation-visual" aria-hidden="true">
@@ -188,6 +249,94 @@ function Homepage() {
         <div><span className="section-kicker">Ready to begin?</span><h2>Explore BONSAI learning at your own pace.</h2><p>Browse the learning offer now, then sign in when you are ready to continue your learner, teacher or admin journey.</p></div>
         <div className="hero-actions"><button className="button button-primary" type="button" onClick={() => navigate('/login')}>Login</button><button className="button button-outline" type="button">Register</button></div>
       </section>
+    </main>
+  );
+}
+
+function LearningAreaPage({ area }) {
+  const [active, setActive] = useState(false);
+  const isFoundation = area.kind === 'foundation';
+
+  return (
+    <main className={`learning-area-page ${isFoundation ? 'learning-area-foundation' : 'learning-area-track'}`}>
+      <section className="learning-area-hero">
+        <button className="back-link" type="button" onClick={() => navigate('/')}><span aria-hidden="true">←</span> Back to homepage</button>
+        <div className="learning-area-hero-grid">
+          <div>
+            <span className={isFoundation ? 'pill' : 'track-page-pill'}>{area.eyebrow}</span>
+            <h1>{area.title}</h1>
+            <p>{area.description}</p>
+            <div className="learning-area-actions">
+              <button className="button button-primary" type="button" onClick={() => setActive(true)} disabled={active}>
+                {active ? (isFoundation ? 'Foundation started ✓' : 'Track enrolled ✓') : (isFoundation ? 'Start Foundation' : 'Enroll in Track')}
+              </button>
+              {!isFoundation && <button className="button button-outline" type="button" onClick={() => navigate('/foundation')}>View Foundation</button>}
+            </div>
+          </div>
+          <aside className="learning-area-summary" aria-label={`${area.title} summary`}>
+            <div><span>Courses</span><strong>4</strong></div>
+            <div><span>Duration</span><strong>{area.duration}</strong></div>
+            <div><span>{isFoundation ? 'Sequence' : 'Prerequisite'}</span><strong>{isFoundation ? 'Start here' : 'Foundation first'}</strong></div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="learning-area-body">
+        <div className="learning-area-intro">
+          <span className="section-kicker">Learning pathway</span>
+          <h2>{isFoundation ? 'Build your common BONSAI foundation' : 'Courses included in this track'}</h2>
+          <p>{area.prerequisite}</p>
+        </div>
+
+        <div className="area-course-grid">
+          {area.courses.map((course, index) => (
+            <button
+              className={`area-course-card ${course.pilot ? 'pilot-course-card' : ''}`}
+              type="button"
+              key={course.slug}
+              onClick={() => navigate(`/courses/${course.slug}`)}
+            >
+              <div className="course-card-topline">
+                <span className="course-sequence">{String(index + 1).padStart(2, '0')}</span>
+                {course.pilot && <span className="pilot-badge">Pilot course</span>}
+              </div>
+              <strong>{course.title}</strong>
+              <p>{course.description}</p>
+              <span className="course-card-link">View course information <b aria-hidden="true">→</b></span>
+            </button>
+          ))}
+        </div>
+
+        <div className={`sequence-note ${isFoundation ? 'sequence-note-foundation' : ''}`}>
+          <span aria-hidden="true">{isFoundation ? '1' : '2'}</span>
+          <div>
+            <strong>{isFoundation ? 'Foundation comes first' : 'Continue after the Foundation'}</strong>
+            <p>{isFoundation ? 'Complete the common core, then choose the specialization that best fits your area of interest.' : 'This specialization is designed to follow the shared Foundation learning area.'}</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function CourseInfoPlaceholder({ course }) {
+  const area = learningAreas[course.areaSlug];
+  return (
+    <main className="course-info-placeholder">
+      <button className="back-link" type="button" onClick={() => navigate(area.kind === 'foundation' ? '/foundation' : `/tracks/${area.slug}`)}><span aria-hidden="true">←</span> Back to {area.title}</button>
+      <div className="course-info-card">
+        <div className="course-info-heading">
+          <span className="pill">{course.pilot ? 'Pilot course' : area.kind === 'foundation' ? 'Foundation course' : 'Specialization course'}</span>
+          <h1>{course.title}</h1>
+          <p>{course.description}</p>
+        </div>
+        <div className="course-info-meta">
+          <div><span>Learning area</span><strong>{area.title}</strong></div>
+          <div><span>Duration</span><strong>{course.pilot ? '2–3 hours' : 'To be confirmed'}</strong></div>
+          <div><span>Course information</span><strong>KAN-20</strong></div>
+        </div>
+        <div className="course-placeholder-note"><strong>Course Information page placeholder</strong><p>The detailed Course Information screen will be implemented in KAN-20. KAN-18 connects every approved course to this route so the learning-area navigation is already functional.</p></div>
+      </div>
     </main>
   );
 }
@@ -271,12 +420,17 @@ function PlaceholderDashboard({ user, onLogout }) {
 function pageForPath(path, user, setUser) {
   if (user) return <PlaceholderDashboard user={user} onLogout={() => { setUser(null); navigate('/'); }} />;
   if (path === '/login') return <LoginPage onLogin={(nextUser) => setUser(nextUser)} />;
-  if (path === '/foundation') return <PlaceholderPage eyebrow="Foundation" title="Foundation learning area" description="The Foundation page will be expanded in its dedicated learning-page work. For KAN-17, this confirms that Foundation is a separate common starting point rather than a specialization track." />;
-  if (path === '/courses') return <PlaceholderPage eyebrow="Course catalogue" title="Browse all BONSAI courses" description="The full catalogue will be implemented in KAN-19. This placeholder keeps the KAN-17 navigation flow working now." />;
+  if (path === '/foundation') return <LearningAreaPage area={learningAreas.foundation} />;
+  if (path.startsWith('/courses/')) {
+    const slug = path.split('/').filter(Boolean)[1];
+    const course = allCourses.find((item) => item.slug === slug);
+    if (course) return <CourseInfoPlaceholder course={course} />;
+  }
+  if (path === '/courses') return <PlaceholderPage eyebrow="Course catalogue" title="Browse all BONSAI courses" description="The full catalogue will be implemented in KAN-19. The 20 approved courses are already connected to Foundation and specialization pages in KAN-18." />;
   if (path.startsWith('/tracks/')) {
     const slug = path.split('/').filter(Boolean)[1];
-    const track = specializationTracks.find((item) => item.slug === slug);
-    return <PlaceholderPage eyebrow="Specialization track" title={track?.title || 'BONSAI specialization'} description="The full track page will be implemented in KAN-18. This placeholder confirms the homepage navigation path." />;
+    const track = learningAreas[slug];
+    if (track?.kind === 'track') return <LearningAreaPage area={track} />;
   }
   return <Homepage />;
 }
