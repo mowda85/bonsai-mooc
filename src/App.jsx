@@ -25,24 +25,57 @@ function LoginPage({ onLogin }) {
 
   return (
     <main className="login-page">
-      <section className="login-intro">
+      <section className="login-hero">
         <span className="pill">BONSAI-MOOC prototype</span>
-        <h1>Learn. Connect. Build.</h1>
-        <h2>Shaping the cities of tomorrow.</h2>
-        <p>Access learning, teaching and collaboration tools for smarter and more sustainable cities.</p>
+        <h1>Welcome to BONSAI-MOOC</h1>
+        <div className="hero-rule" />
+        <p>Access high-quality courses, teaching tools and collaboration spaces for smarter, more sustainable cities.</p>
       </section>
-      <section className="login-card" aria-labelledby="login-heading">
-        <h2 id="login-heading">Welcome to BONSAI</h2>
-        <p>Sign in to continue to your workspace.</p>
-        <form onSubmit={submit}>
-          <label>Username or BONSAI ID<input value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. BNS-1001" autoComplete="username" /></label>
-          <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" autoComplete="current-password" /></label>
-          {error && <div className="login-error" role="alert">{error}</div>}
-          <button className="button button-primary login-submit" type="submit">Login</button>
-        </form>
-        <div className="register-row"><span>New to BONSAI?</span><button type="button" className="text-button">Register</button></div>
-        <div className="demo-note">Prototype only — your account role is resolved automatically.</div>
+
+      <section className="login-content">
+        <div className="login-card" aria-labelledby="login-heading">
+          <h2 id="login-heading">Login</h2>
+          <p>Enter your BONSAI credentials to continue.</p>
+          <form onSubmit={submit}>
+            <label>
+              Username or BONSAI ID
+              <div className="input-shell">
+                <span aria-hidden="true">♙</span>
+                <input value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. alex or BNS-1001" autoComplete="username" />
+              </div>
+            </label>
+            <label>
+              Password
+              <div className="input-shell">
+                <span aria-hidden="true">▣</span>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" autoComplete="current-password" />
+              </div>
+            </label>
+
+            <div className="form-options">
+              <label className="remember"><input type="checkbox" /> Remember me</label>
+              <button type="button" className="text-link">Forgot password?</button>
+            </div>
+
+            {error && <div className="login-error" role="alert">{error}</div>}
+            <button className="button button-primary login-submit" type="submit">Login <span aria-hidden="true">→</span></button>
+          </form>
+
+          <div className="divider"><span>New to BONSAI-MOOC?</span></div>
+          <button type="button" className="button button-outline register-wide">Create an account</button>
+          <div className="demo-note">Prototype environment — no real authentication backend is connected yet.</div>
+        </div>
+
+        <aside className="help-card" aria-label="Login help">
+          <h2>Need help?</h2>
+          <div className="help-rule" />
+          <div className="help-item"><span className="help-icon">?</span><div><strong>Check our FAQs</strong><p>Find answers to common questions.</p><button type="button" className="text-link">View FAQs</button></div></div>
+          <div className="help-item"><span className="help-icon">✉</span><div><strong>Contact support</strong><p>We are here to help.</p><button type="button" className="text-link">Contact us</button></div></div>
+          <div className="help-item"><span className="help-icon">▤</span><div><strong>User guide</strong><p>Learn how to make the most of BONSAI-MOOC.</p><button type="button" className="text-link">Open user guide</button></div></div>
+        </aside>
       </section>
+
+      <div className="security-strip"><span aria-hidden="true">✓</span><div><strong>Secure access</strong><p>Prototype login data stays inside this demo session.</p></div></div>
     </main>
   );
 }
@@ -61,17 +94,31 @@ function PlaceholderDashboard({ user, onLogout }) {
 
 export default function App() {
   const [user, setUser] = useState(null);
+
   return (
     <div className="app-shell">
       <header className="site-header">
         <a className="brand" href="#" onClick={(event) => { event.preventDefault(); if (user) setUser(null); }}>
-          <img src="/bonsai-logo.webp" alt="BONSAI" />
-          <span><strong>BONSAI</strong><small>Smart Learning for a Sustainable Future</small></span>
+          <img src="/bonsai-logo.webp" alt="BONSAI project tree logo" />
+          <span><strong>BONSAI</strong><small>MOOC FOR SMART CITIES</small></span>
         </a>
-        <nav aria-label="Primary navigation"><a href="#about">About</a><a href="#courses">Courses</a><a href="#help">Help</a></nav>
+        <nav aria-label="Primary navigation"><a href="#about">About</a><a href="#courses">Courses</a><a href="#news">News</a><a href="#contact">Contact</a></nav>
+        {!user && <button type="button" className="button button-outline header-register">Register</button>}
       </header>
+
       {user ? <PlaceholderDashboard user={user} onLogout={() => setUser(null)} /> : <LoginPage onLogin={setUser} />}
-      <footer><div><strong>Interreg North-West Europe</strong><span>Co-funded by the European Union</span></div><p>BONSAI is part of the Interreg North-West Europe programme.</p></footer>
+
+      <footer className="site-footer">
+        <div className="footer-brand">
+          <img src="/bonsai-logo.webp" alt="" aria-hidden="true" />
+          <div><strong>BONSAI-MOOC</strong><span>Building a greener future through accessible online education.</span></div>
+        </div>
+        <div className="footer-links"><a href="#about">About</a><a href="#courses">Courses</a><a href="#news">News</a><a href="#contact">Contact</a><a href="#privacy">Privacy Policy</a></div>
+        <div className="funding-credit">
+          <div className="interreg-text"><strong>Interreg</strong><span>North-West Europe</span><b>Bonsai</b></div>
+          <div className="eu-credit"><img src="/eu-flag.svg" alt="European Union flag" /><span>Co-funded by<br /><strong>the European Union</strong></span></div>
+        </div>
+      </footer>
     </div>
   );
 }
