@@ -1,3 +1,118 @@
+import { useState } from 'react';
+
+const pilotCourseUnits = [
+  { title: 'Introduction to Data, Information and Knowledge', lessons: 3 },
+  { title: 'Information Systems in BONSAI', lessons: 2 },
+  { title: 'Knowledge Dissemination in BONSAI', lessons: 1 },
+];
+
+function LearnerUnitPlaceholder({ course, unitNumber, units, onBack }) {
+  const unit = units[unitNumber - 1];
+  return (
+    <main className="learner-unit-preview-page">
+      <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to course overview</button>
+      <section className="learner-unit-preview-card">
+        <span className="pill">Learner Unit placeholder</span>
+        <span className="learner-unit-preview-number">Unit {unitNumber}</span>
+        <h1>{unit?.title || 'Course unit'}</h1>
+        <p>This is the current learner unit destination for the prototype. The full unit, lesson and activity experience will be implemented in KAN-23 and the following learner tasks.</p>
+        <div className="learner-unit-preview-meta">
+          <div><span>Course</span><strong>{course?.title}</strong></div>
+          <div><span>Unit status</span><strong>Current · Continue</strong></div>
+          <div><span>Next implementation</span><strong>Full learner Unit experience</strong></div>
+        </div>
+        <button className="button button-primary" type="button" onClick={onBack}>Return to course overview</button>
+      </section>
+    </main>
+  );
+}
+
+function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo, onOpenUnit }) {
+  const units = course?.pilot ? pilotCourseUnits : [];
+  const completedUnitNumbers = progress.completedUnits || [];
+  const totalUnits = progress.totalUnits || units.length;
+  const completedCount = completedUnitNumbers.length;
+  const percent = totalUnits ? Math.round((completedCount / totalUnits) * 100) : 0;
+  const nextUnitNumber = Array.from({ length: totalUnits }, (_, index) => index + 1).find((number) => !completedUnitNumbers.includes(number));
+  const duration = course?.pilot ? '2–3 hours' : 'To be confirmed';
+
+  return (
+    <main className="learner-course-overview-page">
+      <section className="learner-course-overview-hero">
+        <button className="back-link" type="button" onClick={onBackDashboard}><span aria-hidden="true">←</span> Back to learner dashboard</button>
+        <div className="learner-course-breadcrumb"><span>Learner dashboard</span><b>/</b><strong>{course?.title}</strong></div>
+        <div className="learner-course-overview-hero-grid">
+          <div>
+            <div className="learner-course-overview-badges"><span className="pill">Enrolled course</span>{course?.pilot && <span className="pilot-badge pilot-badge-large">Pilot course</span>}</div>
+            <h1>{course?.title}</h1>
+            <p>{course?.description}</p>
+            <div className="learner-course-overview-actions">
+              <button className="button button-primary" type="button" disabled={!nextUnitNumber} onClick={() => nextUnitNumber && onOpenUnit(nextUnitNumber)}>{percent >= 100 ? 'Course complete ✓' : completedCount ? 'Continue Course →' : 'Start Course →'}</button>
+              <button className="button button-outline" type="button" onClick={onPublicInfo}>Public course information</button>
+            </div>
+          </div>
+          <aside className="learner-course-overview-summary" aria-label={`${course?.title} learner progress summary`}>
+            <div><span>Learning area</span><strong>{course?.area || 'Foundation'}</strong></div>
+            <div><span>Course type</span><strong>{course?.areaKind === 'foundation' ? 'Foundation · Required' : 'Specialization'}</strong></div>
+            <div><span>Duration</span><strong>{duration}</strong></div>
+            <div><span>Progress</span><strong>{completedCount} of {totalUnits} units · {percent}%</strong></div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="learner-course-overview-body">
+        <div className="learner-course-overview-main">
+          <section className="learner-course-progress-banner" aria-label={`Course ${percent}% complete`}>
+            <div className="learner-course-progress-heading"><div><span className="section-kicker">Your progress</span><h2>{completedCount} of {totalUnits} units complete</h2></div><strong>{percent}%</strong></div>
+            <div className="learner-progress-track"><span style={{ width: `${percent}%` }} /></div>
+            <p>{nextUnitNumber ? `Your next step is Unit ${nextUnitNumber}: ${units[nextUnitNumber - 1]?.title || 'Course unit'}.` : 'All available units are complete.'}</p>
+          </section>
+
+          <section className="learner-enrolled-course-section">
+            <span className="section-kicker">About this course</span>
+            <h2>Course description</h2>
+            <p>{course?.description}</p>
+            {course?.pilot && <p>This pilot course introduces data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.</p>}
+          </section>
+
+          <section className="learner-enrolled-course-section" aria-labelledby="learner-unit-progress-heading">
+            <div className="learner-unit-progress-heading"><div><span className="section-kicker">Course structure</span><h2 id="learner-unit-progress-heading">Units and progress</h2><p>Your unit status is calculated from the learner progress data used by the dashboard.</p></div><span className="course-unit-count">{totalUnits} units</span></div>
+            {units.length ? (
+              <div className="learner-unit-status-list">
+                {units.map((unit, index) => {
+                  const unitNumber = index + 1;
+                  const completed = completedUnitNumbers.includes(unitNumber);
+                  const current = unitNumber === nextUnitNumber;
+                  const status = completed ? 'Completed' : current ? 'Current · Continue' : 'Upcoming';
+                  return (
+                    <article key={unit.title} className={`learner-unit-status-card ${completed ? 'learner-unit-completed' : ''} ${current ? 'learner-unit-current' : ''}`}>
+                      <div className="learner-unit-status-number">{completed ? '✓' : unitNumber}</div>
+                      <div className="learner-unit-status-copy"><span>Unit {unitNumber}</span><strong>{unit.title}</strong><small>{unit.lessons} lesson{unit.lessons === 1 ? '' : 's'}</small></div>
+                      <div className="learner-unit-status-action"><b>{status}</b>{(completed || current) ? <button type="button" className={current ? 'button button-primary' : 'button button-outline'} onClick={() => onOpenUnit(unitNumber)}>{current ? 'Continue' : 'Review'}</button> : <span>Available after Unit {unitNumber - 1}</span>}</div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="content-pending"><strong>Course structure being prepared</strong><p>Detailed units have not yet been supplied for this enrolled course.</p></div>
+            )}
+          </section>
+        </div>
+
+        <aside className="learner-course-side-panel">
+          <span className="section-kicker">Continue learning</span>
+          <h2>{nextUnitNumber ? `Unit ${nextUnitNumber} is next` : 'Course complete'}</h2>
+          <p>{nextUnitNumber ? units[nextUnitNumber - 1]?.title : 'You have completed all currently available units.'}</p>
+          <div className="learner-course-side-percent"><strong>{percent}%</strong><span>course complete</span></div>
+          <div className="learner-progress-track"><span style={{ width: `${percent}%` }} /></div>
+          {nextUnitNumber && <button className="button button-primary" type="button" onClick={() => onOpenUnit(nextUnitNumber)}>Continue Course →</button>}
+          <button className="button button-outline" type="button" onClick={onBackDashboard}>Back to dashboard</button>
+        </aside>
+      </section>
+    </main>
+  );
+}
+
 export default function LearnerDashboard({
   user,
   foundationCourses,
@@ -20,6 +135,44 @@ export default function LearnerDashboard({
   const remainingUnits = Math.max(totalUnits - completedUnits, 0);
   const currentCoursePercent = totalUnits ? Math.round((completedUnits / totalUnits) * 100) : 0;
   const certificates = progress.certificates || [];
+  const query = new URLSearchParams(window.location.search);
+  const initialCourseOpen = query.get('course') === progress.currentCourse.slug;
+  const initialUnit = Number(query.get('unit')) || null;
+  const [workspaceView, setWorkspaceView] = useState(initialUnit ? 'unit' : initialCourseOpen ? 'course' : 'dashboard');
+  const [activeUnit, setActiveUnit] = useState(initialUnit);
+
+  function setLearnerUrl(params = '') {
+    window.history.pushState({}, '', `/learner${params}`);
+  }
+
+  function openCourseOverview() {
+    setLearnerUrl(`?course=${progress.currentCourse.slug}`);
+    setActiveUnit(null);
+    setWorkspaceView('course');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openUnit(unitNumber) {
+    setLearnerUrl(`?course=${progress.currentCourse.slug}&unit=${unitNumber}`);
+    setActiveUnit(unitNumber);
+    setWorkspaceView('unit');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function backToDashboard() {
+    setLearnerUrl('');
+    setActiveUnit(null);
+    setWorkspaceView('dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (workspaceView === 'unit') {
+    return <LearnerUnitPlaceholder course={currentCourse} unitNumber={activeUnit || 1} units={pilotCourseUnits} onBack={openCourseOverview} />;
+  }
+
+  if (workspaceView === 'course') {
+    return <LearnerCourseOverview course={currentCourse} progress={progress.currentCourse} onBackDashboard={backToDashboard} onPublicInfo={() => onNavigate(`/courses/${progress.currentCourse.slug}`)} onOpenUnit={openUnit} />;
+  }
 
   return (
     <main className="learner-dashboard-page">
@@ -64,8 +217,8 @@ export default function LearnerDashboard({
           <div className="learner-unit-progress"><div><strong>{completedUnits}/{totalUnits}</strong><span>units complete</span></div><div><strong>{remainingUnits}</strong><span>units left</span></div></div>
           <div className="learner-progress-track" aria-label={`Current course ${currentCoursePercent}% complete`}><span style={{ width: `${currentCoursePercent}%` }} /></div>
           <div className="current-course-actions">
-            <button className="button button-primary" type="button" onClick={() => onNavigate(`/learn/${progress.currentCourse.slug}/unit-1`)}>Continue course →</button>
-            <button className="button button-outline" type="button" onClick={() => onNavigate(`/courses/${progress.currentCourse.slug}`)}>Course information</button>
+            <button className="button button-primary" type="button" onClick={openCourseOverview}>Continue course →</button>
+            <button className="button button-outline" type="button" onClick={() => onNavigate(`/courses/${progress.currentCourse.slug}`)}>Public course information</button>
           </div>
         </article>
       </section>
