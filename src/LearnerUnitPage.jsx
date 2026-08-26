@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import LearnerActivityPage, { UNIT_TWO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
 
 const pilotUnits = [
   {
@@ -109,13 +110,28 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
   );
 }
 
-export default function LearnerUnitPage({ course, unitNumber, completedUnits = [], onBack, onOpenUnit }) {
+export default function LearnerUnitPage({ course, unitNumber, completedUnits = [], completedActivityIds = [], onCompleteActivity, onBack, onOpenUnit }) {
   const [activeLessonIndex, setActiveLessonIndex] = useState(null);
+  const [activityOpen, setActivityOpen] = useState(false);
   const unit = pilotUnits[unitNumber - 1];
   const totalUnits = pilotUnits.length;
+  const activityComplete = completedActivityIds.includes(UNIT_TWO_ACTIVITY_ID);
 
   function openLesson(index) {
+    setActivityOpen(false);
     setActiveLessonIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openActivity() {
+    setActiveLessonIndex(null);
+    setActivityOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function backToUnit() {
+    setActiveLessonIndex(null);
+    setActivityOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -128,6 +144,19 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
     );
   }
 
+  if (activityOpen && unitNumber === 2) {
+    return (
+      <LearnerActivityPage
+        course={course}
+        unitTitle={unit.title}
+        unitNumber={unitNumber}
+        completed={activityComplete}
+        onBack={backToUnit}
+        onComplete={onCompleteActivity}
+      />
+    );
+  }
+
   if (activeLessonIndex !== null) {
     return (
       <LessonContentPage
@@ -135,7 +164,7 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
         unit={unit}
         unitNumber={unitNumber}
         lessonNumber={activeLessonIndex + 1}
-        onBack={() => { setActiveLessonIndex(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        onBack={backToUnit}
         onNavigateLesson={(lessonNumber) => openLesson(lessonNumber - 1)}
       />
     );
@@ -191,6 +220,20 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
                 </button>
               ))}
             </div>
+
+            {unitNumber === 2 && (
+              <section className="learner-unit-activity" aria-labelledby="unit-activity-heading">
+                <div className="learner-unit-activity-heading">
+                  <div><span className="section-kicker">Activity</span><h2 id="unit-activity-heading">Unit 2 submission activity</h2><p>Test the free-text submission workflow. Final instructional activity content will be integrated separately.</p></div>
+                  <span className={`learner-unit-activity-badge ${activityComplete ? 'learner-unit-activity-badge-done' : ''}`}>{activityComplete ? '✓ Completed' : 'To complete'}</span>
+                </div>
+                <button className="learner-unit-activity-card" type="button" onClick={openActivity}>
+                  <span className="learner-unit-activity-icon" aria-hidden="true">✎</span>
+                  <div><small>Prototype activity</small><strong>{activityComplete ? 'Submission recorded' : 'Instructions + free-text submission'}</strong></div>
+                  <span className="learner-unit-activity-action">{activityComplete ? 'Review activity' : 'Open activity'} <b aria-hidden="true">→</b></span>
+                </button>
+              </section>
+            )}
           </section>
         </div>
 
