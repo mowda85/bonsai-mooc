@@ -10,10 +10,10 @@ const learningAreas = {
   foundation: {
     slug: 'foundation',
     kind: 'foundation',
-    eyebrow: 'Common core',
+    eyebrow: 'Required common core',
     title: 'Foundation',
-    description: 'The shared starting point for every BONSAI learner before choosing an area of specialization.',
-    prerequisite: 'Starting point — complete the Foundation before moving into a specialization.',
+    description: 'The shared starting point for every BONSAI learner. Complete all four Foundation courses before starting a specialization.',
+    prerequisite: 'Required first step — all four Foundation courses must be completed to unlock specialization enrollment.',
     duration: 'To be confirmed',
     courses: [
       {
@@ -45,7 +45,7 @@ const learningAreas = {
     eyebrow: 'Specialization 01',
     title: 'Dike Stability and Erosion',
     description: 'Explore dike stability, erosion assessment, erosion properties and numerical modelling for flood and erosion.',
-    prerequisite: 'Foundation should be completed first.',
+    prerequisite: 'Complete the Foundation to unlock enrollment in this specialization.',
     duration: 'To be confirmed',
     courses: [
       { slug: 'dike-stability', title: 'Dike Stability', description: 'Core concepts in dike stability.' },
@@ -60,7 +60,7 @@ const learningAreas = {
     eyebrow: 'Specialization 02',
     title: 'Animal Activities and Burrows',
     description: 'Study burrow management, levee safety, non-destructive geophysical methods and animal risk assessment.',
-    prerequisite: 'Foundation should be completed first.',
+    prerequisite: 'Complete the Foundation to unlock enrollment in this specialization.',
     duration: 'To be confirmed',
     courses: [
       { slug: 'burrows-levee-management', title: 'Burrows and Levee Management', description: 'Management of burrows in levee systems.' },
@@ -75,7 +75,7 @@ const learningAreas = {
     eyebrow: 'Specialization 03',
     title: 'Vegetation and Nature-based Solutions',
     description: 'Explore vegetation for dike safety, biodiversity, vegetation management and climate change.',
-    prerequisite: 'Foundation should be completed first.',
+    prerequisite: 'Complete the Foundation to unlock enrollment in this specialization.',
     duration: 'To be confirmed',
     courses: [
       { slug: 'vegetation-dike-safety', title: 'Vegetation for Dike Safety', description: 'The role of vegetation in dike safety.' },
@@ -90,7 +90,7 @@ const learningAreas = {
     eyebrow: 'Specialization 04',
     title: 'Flood Risk and Emergency Management',
     description: 'Build knowledge in flood risk management, emergency response, crisis management and AI for flood forecasting.',
-    prerequisite: 'Foundation should be completed first.',
+    prerequisite: 'Complete the Foundation to unlock enrollment in this specialization.',
     duration: 'To be confirmed',
     courses: [
       { slug: 'flood-risk-management', title: 'Flood Risk Management', description: 'Foundations of flood risk management.' },
@@ -103,6 +103,7 @@ const learningAreas = {
 
 const specializationTracks = Object.values(learningAreas).filter((area) => area.kind === 'track');
 const allCourses = Object.values(learningAreas).flatMap((area) => area.courses.map((course) => ({ ...course, area: area.title, areaSlug: area.slug })));
+const foundationCourses = learningAreas.foundation.courses;
 
 function navigate(path) {
   if (window.location.pathname === path) return;
@@ -119,13 +120,11 @@ function Header({ path, user, onLogout }) {
         <img src="/bonsai-logo.webp" alt="BONSAI project tree logo" />
         <span><strong>BONSAI-MOOC</strong><small>Flood resilience learning</small></span>
       </button>
-
       <nav aria-label="Primary navigation">
         <button type="button" onClick={() => navigate('/')}>Home</button>
         <button type="button" onClick={() => navigate('/courses')}>Courses</button>
         <a href="#about">About BONSAI</a>
       </nav>
-
       <div className="header-actions">
         {isPublic ? (
           <>
@@ -156,7 +155,7 @@ function Footer() {
   );
 }
 
-function Homepage() {
+function Homepage({ foundationComplete }) {
   const [query, setQuery] = useState('');
   const [submittedQuery, setSubmittedQuery] = useState('');
 
@@ -177,25 +176,22 @@ function Homepage() {
         <div className="home-hero-copy">
           <span className="pill">BONSAI learning platform</span>
           <h1>Build the knowledge to strengthen flood resilience.</h1>
-          <p>Start with a shared Foundation, then continue into the BONSAI specialization area that best matches your interests and professional needs.</p>
+          <p>Complete the shared Foundation first. Once it reaches 100%, the BONSAI specialization tracks unlock and you can continue in the area that best matches your interests.</p>
           <div className="hero-actions">
-            <button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>Start with the Foundation <span aria-hidden="true">→</span></button>
+            <button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>{foundationComplete ? 'Review the Foundation' : 'Start with the Foundation'} <span aria-hidden="true">→</span></button>
             <button className="button button-outline" type="button" onClick={() => navigate('/courses')}>Browse all courses</button>
           </div>
         </div>
         <div className="home-hero-panel" aria-label="BONSAI learning pathway">
-          <div className="path-step path-foundation"><span>1</span><div><strong>Foundation</strong><small>Common knowledge for everyone</small></div></div>
+          <div className={`path-step path-foundation ${foundationComplete ? 'path-complete' : ''}`}><span>{foundationComplete ? '✓' : '1'}</span><div><strong>Foundation</strong><small>{foundationComplete ? 'Completed — specializations unlocked' : 'Required common core'}</small></div></div>
           <div className="path-line" />
-          <div className="path-step"><span>2</span><div><strong>Choose a specialization</strong><small>Continue based on your area of interest</small></div></div>
-          <div className="path-tags"><span>Dikes</span><span>Animals</span><span>Vegetation</span><span>Emergency</span></div>
+          <div className={`path-step ${foundationComplete ? '' : 'path-locked'}`}><span>{foundationComplete ? '2' : '🔒'}</span><div><strong>Choose a specialization</strong><small>{foundationComplete ? 'Continue based on your area of interest' : 'Unlocks after Foundation completion'}</small></div></div>
+          <div className={`path-tags ${foundationComplete ? '' : 'path-tags-locked'}`}><span>Dikes</span><span>Animals</span><span>Vegetation</span><span>Emergency</span></div>
         </div>
       </section>
 
       <section className="search-section" aria-labelledby="course-search-heading">
-        <div>
-          <span className="section-kicker">Course discovery</span>
-          <h2 id="course-search-heading">What would you like to learn?</h2>
-        </div>
+        <div><span className="section-kicker">Course discovery</span><h2 id="course-search-heading">What would you like to learn?</h2></div>
         <form className="course-search" onSubmit={search}>
           <label className="sr-only" htmlFor="course-search">Search courses</label>
           <input id="course-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by topic, course or specialization" />
@@ -215,50 +211,71 @@ function Homepage() {
 
       <section className="foundation-section" aria-labelledby="foundation-heading">
         <div className="foundation-copy">
-          <span className="section-kicker">Your starting point</span>
+          <span className="section-kicker">Step 1 · Required</span>
           <h2 id="foundation-heading">Foundation</h2>
-          <p>The Foundation is the shared core of BONSAI-MOOC. It gives every learner the common concepts and context needed before moving into a specialization.</p>
-          <div className="foundation-meta"><span>Common core</span><span>Complete first</span><span>4 courses</span></div>
-          <button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>Explore the Foundation</button>
+          <p>The Foundation is the mandatory common core of BONSAI-MOOC. Complete all four courses to unlock specialization enrollment.</p>
+          <div className="foundation-meta"><span>Required common core</span><span>Complete first</span><span>4 courses</span></div>
+          <button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>{foundationComplete ? 'Foundation complete ✓' : 'Start Foundation'}</button>
         </div>
         <div className="foundation-visual" aria-hidden="true">
-          <div className="foundation-tree">BONSAI</div>
+          <div className="foundation-tree">{foundationComplete ? '100%' : 'STEP 1'}</div>
           <div className="foundation-branches"><span>Understand</span><span>Connect</span><span>Apply</span></div>
         </div>
       </section>
 
       <section className="tracks-section" aria-labelledby="tracks-heading">
         <div className="section-heading-row">
-          <div><span className="section-kicker">After the Foundation</span><h2 id="tracks-heading">Choose your specialization</h2><p>Continue into one or more areas that match your role, interests or learning goals.</p></div>
-          <button className="button button-outline" type="button" onClick={() => navigate('/courses')}>Browse all courses</button>
+          <div><span className="section-kicker">Step 2 · Specialize</span><h2 id="tracks-heading">Choose your specialization</h2><p>{foundationComplete ? 'Foundation complete. Your specialization tracks are now unlocked.' : 'You can explore the specialization options now, but enrollment stays locked until the Foundation is complete.'}</p></div>
+          <span className={`unlock-status ${foundationComplete ? 'unlock-status-open' : ''}`}>{foundationComplete ? '✓ Unlocked' : '🔒 Foundation required'}</span>
         </div>
         <div className="track-grid">
           {specializationTracks.map((track, index) => (
-            <button className="track-card" type="button" key={track.slug} onClick={() => navigate(`/tracks/${track.slug}`)}>
+            <button className={`track-card ${foundationComplete ? '' : 'track-card-locked'}`} type="button" key={track.slug} onClick={() => navigate(`/tracks/${track.slug}`)}>
               <span className="track-number">0{index + 1}</span>
               <span className="track-eyebrow">{track.eyebrow}</span>
+              {!foundationComplete && <span className="track-lock-badge">🔒 Complete Foundation to unlock</span>}
               <strong>{track.title}</strong>
               <p>{track.description}</p>
-              <span className="track-link">Explore track <b aria-hidden="true">→</b></span>
+              <span className="track-link">{foundationComplete ? 'Explore track' : 'View track details'} <b aria-hidden="true">→</b></span>
             </button>
           ))}
         </div>
       </section>
 
       <section className="home-cta">
-        <div><span className="section-kicker">Ready to begin?</span><h2>Explore BONSAI learning at your own pace.</h2><p>Browse the learning offer now, then sign in when you are ready to continue your learner, teacher or admin journey.</p></div>
-        <div className="hero-actions"><button className="button button-primary" type="button" onClick={() => navigate('/login')}>Login</button><button className="button button-outline" type="button">Register</button></div>
+        <div><span className="section-kicker">Your BONSAI pathway</span><h2>Foundation first. Specialize second.</h2><p>The learning pathway keeps the common BONSAI knowledge consistent for everyone before learners branch into specialist subjects.</p></div>
+        <div className="hero-actions"><button className="button button-primary" type="button" onClick={() => navigate('/foundation')}>{foundationComplete ? 'View Foundation' : 'Start Foundation'}</button></div>
       </section>
     </main>
   );
 }
 
-function LearningAreaPage({ area }) {
+function FoundationCourseCard({ course, index, completed, onToggle }) {
+  return (
+    <article className={`area-course-card foundation-progress-card ${course.pilot ? 'pilot-course-card' : ''} ${completed ? 'course-completed' : ''}`}>
+      <div className="course-card-topline">
+        <span className="course-sequence">{completed ? '✓' : String(index + 1).padStart(2, '0')}</span>
+        {course.pilot && <span className="pilot-badge">Pilot course</span>}
+      </div>
+      <strong>{course.title}</strong>
+      <p>{course.description}</p>
+      <div className="foundation-course-actions">
+        <button className="course-card-link-button" type="button" onClick={() => navigate(`/courses/${course.slug}`)}>View course information →</button>
+        <button className={`completion-toggle ${completed ? 'completion-toggle-done' : ''}`} type="button" onClick={() => onToggle(course.slug)}>{completed ? 'Completed ✓' : 'Mark complete'}</button>
+      </div>
+    </article>
+  );
+}
+
+function LearningAreaPage({ area, foundationComplete, completedFoundationCourses, onToggleFoundationCourse }) {
   const [active, setActive] = useState(false);
   const isFoundation = area.kind === 'foundation';
+  const locked = !isFoundation && !foundationComplete;
+  const completedCount = completedFoundationCourses.length;
+  const progress = Math.round((completedCount / foundationCourses.length) * 100);
 
   return (
-    <main className={`learning-area-page ${isFoundation ? 'learning-area-foundation' : 'learning-area-track'}`}>
+    <main className={`learning-area-page ${isFoundation ? 'learning-area-foundation' : 'learning-area-track'} ${locked ? 'learning-area-locked' : ''}`}>
       <section className="learning-area-hero">
         <button className="back-link" type="button" onClick={() => navigate('/')}><span aria-hidden="true">←</span> Back to homepage</button>
         <div className="learning-area-hero-grid">
@@ -267,39 +284,44 @@ function LearningAreaPage({ area }) {
             <h1>{area.title}</h1>
             <p>{area.description}</p>
             <div className="learning-area-actions">
-              <button className="button button-primary" type="button" onClick={() => setActive(true)} disabled={active}>
-                {active ? (isFoundation ? 'Foundation started ✓' : 'Track enrolled ✓') : (isFoundation ? 'Start Foundation' : 'Enroll in Track')}
-              </button>
-              {!isFoundation && <button className="button button-outline" type="button" onClick={() => navigate('/foundation')}>View Foundation</button>}
+              {isFoundation ? (
+                <button className="button button-primary" type="button" onClick={() => document.getElementById('foundation-courses')?.scrollIntoView({ behavior: 'smooth' })}>{foundationComplete ? 'Foundation complete ✓' : 'Continue Foundation'}</button>
+              ) : (
+                <button className="button button-primary" type="button" onClick={() => setActive(true)} disabled={locked || active}>{locked ? '🔒 Complete Foundation first' : active ? 'Track enrolled ✓' : 'Enroll in Track'}</button>
+              )}
+              {!isFoundation && <button className="button button-outline" type="button" onClick={() => navigate('/foundation')}>{foundationComplete ? 'Review Foundation' : 'Complete Foundation'}</button>}
             </div>
+            {locked && <div className="track-prerequisite-lock"><strong>Specialization locked</strong><span>Finish all four Foundation courses to enable enrollment.</span></div>}
           </div>
           <aside className="learning-area-summary" aria-label={`${area.title} summary`}>
             <div><span>Courses</span><strong>4</strong></div>
             <div><span>Duration</span><strong>{area.duration}</strong></div>
-            <div><span>{isFoundation ? 'Sequence' : 'Prerequisite'}</span><strong>{isFoundation ? 'Start here' : 'Foundation first'}</strong></div>
+            <div><span>{isFoundation ? 'Progress' : 'Access'}</span><strong>{isFoundation ? `${completedCount} of 4 complete` : foundationComplete ? 'Unlocked ✓' : 'Locked · Foundation first'}</strong></div>
           </aside>
         </div>
       </section>
 
       <section className="learning-area-body">
-        <div className="learning-area-intro">
-          <span className="section-kicker">Learning pathway</span>
-          <h2>{isFoundation ? 'Build your common BONSAI foundation' : 'Courses included in this track'}</h2>
+        {isFoundation && (
+          <div className="foundation-roadmap" aria-label="Foundation progress">
+            <div className="roadmap-heading"><div><span className="section-kicker">Step 1 · Mandatory</span><h2>Complete the Foundation to unlock your pathway</h2></div><strong>{progress}%</strong></div>
+            <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
+            <p>All four Foundation courses are required. When progress reaches 100%, all four specialization tracks unlock automatically.</p>
+          </div>
+        )}
+
+        <div className="learning-area-intro" id={isFoundation ? 'foundation-courses' : undefined}>
+          <span className="section-kicker">{isFoundation ? 'Required courses' : foundationComplete ? 'Unlocked specialization' : 'Preview specialization'}</span>
+          <h2>{isFoundation ? 'Your four Foundation courses' : 'Courses included in this track'}</h2>
           <p>{area.prerequisite}</p>
         </div>
 
         <div className="area-course-grid">
-          {area.courses.map((course, index) => (
-            <button
-              className={`area-course-card ${course.pilot ? 'pilot-course-card' : ''}`}
-              type="button"
-              key={course.slug}
-              onClick={() => navigate(`/courses/${course.slug}`)}
-            >
-              <div className="course-card-topline">
-                <span className="course-sequence">{String(index + 1).padStart(2, '0')}</span>
-                {course.pilot && <span className="pilot-badge">Pilot course</span>}
-              </div>
+          {area.courses.map((course, index) => isFoundation ? (
+            <FoundationCourseCard key={course.slug} course={course} index={index} completed={completedFoundationCourses.includes(course.slug)} onToggle={onToggleFoundationCourse} />
+          ) : (
+            <button className="area-course-card" type="button" key={course.slug} onClick={() => navigate(`/courses/${course.slug}`)}>
+              <div className="course-card-topline"><span className="course-sequence">{String(index + 1).padStart(2, '0')}</span></div>
               <strong>{course.title}</strong>
               <p>{course.description}</p>
               <span className="course-card-link">View course information <b aria-hidden="true">→</b></span>
@@ -307,13 +329,14 @@ function LearningAreaPage({ area }) {
           ))}
         </div>
 
-        <div className={`sequence-note ${isFoundation ? 'sequence-note-foundation' : ''}`}>
-          <span aria-hidden="true">{isFoundation ? '1' : '2'}</span>
-          <div>
-            <strong>{isFoundation ? 'Foundation comes first' : 'Continue after the Foundation'}</strong>
-            <p>{isFoundation ? 'Complete the common core, then choose the specialization that best fits your area of interest.' : 'This specialization is designed to follow the shared Foundation learning area.'}</p>
+        {isFoundation && foundationComplete ? (
+          <div className="foundation-unlocked-banner"><span aria-hidden="true">✓</span><div><strong>Foundation complete — specializations unlocked</strong><p>You can now choose and enroll in any BONSAI specialization track.</p></div><button className="button button-primary" type="button" onClick={() => navigate('/')}>Choose a specialization</button></div>
+        ) : (
+          <div className={`sequence-note ${isFoundation ? 'sequence-note-foundation' : ''}`}>
+            <span aria-hidden="true">{isFoundation ? '1' : locked ? '🔒' : '2'}</span>
+            <div><strong>{isFoundation ? 'Foundation comes first' : locked ? 'Enrollment is still locked' : 'Foundation complete — continue here'}</strong><p>{isFoundation ? 'Complete all four common-core courses. The specialization stage unlocks only when Foundation progress reaches 100%.' : locked ? 'You may preview these courses, but you cannot enroll in this specialization until the Foundation is complete.' : 'This specialization is now available because the shared Foundation has been completed.'}</p></div>
           </div>
-        </div>
+        )}
       </section>
     </main>
   );
@@ -366,11 +389,9 @@ function LoginPage({ onLogin }) {
         <div className="hero-rule" />
         <p>Access BONSAI courses, teaching tools and collaboration spaces focused on flood resilience, disaster management and knowledge transfer.</p>
       </section>
-
       <section className="login-content">
         <div className="login-card" aria-labelledby="login-heading">
-          <h2 id="login-heading">Login</h2>
-          <p>Enter your BONSAI credentials to continue.</p>
+          <h2 id="login-heading">Login</h2><p>Enter your BONSAI credentials to continue.</p>
           <form onSubmit={submit}>
             <label>Username or BONSAI ID<div className="input-shell"><span aria-hidden="true">♙</span><input value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. alex or BNS-1001" autoComplete="username" /></div></label>
             <label>Password<div className="input-shell"><span aria-hidden="true">▣</span><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" autoComplete="current-password" /></div></label>
@@ -382,7 +403,6 @@ function LoginPage({ onLogin }) {
           <button type="button" className="button button-outline register-wide">Create an account</button>
           <div className="demo-note">Prototype environment — no real authentication backend is connected yet.</div>
         </div>
-
         <aside className="help-card" aria-label="Login help">
           <h2>Need help?</h2><div className="help-rule" />
           <div className="help-item"><span className="help-icon">?</span><div><strong>Check our FAQs</strong><p>Find answers to common questions.</p><button type="button" className="text-link">View FAQs</button></div></div>
@@ -397,9 +417,7 @@ function LoginPage({ onLogin }) {
 function PlaceholderPage({ eyebrow, title, description }) {
   return (
     <main className="placeholder-page">
-      <span className="pill">{eyebrow}</span>
-      <h1>{title}</h1>
-      <p>{description}</p>
+      <span className="pill">{eyebrow}</span><h1>{title}</h1><p>{description}</p>
       <div className="placeholder-actions"><button className="button button-primary" type="button" onClick={() => navigate('/')}>Back to homepage</button><button className="button button-outline" type="button" onClick={() => navigate('/login')}>Login</button></div>
     </main>
   );
@@ -409,18 +427,15 @@ function PlaceholderDashboard({ user, onLogout }) {
   const labels = { learner: 'Learner Dashboard', teacher: 'Teacher Dashboard', admin: 'Admin Dashboard' };
   return (
     <main className="dashboard-placeholder">
-      <span className="pill">{user.role} workspace</span>
-      <h1>{labels[user.role]}</h1>
-      <p>Welcome, {user.name}. Your account role routed you here automatically. This temporary destination will be replaced by the full {user.role} experience in its Jira task.</p>
-      <button className="button button-primary" type="button" onClick={onLogout}>Log out</button>
+      <span className="pill">{user.role} workspace</span><h1>{labels[user.role]}</h1><p>Welcome, {user.name}. Your account role routed you here automatically. This temporary destination will be replaced by the full {user.role} experience in its Jira task.</p><button className="button button-primary" type="button" onClick={onLogout}>Log out</button>
     </main>
   );
 }
 
-function pageForPath(path, user, setUser) {
+function pageForPath(path, user, setUser, foundationComplete, completedFoundationCourses, onToggleFoundationCourse) {
   if (user) return <PlaceholderDashboard user={user} onLogout={() => { setUser(null); navigate('/'); }} />;
   if (path === '/login') return <LoginPage onLogin={(nextUser) => setUser(nextUser)} />;
-  if (path === '/foundation') return <LearningAreaPage area={learningAreas.foundation} />;
+  if (path === '/foundation') return <LearningAreaPage area={learningAreas.foundation} foundationComplete={foundationComplete} completedFoundationCourses={completedFoundationCourses} onToggleFoundationCourse={onToggleFoundationCourse} />;
   if (path.startsWith('/courses/')) {
     const slug = path.split('/').filter(Boolean)[1];
     const course = allCourses.find((item) => item.slug === slug);
@@ -430,14 +445,20 @@ function pageForPath(path, user, setUser) {
   if (path.startsWith('/tracks/')) {
     const slug = path.split('/').filter(Boolean)[1];
     const track = learningAreas[slug];
-    if (track?.kind === 'track') return <LearningAreaPage area={track} />;
+    if (track?.kind === 'track') return <LearningAreaPage area={track} foundationComplete={foundationComplete} completedFoundationCourses={completedFoundationCourses} onToggleFoundationCourse={onToggleFoundationCourse} />;
   }
-  return <Homepage />;
+  return <Homepage foundationComplete={foundationComplete} />;
 }
 
 export default function App() {
   const [path, setPath] = useState(window.location.pathname || '/');
   const [user, setUser] = useState(null);
+  const [completedFoundationCourses, setCompletedFoundationCourses] = useState([]);
+  const foundationComplete = completedFoundationCourses.length === foundationCourses.length;
+
+  function toggleFoundationCourse(slug) {
+    setCompletedFoundationCourses((current) => current.includes(slug) ? current.filter((item) => item !== slug) : [...current, slug]);
+  }
 
   useEffect(() => {
     const handleLocation = () => setPath(window.location.pathname || '/');
@@ -448,7 +469,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <Header path={path} user={user} onLogout={() => { setUser(null); navigate('/'); }} />
-      {pageForPath(path, user, setUser)}
+      {pageForPath(path, user, setUser, foundationComplete, completedFoundationCourses, toggleFoundationCourse)}
       <Footer />
     </div>
   );
