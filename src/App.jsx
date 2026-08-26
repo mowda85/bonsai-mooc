@@ -74,8 +74,6 @@ function LoginPage({ onLogin }) {
           <div className="help-item"><span className="help-icon">▤</span><div><strong>User guide</strong><p>Learn how to make the most of BONSAI-MOOC.</p><button type="button" className="text-link">Open user guide</button></div></div>
         </aside>
       </section>
-
-      <div className="security-strip"><span aria-hidden="true">✓</span><div><strong>Secure access</strong><p>Prototype login data stays inside this demo session.</p></div></div>
     </main>
   );
 }
