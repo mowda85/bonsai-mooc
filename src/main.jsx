@@ -8,6 +8,7 @@ import './course-info.css';
 import './learner-dashboard.css';
 import './learner-course-overview.css';
 import './learner-unit.css';
+import './lesson-content.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
