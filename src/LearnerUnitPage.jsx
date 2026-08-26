@@ -24,25 +24,87 @@ function getUnitStatus(unitNumber, completedUnits, totalUnits) {
   return unitNumber === nextUnitNumber ? 'Current · Continue' : 'Upcoming';
 }
 
-function LearnerLessonPlaceholder({ course, unit, unitNumber, lesson, lessonNumber, onBack }) {
+function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson }) {
+  const lesson = unit.lessons[lessonNumber - 1];
+  const previousLesson = lessonNumber > 1 ? lessonNumber - 1 : null;
+  const nextLesson = lessonNumber < unit.lessons.length ? lessonNumber + 1 : null;
+
   return (
-    <main className="learner-lesson-placeholder-page">
-      <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Unit {unitNumber}</button>
-      <section className="learner-lesson-placeholder-card">
+    <main className="lesson-content-page">
+      <section className="lesson-content-hero">
+        <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Unit {unitNumber}</button>
         <div className="learner-unit-breadcrumb" aria-label="Learner lesson breadcrumb">
           <span>Learner dashboard</span><b>/</b><span>{course?.title}</span><b>/</b><span>Unit {unitNumber}</span><b>/</b><strong>Lesson {lessonNumber}</strong>
         </div>
-        <span className="pill">KAN-24 · Lesson Content placeholder</span>
-        <span className="learner-unit-kicker">Unit {unitNumber} · Lesson {lessonNumber}</span>
-        <h1>{lesson}</h1>
-        <p>The lesson destination is connected, but the full lesson-content experience belongs to KAN-24. This placeholder intentionally does not invent teaching material that has not been supplied.</p>
-        <div className="learner-lesson-placeholder-meta">
-          <div><span>Course</span><strong>{course?.title}</strong></div>
-          <div><span>Unit</span><strong>{unit.title}</strong></div>
-          <div><span>Next task</span><strong>KAN-24 · Lesson content</strong></div>
+        <div className="lesson-content-hero-grid">
+          <div>
+            <div className="lesson-content-badges"><span className="pill">Learner lesson</span><span className="lesson-content-status">KAN-24 content shell</span></div>
+            <span className="learner-unit-kicker">Unit {unitNumber} · Lesson {lessonNumber} of {unit.lessons.length}</span>
+            <h1>{lesson}</h1>
+            <p>This page demonstrates the four lesson-content types required by the prototype without inventing teaching material that has not yet been supplied.</p>
+          </div>
+          <aside className="lesson-content-summary" aria-label={`Lesson ${lessonNumber} summary`}>
+            <div><span>Course</span><strong>{course?.title}</strong></div>
+            <div><span>Unit</span><strong>{unit.title}</strong></div>
+            <div><span>Lesson</span><strong>{lessonNumber} of {unit.lessons.length}</strong></div>
+            <div><span>Content types</span><strong>Text · Image · Video · Download</strong></div>
+          </aside>
         </div>
-        <button className="button button-primary" type="button" onClick={onBack}>Return to Unit {unitNumber}</button>
       </section>
+
+      <section className="lesson-content-body">
+        <div className="lesson-content-main">
+          <section className="lesson-content-block lesson-text-block" aria-labelledby="lesson-text-heading">
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">T</span><div><span className="section-kicker">Text content</span><h2 id="lesson-text-heading">Lesson text placeholder</h2></div></div>
+            <div className="lesson-text-placeholder">
+              <strong>Instructional text will appear here.</strong>
+              <p>This block verifies the layout for headings, paragraphs and structured lesson text. Final teaching content will be supplied in KAN-45.</p>
+              <div className="lesson-placeholder-lines" aria-hidden="true"><span /><span /><span className="short" /></div>
+            </div>
+          </section>
+
+          <section className="lesson-content-block" aria-labelledby="lesson-image-heading">
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▧</span><div><span className="section-kicker">Image content</span><h2 id="lesson-image-heading">Responsive image placeholder</h2></div></div>
+            <div className="lesson-image-placeholder" role="img" aria-label="Placeholder for the final lesson image to be supplied in KAN-46">
+              <div className="lesson-image-symbol" aria-hidden="true">▧</div>
+              <strong>Lesson image placeholder</strong>
+              <span>Final visual content will be supplied in KAN-46.</span>
+            </div>
+          </section>
+
+          <section className="lesson-content-block" aria-labelledby="lesson-video-heading">
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▶</span><div><span className="section-kicker">Video content</span><h2 id="lesson-video-heading">Video player placeholder</h2></div></div>
+            <div className="lesson-video-placeholder" aria-label="Placeholder video player for future lesson video">
+              <button className="lesson-video-play" type="button" aria-label="Placeholder play control" onClick={() => {}}>▶</button>
+              <div className="lesson-video-caption"><strong>Video content placeholder</strong><span>Final lesson video will be supplied in KAN-47.</span></div>
+              <div className="lesson-video-controls" aria-hidden="true"><span className="lesson-video-progress"><b /></span><span>0:00</span><span>⚙</span><span>⛶</span></div>
+            </div>
+          </section>
+
+          <section className="lesson-content-block" aria-labelledby="lesson-download-heading">
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">↓</span><div><span className="section-kicker">Downloadable document</span><h2 id="lesson-download-heading">Lesson resource placeholder</h2></div></div>
+            <div className="lesson-download-card">
+              <div className="lesson-download-file-icon" aria-hidden="true">DOC</div>
+              <div><strong>BONSAI lesson resource placeholder</strong><p>This non-instructional file only verifies the download interaction. Final downloadable teaching material will be supplied in KAN-48.</p><span>TXT · Prototype placeholder</span></div>
+              <a className="button button-primary" href="/lesson-resource-placeholder.txt" download>Download placeholder ↓</a>
+            </div>
+          </section>
+        </div>
+
+        <aside className="lesson-content-side-panel">
+          <span className="section-kicker">Lesson position</span>
+          <h2>Lesson {lessonNumber} of {unit.lessons.length}</h2>
+          <p>{lesson}</p>
+          <div className="lesson-content-type-list"><span>✓ Text shell</span><span>✓ Image shell</span><span>✓ Video shell</span><span>✓ Download shell</span></div>
+          <button className="button button-outline" type="button" onClick={onBack}>Back to Unit {unitNumber}</button>
+        </aside>
+      </section>
+
+      <nav className="lesson-content-navigation" aria-label="Lesson navigation">
+        <button className="button button-outline" type="button" disabled={!previousLesson} onClick={() => previousLesson && onNavigateLesson(previousLesson)}>← {previousLesson ? `Previous Lesson · ${previousLesson}` : 'Previous Lesson'}</button>
+        <button className="button button-outline" type="button" onClick={onBack}>Unit {unitNumber} overview</button>
+        <button className="button button-primary" type="button" disabled={!nextLesson} onClick={() => nextLesson && onNavigateLesson(nextLesson)}>{nextLesson ? `Next Lesson · ${nextLesson}` : 'Final Lesson'} →</button>
+      </nav>
     </main>
   );
 }
@@ -51,6 +113,11 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
   const [activeLessonIndex, setActiveLessonIndex] = useState(null);
   const unit = pilotUnits[unitNumber - 1];
   const totalUnits = pilotUnits.length;
+
+  function openLesson(index) {
+    setActiveLessonIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   if (!unit) {
     return (
@@ -63,13 +130,13 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
 
   if (activeLessonIndex !== null) {
     return (
-      <LearnerLessonPlaceholder
+      <LessonContentPage
         course={course}
         unit={unit}
         unitNumber={unitNumber}
-        lesson={unit.lessons[activeLessonIndex]}
         lessonNumber={activeLessonIndex + 1}
-        onBack={() => setActiveLessonIndex(null)}
+        onBack={() => { setActiveLessonIndex(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+        onNavigateLesson={(lessonNumber) => openLesson(lessonNumber - 1)}
       />
     );
   }
@@ -112,12 +179,12 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
 
           <section className="learner-unit-lessons" aria-labelledby="learner-unit-lessons-heading">
             <div className="learner-unit-section-heading">
-              <div><span className="section-kicker">Lessons</span><h2 id="learner-unit-lessons-heading">Unit {unitNumber} lessons</h2><p>Select a lesson to open its KAN-24 content placeholder.</p></div>
+              <div><span className="section-kicker">Lessons</span><h2 id="learner-unit-lessons-heading">Unit {unitNumber} lessons</h2><p>Select a lesson to open its KAN-24 content page.</p></div>
               <span className="course-unit-count">{unit.lessons.length} lesson{unit.lessons.length === 1 ? '' : 's'}</span>
             </div>
             <div className="learner-lesson-list">
               {unit.lessons.map((lesson, index) => (
-                <button className="learner-lesson-card" type="button" key={lesson} onClick={() => setActiveLessonIndex(index)}>
+                <button className="learner-lesson-card" type="button" key={lesson} onClick={() => openLesson(index)}>
                   <span className="learner-lesson-number">{String(index + 1).padStart(2, '0')}</span>
                   <div><small>Lesson {index + 1}</small><strong>{lesson}</strong></div>
                   <span className="learner-lesson-action">Open lesson <b aria-hidden="true">→</b></span>

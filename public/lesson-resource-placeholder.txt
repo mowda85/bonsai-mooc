@@ -1,0 +1,5 @@
+BONSAI-MOOC placeholder resource
+
+This non-instructional file exists only to verify the downloadable-document interaction for KAN-24.
+
+Final downloadable lesson material will be supplied in KAN-48.
