@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LearnerActivityPage, { UNIT_TWO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
+import LearnerQuizPage from './LearnerQuizPage.jsx';
 
 const pilotUnits = [
   {
@@ -113,25 +114,36 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
 export default function LearnerUnitPage({ course, unitNumber, completedUnits = [], completedActivityIds = [], onCompleteActivity, onBack, onOpenUnit }) {
   const [activeLessonIndex, setActiveLessonIndex] = useState(null);
   const [activityOpen, setActivityOpen] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
   const unit = pilotUnits[unitNumber - 1];
   const totalUnits = pilotUnits.length;
   const activityComplete = completedActivityIds.includes(UNIT_TWO_ACTIVITY_ID);
 
   function openLesson(index) {
     setActivityOpen(false);
+    setQuizOpen(false);
     setActiveLessonIndex(index);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function openActivity() {
     setActiveLessonIndex(null);
+    setQuizOpen(false);
     setActivityOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openQuiz() {
+    setActiveLessonIndex(null);
+    setActivityOpen(false);
+    setQuizOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function backToUnit() {
     setActiveLessonIndex(null);
     setActivityOpen(false);
+    setQuizOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -142,6 +154,10 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
         <section className="learner-unit-empty"><h1>Unit unavailable</h1><p>This unit has not been supplied for the prototype.</p></section>
       </main>
     );
+  }
+
+  if (quizOpen && unitNumber === 1) {
+    return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} />;
   }
 
   if (activityOpen && unitNumber === 2) {
@@ -220,6 +236,20 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
                 </button>
               ))}
             </div>
+
+            {unitNumber === 1 && (
+              <section className="learner-unit-quiz" aria-labelledby="unit-quiz-heading">
+                <div className="learner-unit-quiz-heading">
+                  <div><span className="section-kicker">Quiz</span><h2 id="unit-quiz-heading">Unit 1 prototype quiz</h2><p>Test MCQ scoring, writing responses and the KAN-27 Results handoff. Final five questions remain KAN-50.</p></div>
+                  <span className="learner-unit-quiz-badge">4 prototype questions</span>
+                </div>
+                <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
+                  <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
+                  <div><small>Prototype quiz</small><strong>MCQ + short writing + project response</strong></div>
+                  <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
+                </button>
+              </section>
+            )}
 
             {unitNumber === 2 && (
               <section className="learner-unit-activity" aria-labelledby="unit-activity-heading">
