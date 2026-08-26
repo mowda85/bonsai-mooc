@@ -10,6 +10,7 @@ import './learner-course-overview.css';
 import './learner-unit.css';
 import './lesson-content.css';
 import './learner-activity.css';
+import './learner-quiz.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
