@@ -29,7 +29,7 @@ function LoginPage({ onLogin }) {
         <span className="pill">BONSAI-MOOC prototype</span>
         <h1>Welcome to BONSAI-MOOC</h1>
         <div className="hero-rule" />
-        <p>Access high-quality courses, teaching tools and collaboration spaces for smarter, more sustainable cities.</p>
+        <p>Access BONSAI courses, teaching tools and collaboration spaces focused on flood resilience, disaster management and knowledge transfer.</p>
       </section>
 
       <section className="login-content">
@@ -98,7 +98,7 @@ export default function App() {
       <header className="site-header">
         <a className="brand" href="#" onClick={(event) => { event.preventDefault(); if (user) setUser(null); }}>
           <img src="/bonsai-logo.webp" alt="BONSAI project tree logo" />
-          <span><strong>BONSAI</strong><small>MOOC FOR SMART CITIES</small></span>
+          <span><strong>BONSAI-MOOC</strong></span>
         </a>
         <nav aria-label="Primary navigation"><a href="#about">About</a><a href="#courses">Courses</a><a href="#news">News</a><a href="#contact">Contact</a></nav>
         {!user && <button type="button" className="button button-outline header-register">Register</button>}
@@ -109,7 +109,7 @@ export default function App() {
       <footer className="site-footer">
         <div className="footer-brand">
           <img src="/bonsai-logo.webp" alt="" aria-hidden="true" />
-          <div><strong>BONSAI-MOOC</strong><span>Building a greener future through accessible online education.</span></div>
+          <div><strong>BONSAI-MOOC</strong><span>Learning and knowledge transfer for flood resilience in North-West Europe.</span></div>
         </div>
         <div className="footer-links"><a href="#about">About</a><a href="#courses">Courses</a><a href="#news">News</a><a href="#contact">Contact</a><a href="#privacy">Privacy Policy</a></div>
         <div className="funding-credit">
