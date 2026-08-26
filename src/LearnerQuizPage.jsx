@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import LearnerQuizResultsPage from './LearnerQuizResultsPage.jsx';
 
 const prototypeQuestions = [
   {
@@ -37,29 +38,6 @@ function isAnswered(question, value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
-function ResultsHandoff({ course, unitTitle, score, mcqTotal, responseCount, onBackToQuiz, onBackToUnit }) {
-  return (
-    <main className="quiz-results-handoff-page">
-      <section className="quiz-results-handoff-card">
-        <span className="pill">KAN-27 · Results handoff</span>
-        <span className="learner-unit-kicker">Prototype quiz submitted</span>
-        <h1>Quiz responses received</h1>
-        <p>This lightweight handoff confirms KAN-26 scoring and routing. KAN-27 will replace it with the full Results page.</p>
-        <div className="quiz-results-summary">
-          <div><span>MCQ score</span><strong>{score} / {mcqTotal}</strong></div>
-          <div><span>Responses submitted</span><strong>{responseCount} / {prototypeQuestions.length}</strong></div>
-          <div><span>Course</span><strong>{course?.title}</strong></div>
-          <div><span>Unit</span><strong>{unitTitle}</strong></div>
-        </div>
-        <div className="quiz-results-actions">
-          <button className="button button-outline" type="button" onClick={onBackToQuiz}>Review quiz</button>
-          <button className="button button-primary" type="button" onClick={onBackToUnit}>Back to Unit 1 →</button>
-        </div>
-      </section>
-    </main>
-  );
-}
-
 export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onBack }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -91,20 +69,38 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
 
     const mcqs = prototypeQuestions.filter((item) => item.type === 'mcq');
     const score = mcqs.reduce((total, item) => total + (answers[item.id] === item.answer ? 1 : 0), 0);
-    setResult({ score, mcqTotal: mcqs.length, responseCount: answeredCount });
+    const writtenResponseCount = prototypeQuestions.filter((item) => item.type !== 'mcq' && isAnswered(item, answers[item.id])).length;
+    setResult({
+      score,
+      mcqTotal: mcqs.length,
+      responseCount: answeredCount,
+      writtenResponseCount,
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToNextUnit() {
+    onBack();
+    window.setTimeout(() => {
+      const nextUnitButton = Array.from(document.querySelectorAll('.learner-unit-navigation button')).find((button) => button.textContent.includes('Next Unit') && !button.disabled);
+      if (nextUnitButton) nextUnitButton.click();
+    }, 50);
   }
 
   if (result) {
     return (
-      <ResultsHandoff
+      <LearnerQuizResultsPage
         course={course}
         unitTitle={unitTitle}
+        unitNumber={unitNumber}
         score={result.score}
         mcqTotal={result.mcqTotal}
         responseCount={result.responseCount}
-        onBackToQuiz={() => setResult(null)}
+        totalQuestions={prototypeQuestions.length}
+        writtenResponseCount={result.writtenResponseCount}
+        onReviewQuiz={() => { setResult(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         onBackToUnit={onBack}
+        onNextUnit={goToNextUnit}
       />
     );
   }
@@ -127,7 +123,7 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
             <div><span>Questions</span><strong>{prototypeQuestions.length}</strong></div>
             <div><span>Answered</span><strong>{answeredCount} / {prototypeQuestions.length}</strong></div>
             <div><span>Auto-scored</span><strong>MCQ only</strong></div>
-            <div><span>Next step</span><strong>KAN-27 Results</strong></div>
+            <div><span>Next step</span><strong>Quiz Results</strong></div>
           </aside>
         </div>
       </section>
