@@ -16,45 +16,73 @@ body { margin: 0; min-width: 320px; min-height: 100vh; }
 button, a { font: inherit; }
 button { cursor: pointer; }
 
-.app-shell { min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(circle at 15% 20%, #eaf2fb 0, transparent 28%), #fff; }
-.site-header { height: 76px; padding: 0 clamp(24px, 6vw, 88px); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e7edf4; background: rgba(255,255,255,.94); }
-.brand { display: flex; gap: 11px; align-items: center; color: #17395f; text-decoration: none; }
-.brand > span:last-child { display: flex; flex-direction: column; line-height: .95; letter-spacing: .05em; }
-.brand strong { font-size: 20px; }
-.brand small { color: var(--green); font-weight: 800; font-size: 11px; margin-top: 5px; letter-spacing: .18em; }
-.brand-mark { width: 36px; height: 36px; position: relative; display: inline-block; }
-.brand-mark i { position: absolute; width: 18px; height: 18px; border-radius: 70% 10% 70% 10%; transform: rotate(45deg); }
-.brand-mark i:nth-child(1) { background: var(--blue); left: 1px; top: 9px; }
-.brand-mark i:nth-child(2) { background: var(--green); right: 1px; top: 9px; transform: rotate(135deg); }
-.brand-mark i:nth-child(3) { background: #79b979; left: 9px; top: 1px; transform: rotate(45deg) scale(.75); }
-nav { display: flex; gap: 28px; }
-nav a { color: #425466; text-decoration: none; font-size: 14px; font-weight: 600; }
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 10% 28%, rgba(234,242,251,.95) 0, transparent 27%),
+    radial-gradient(circle at 92% 35%, rgba(233,246,234,.9) 0, transparent 25%),
+    #fff;
+}
 
-.role-page { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 70px 0 80px; }
-.welcome-panel { text-align: center; max-width: 760px; margin: 0 auto 62px; }
+.site-header {
+  min-height: 92px;
+  padding: 10px clamp(24px, 5vw, 76px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e7edf4;
+  background: rgba(255,255,255,.96);
+}
+
+.brand {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  color: var(--blue);
+  text-decoration: none;
+}
+.brand-logo {
+  width: 82px;
+  height: 64px;
+  object-fit: contain;
+}
+.brand-name {
+  font-size: 28px;
+  font-weight: 850;
+  letter-spacing: .035em;
+}
+nav { display: flex; gap: 30px; }
+nav a { color: #31445b; text-decoration: none; font-size: 14px; font-weight: 650; }
+nav a:hover { color: var(--blue); }
+
+.role-page { width: min(1080px, calc(100% - 40px)); margin: 0 auto; padding: 54px 0 64px; }
+.welcome-panel { text-align: center; max-width: 770px; margin: 0 auto 34px; }
 .pill { display: inline-block; padding: 7px 12px; border-radius: 999px; background: var(--green-tint); color: #34763b; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
-h1 { color: #17395f; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 18px 0 16px; letter-spacing: -.035em; }
-.welcome-panel > p, .section-heading p, .dashboard-placeholder p { color: var(--muted); font-size: 17px; line-height: 1.7; }
-.auth-actions { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
-.button { border: 0; border-radius: 8px; padding: 12px 21px; font-weight: 750; transition: transform .15s ease, box-shadow .15s ease; }
+h1 { color: #0b2f63; font-size: clamp(36px, 5vw, 56px); line-height: 1.08; margin: 18px 0 14px; letter-spacing: -.035em; }
+.welcome-panel > p, .section-heading p, .dashboard-placeholder p { color: var(--muted); font-size: 17px; line-height: 1.65; }
+.auth-actions { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+.button { border: 0; border-radius: 9px; padding: 12px 22px; font-weight: 760; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
 .button:hover { transform: translateY(-1px); }
 .button-primary { background: var(--blue); color: white; box-shadow: 0 7px 18px rgba(15,77,157,.16); }
+.button-primary.green { background: var(--green); box-shadow: 0 7px 18px rgba(76,156,83,.16); }
 .button-secondary { background: white; color: var(--blue); border: 1px solid #b9cbe0; }
 
-.role-section { padding: 38px; border: 1px solid #e0e8f0; border-radius: 18px; background: rgba(255,255,255,.9); box-shadow: 0 20px 50px rgba(36,62,89,.07); }
-.section-heading { text-align: center; margin-bottom: 30px; }
+.role-section { padding: 36px; border: 1px solid #e0e8f0; border-radius: 20px; background: rgba(255,255,255,.92); box-shadow: 0 20px 50px rgba(36,62,89,.08); }
+.section-heading { text-align: center; margin-bottom: 28px; }
 .section-heading > span { color: var(--blue); font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: .08em; }
-.section-heading h2 { color: #17395f; font-size: 28px; margin: 7px 0 4px; }
+.section-heading h2 { color: #123764; font-size: 30px; margin: 7px 0 4px; }
 .section-heading p { font-size: 14px; margin: 0; }
-.role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; max-width: 800px; margin: 0 auto; }
-.role-card { border: 1px solid var(--border); border-radius: 14px; padding: 28px; display: flex; flex-direction: column; min-height: 310px; background: white; }
-.role-card-learner { background: linear-gradient(150deg, var(--blue-tint), white 55%); }
-.role-card-teacher { background: linear-gradient(150deg, var(--green-tint), white 55%); }
-.role-icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-weight: 900; font-size: 19px; margin-bottom: 23px; }
+.role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; max-width: 830px; margin: 0 auto; }
+.role-card { border: 1px solid var(--border); border-radius: 16px; padding: 30px; display: flex; flex-direction: column; min-height: 315px; background: white; }
+.role-card-learner { background: linear-gradient(150deg, var(--blue-tint), white 58%); }
+.role-card-teacher { background: linear-gradient(150deg, var(--green-tint), white 58%); }
+.role-icon { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 20px; margin-bottom: 22px; }
 .role-card-learner .role-icon { background: #d8e8fa; color: var(--blue); }
 .role-card-teacher .role-icon { background: #d8efd9; color: #34763b; }
 .role-eyebrow { color: var(--muted); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
-.role-card h3 { color: #17395f; font-size: 24px; margin: 5px 0 8px; }
+.role-card h3 { color: #123764; font-size: 25px; margin: 6px 0 9px; }
 .role-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0 0 24px; }
 .role-button { margin-top: auto; color: white; display: flex; align-items: center; justify-content: space-between; }
 .role-button.learner { background: var(--blue); }
@@ -63,14 +91,36 @@ h1 { color: #17395f; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margi
 .dashboard-placeholder { width: min(720px, calc(100% - 40px)); margin: auto; padding: 80px 0; text-align: center; }
 .dashboard-placeholder h1 { font-size: 42px; }
 .dashboard-placeholder .button { margin-top: 14px; }
-footer { margin-top: auto; padding: 22px; text-align: center; color: #7b8796; font-size: 12px; border-top: 1px solid #edf1f5; background: white; }
+
+.site-footer {
+  margin-top: auto;
+  padding: 26px clamp(24px, 5vw, 76px);
+  border-top: 1px solid #e7edf4;
+  background: rgba(255,255,255,.96);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.footer-brand { display: flex; align-items: center; gap: 14px; min-width: 260px; }
+.footer-brand img { width: 58px; height: 48px; object-fit: contain; }
+.footer-brand div { display: flex; flex-direction: column; gap: 3px; }
+.footer-brand strong { color: var(--blue); font-size: 14px; }
+.footer-brand span { color: #6c7a8a; font-size: 12px; }
+.footer-credit { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; color: #49627f; font-size: 12px; text-align: right; }
+.footer-credit strong { color: var(--blue); }
+.footer-credit span:last-child { color: var(--green); font-weight: 800; }
 
 @media (max-width: 700px) {
-  .site-header { padding: 0 20px; }
+  .site-header { padding: 10px 18px; }
+  .brand-logo { width: 64px; height: 52px; }
+  .brand-name { font-size: 22px; }
   nav { display: none; }
-  .role-page { padding-top: 42px; }
+  .role-page { padding-top: 38px; }
   .role-section { padding: 24px 18px; }
   .role-grid { grid-template-columns: 1fr; }
   .auth-actions { flex-direction: column; }
   .auth-actions .button { width: 100%; }
+  .site-footer { flex-direction: column; align-items: flex-start; }
+  .footer-credit { align-items: flex-start; text-align: left; }
 }
