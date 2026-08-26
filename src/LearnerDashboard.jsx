@@ -117,6 +117,7 @@ export default function LearnerDashboard({
   const initialUnit = Number(query.get('unit')) || null;
   const [workspaceView, setWorkspaceView] = useState(initialUnit ? 'unit' : initialCourseOpen ? 'course' : 'dashboard');
   const [activeUnit, setActiveUnit] = useState(initialUnit);
+  const [completedActivityIds, setCompletedActivityIds] = useState(progress.currentCourse.completedActivityIds || []);
 
   function setLearnerUrl(params = '') {
     window.history.pushState({}, '', `/learner${params}`);
@@ -136,6 +137,10 @@ export default function LearnerDashboard({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function completeActivity(activityId) {
+    setCompletedActivityIds((current) => current.includes(activityId) ? current : [...current, activityId]);
+  }
+
   function backToDashboard() {
     setLearnerUrl('');
     setActiveUnit(null);
@@ -144,7 +149,7 @@ export default function LearnerDashboard({
   }
 
   if (workspaceView === 'unit') {
-    return <LearnerUnitPage course={currentCourse} unitNumber={activeUnit || 1} completedUnits={progress.currentCourse.completedUnits} onBack={openCourseOverview} onOpenUnit={openUnit} />;
+    return <LearnerUnitPage course={currentCourse} unitNumber={activeUnit || 1} completedUnits={progress.currentCourse.completedUnits} completedActivityIds={completedActivityIds} onCompleteActivity={completeActivity} onBack={openCourseOverview} onOpenUnit={openUnit} />;
   }
 
   if (workspaceView === 'course') {
