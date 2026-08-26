@@ -4,6 +4,7 @@ import App from './App.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
+import './course-info.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
