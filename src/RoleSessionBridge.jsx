@@ -35,11 +35,17 @@ export default function RoleSessionBridge() {
   const [session, setSession] = useState(null);
   const [headerActions, setHeaderActions] = useState(null);
   const [, setRouteKey] = useState(locationKey);
+  const sessionRef = useRef(null);
   const pendingLoginRef = useRef(null);
   const pendingExpiryRef = useRef(null);
 
   useEffect(() => {
     let scanQueued = false;
+
+    function setCurrentSession(next) {
+      sessionRef.current = next;
+      setSession(next);
+    }
 
     function scanHeader() {
       if (scanQueued) return;
@@ -59,27 +65,23 @@ export default function RoleSessionBridge() {
         window.clearTimeout(pendingExpiryRef.current);
         pendingExpiryRef.current = null;
         pendingLoginRef.current = null;
-        setSession({
+        setCurrentSession({
           identifier: pendingLogin.identifier,
           role: protectedRole,
         });
         return;
       }
 
-      setSession((current) => {
-        if (!current) {
-          if (protectedRole) {
-            window.setTimeout(() => replaceNavigate('/login'), 0);
-          }
-          return current;
-        }
+      const current = sessionRef.current;
+      if (!current) {
+        if (protectedRole) window.setTimeout(() => replaceNavigate('/login'), 0);
+        return;
+      }
 
-        const home = roleHomePaths[current.role];
-        if (path === '/login' || (protectedRole && protectedRole !== current.role)) {
-          window.setTimeout(() => replaceNavigate(home), 0);
-        }
-        return current;
-      });
+      const home = roleHomePaths[current.role];
+      if (path === '/login' || (protectedRole && protectedRole !== current.role)) {
+        window.setTimeout(() => replaceNavigate(home), 0);
+      }
     }
 
     function handleRoute() {
@@ -115,7 +117,7 @@ export default function RoleSessionBridge() {
       window.clearTimeout(pendingExpiryRef.current);
       pendingExpiryRef.current = null;
       pendingLoginRef.current = null;
-      setSession(null);
+      setCurrentSession(null);
     }
 
     const observer = new MutationObserver(scanHeader);
