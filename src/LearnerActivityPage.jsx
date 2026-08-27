@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getPrototypeActivity } from './prototypeActivityStore.js';
 
 export const UNIT_TWO_ACTIVITY_ID = 'unit-2-prototype-activity';
 
@@ -7,6 +8,10 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
   const [submittedNow, setSubmittedNow] = useState(false);
   const isComplete = completed || submittedNow;
   const canSubmit = response.trim().length > 0 && !isComplete;
+  const configuredActivity = getPrototypeActivity(course?.slug, 'pilot-unit-2');
+  const activityTitle = configuredActivity?.title || 'Prototype submission activity';
+  const activityInstructions = configuredActivity?.instructions || 'Enter a short response in the field below and submit it. This prototype checks the submission interaction only; the final instructional prompt belongs to the later activity-content task.';
+  const teacherConfigured = configuredActivity?.source === 'teacher';
 
   function submitActivity(event) {
     event.preventDefault();
@@ -27,11 +32,12 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
           <div>
             <div className="learner-activity-badges">
               <span className="pill">Learner activity</span>
+              {teacherConfigured && <span className="learner-activity-status">Teacher configured</span>}
               <span className={`learner-activity-status ${isComplete ? 'learner-activity-status-done' : ''}`}>{isComplete ? '✓ Completed' : 'To complete'}</span>
             </div>
             <span className="learner-unit-kicker">Unit {unitNumber} · Activity</span>
-            <h1>Prototype submission activity</h1>
-            <p>This activity demonstrates the learner submission workflow. The final BONSAI learning prompt will be added during activity-content integration.</p>
+            <h1>{activityTitle}</h1>
+            <p>{teacherConfigured ? 'Follow the configured activity instructions below and submit your free-text response.' : 'This activity demonstrates the learner submission workflow. The final BONSAI learning prompt will be added during activity-content integration.'}</p>
           </div>
           <aside className="learner-activity-summary" aria-label="Activity summary">
             <div><span>Course</span><strong>{course?.title}</strong></div>
@@ -53,10 +59,10 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
 
           <section className="learner-activity-card" aria-labelledby="activity-instructions-heading">
             <span className="section-kicker">Instructions</span>
-            <h2 id="activity-instructions-heading">Test the submission workflow</h2>
-            <p>Enter a short response in the field below and submit it. This prototype checks the submission interaction only; the final instructional prompt belongs to the later activity-content task.</p>
+            <h2 id="activity-instructions-heading">Activity instructions</h2>
+            <p>{activityInstructions}</p>
             <div className="learner-activity-instruction-list">
-              <div><span>1</span><p>Enter any short prototype response.</p></div>
+              <div><span>1</span><p>Follow the activity instructions and prepare a short free-text response.</p></div>
               <div><span>2</span><p>Submit the response to mark the activity complete.</p></div>
               <div><span>3</span><p>Return to Unit {unitNumber} and confirm the completed state.</p></div>
             </div>
