@@ -6,6 +6,7 @@ import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
 import TeacherFeedbackOverviewBridge from './TeacherFeedbackOverview.jsx';
 import WorkflowVersionBridge from './WorkflowVersionBridge.jsx';
+import CrossRoleDataBridge from './CrossRoleDataBridge.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -37,5 +38,6 @@ createRoot(document.getElementById('root')).render(
     <TeacherProgressResultsBridge />
     <TeacherFeedbackOverviewBridge />
     <WorkflowVersionBridge />
+    <CrossRoleDataBridge />
   </React.StrictMode>,
 );

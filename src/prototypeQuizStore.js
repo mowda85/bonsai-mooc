@@ -1,3 +1,5 @@
+import { getLiveCourseContent, stageQuizContent } from './crossRoleCourseStore.js';
+
 export const PROTOTYPE_QUIZ_STORAGE_KEY = 'bonsai-mooc.prototype.quizzes.v1';
 
 const PILOT_COURSE_SLUG = 'information-systems-knowledge-dissemination';
@@ -52,7 +54,19 @@ function readStoredQuizzes() {
   }
 }
 
+function learnerFacingRoute() {
+  if (typeof window === 'undefined') return false;
+  return window.location.pathname === '/learner' || window.location.pathname.startsWith('/learn/');
+}
+
 export function getPrototypeQuiz(courseSlug, unitId) {
+  if (learnerFacingRoute()) {
+    const liveQuiz = getLiveCourseContent(courseSlug)?.quizzes?.[unitId];
+    if (liveQuiz) return cloneQuiz({ ...liveQuiz, source: 'teacher' });
+    if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_UNIT_ONE_ID) return cloneQuiz(PILOT_QUIZ_FALLBACK);
+    return null;
+  }
+
   const stored = readStoredQuizzes().find((quiz) => quiz.courseSlug === courseSlug && quiz.unitId === unitId);
   if (stored) return cloneQuiz(stored);
   if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_UNIT_ONE_ID) return cloneQuiz(PILOT_QUIZ_FALLBACK);
@@ -86,5 +100,6 @@ export function savePrototypeQuiz(quiz) {
       // The prototype can still use the bundled fallback when session storage is unavailable.
     }
   }
+  stageQuizContent(saved.courseSlug, saved.unitId, saved);
   return cloneQuiz(saved);
 }
