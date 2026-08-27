@@ -21,6 +21,7 @@ export function CourseLearnerPreview({ form, course, onBack, onSave, errors }) {
   const objectives = form.objectives.split('\n').map((item) => item.trim()).filter(Boolean);
   const areas = form.areas?.length ? form.areas : ['Unassigned Draft'];
   const units = course?.units || [];
+  const isPublishedUpdate = course?.status === 'Published';
 
   return (
     <PreviewFrame
@@ -33,6 +34,7 @@ export function CourseLearnerPreview({ form, course, onBack, onSave, errors }) {
     >
       <section className="teacher-learner-course-preview-body">
         <div className="teacher-learner-preview-main">
+          {isPublishedUpdate && <section className="teacher-learner-preview-card"><span className="section-kicker">Draft update preview</span><h2>Current Published version remains live</h2><p>This preview shows the edited version only. Saving it creates a Draft update that must pass Lead Author + Admin review before it can replace the current learner-visible version.</p></section>}
           <section className="teacher-learner-preview-card">
             <span className="section-kicker">About this course</span>
             <h2>What you will learn</h2>
@@ -51,7 +53,7 @@ export function CourseLearnerPreview({ form, course, onBack, onSave, errors }) {
             <div className="teacher-preview-detail"><span>Track / learning area</span><strong>{areas.join(' · ')}</strong></div>
             <div className="teacher-preview-detail"><span>Primary author</span><strong>{form.author.trim() || 'Not set'}</strong></div>
             <div className="teacher-preview-detail"><span>Co-authors</span><strong>{form.coAuthors?.length ? form.coAuthors.join(', ') : 'None'}</strong></div>
-            <div className="teacher-preview-detail"><span>Status</span><strong>Preview only · not published</strong></div>
+            <div className="teacher-preview-detail"><span>Status</span><strong>{isPublishedUpdate ? 'Draft update · review required' : 'Preview only · not published'}</strong></div>
           </section>
         </aside>
       </section>
@@ -65,6 +67,7 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
   const area = course?.areas?.[0] || course?.area || 'Unassigned Draft';
   const title = form.title.trim() || 'Untitled unit';
   const lessonContent = form.description.trim();
+  const isPublishedUpdate = course?.status === 'Published';
 
   return (
     <PreviewFrame
@@ -77,6 +80,7 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
     >
       <section className="teacher-learner-unit-preview-body">
         <div className="teacher-learner-preview-main">
+          {isPublishedUpdate && <section className="teacher-learner-preview-card"><span className="section-kicker">Draft Unit / Lesson update</span><h2>Current Published content remains live</h2><p>Saving this preview creates a Draft update. Learners keep the previous Published version until the update completes Lead Author + Admin review and is published.</p></section>}
           <section className="teacher-learner-preview-card">
             <div className="teacher-preview-section-heading"><div><span className="section-kicker">Lesson selector</span><h2>Unit content</h2></div><span>1 lesson preview</span></div>
             <button className="teacher-preview-lesson-selector active" type="button"><span>01</span><div><small>Lesson 1</small><strong>{title}</strong></div><b>Selected</b></button>
@@ -97,7 +101,7 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
             <div className="teacher-preview-detail"><span>Course</span><strong>{courseName}</strong></div>
             <div className="teacher-preview-detail"><span>Preview assignment</span><strong>{form.assignedCourseSlugs?.length > 1 ? `First of ${form.assignedCourseSlugs.length} assigned courses` : 'Assigned course'}</strong></div>
             <div className="teacher-preview-detail"><span>Resource</span><strong>{form.file?.name || 'No attached file'}</strong></div>
-            <div className="teacher-preview-detail"><span>Status</span><strong>Preview only · not published</strong></div>
+            <div className="teacher-preview-detail"><span>Status</span><strong>{isPublishedUpdate ? 'Draft update · review required' : 'Preview only · not published'}</strong></div>
           </section>
           {form.file && <section className="teacher-learner-preview-card teacher-preview-resource-card"><span className="section-kicker">Learner resource</span><h2>{form.file.name}</h2><p>{form.file.type || 'File'} · metadata preview only</p><button className="button button-outline" type="button" disabled>Download unavailable in preview</button></section>}
         </aside>
