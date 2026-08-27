@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { CourseLearnerPreview } from './TeacherLearnerPreview.jsx';
+import { getCoursePublicationDisplayStatus, isCoursePublished } from './coursePublicationStore.js';
 
 export const teacherLearningAreas = [
   { name: 'Foundation', note: 'Required common core · not a specialization track' },
@@ -41,7 +42,10 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
   const [areaSearch, setAreaSearch] = useState('');
   const [areaOpen, setAreaOpen] = useState(false);
   const [coAuthorInput, setCoAuthorInput] = useState('');
-  const publishedUpdate = !isNew && course?.status === 'Published';
+  const publishedUpdate = !isNew && Boolean(course?.slug) && isCoursePublished(course.slug);
+  const workflowDisplayStatus = !isNew && course?.slug
+    ? getCoursePublicationDisplayStatus(course.slug, course?.status || 'Draft')
+    : 'New course';
 
   const objectiveCount = useMemo(
     () => form.objectives.split('\n').map((item) => item.trim()).filter(Boolean).length,
@@ -134,7 +138,7 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
             <h1>{isNew ? 'Create a new BONSAI course' : `Edit ${course?.title || 'course'}`}</h1>
             <p>Draft freely, organize your work, add co-authors, and connect the course to official BONSAI tracks when it is ready.</p>
           </div>
-          <aside><span>Current status</span><strong>{course?.status || 'New course'}</strong><small>{publishedUpdate ? 'Saving creates a Draft update. The current Published version stays live until the update completes review and is published.' : 'Save keeps this work in Draft until it completes review.'}</small></aside>
+          <aside><span>Current status</span><strong>{workflowDisplayStatus}</strong><small>{publishedUpdate ? 'Saving creates a Draft update. The current Published version stays live until the update completes review and is published.' : 'Save keeps this work in Draft until it completes review.'}</small></aside>
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { UnitLearnerPreview } from './TeacherLearnerPreview.jsx';
+import { isCoursePublished } from './coursePublicationStore.js';
 
 function formatBytes(bytes) {
   if (!bytes) return '0 KB';
@@ -27,7 +28,7 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
   }, [courseSearch, portfolio]);
 
   const publishedAssignments = useMemo(
-    () => form.assignedCourseSlugs.map((slug) => portfolio.find((course) => course.slug === slug)).filter((course) => course?.status === 'Published'),
+    () => form.assignedCourseSlugs.map((slug) => portfolio.find((course) => course.slug === slug)).filter((course) => course && isCoursePublished(course.slug)),
     [form.assignedCourseSlugs, portfolio],
   );
   const publishedUpdate = publishedAssignments.length > 0;
@@ -106,7 +107,8 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
             <input className="teacher-unit-course-search" value={courseSearch} onChange={(event) => setCourseSearch(event.target.value)} placeholder="Search courses…" aria-label="Search teacher courses" />
             <div className="teacher-unit-course-options">{filteredCourses.map((course) => {
               const selected = form.assignedCourseSlugs.includes(course.slug);
-              return <button className={selected ? 'teacher-unit-course-option selected' : 'teacher-unit-course-option'} type="button" key={course.slug} onClick={() => toggleCourse(course.slug)}><span><strong>{course.title}</strong><small>{course.area || course.draftFolder || 'Unassigned draft'}{course.status === 'Published' ? ' · Published' : ''}</small></span><b>{selected ? '✓' : '+'}</b></button>;
+              const published = isCoursePublished(course.slug);
+              return <button className={selected ? 'teacher-unit-course-option selected' : 'teacher-unit-course-option'} type="button" key={course.slug} onClick={() => toggleCourse(course.slug)}><span><strong>{course.title}</strong><small>{course.area || course.draftFolder || 'Unassigned draft'}{published ? ' · Published' : ''}</small></span><b>{selected ? '✓' : '+'}</b></button>;
             })}</div>
           </section>
 
