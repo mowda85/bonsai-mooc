@@ -41,6 +41,7 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
   const [areaSearch, setAreaSearch] = useState('');
   const [areaOpen, setAreaOpen] = useState(false);
   const [coAuthorInput, setCoAuthorInput] = useState('');
+  const publishedUpdate = !isNew && course?.status === 'Published';
 
   const objectiveCount = useMemo(
     () => form.objectives.split('\n').map((item) => item.trim()).filter(Boolean).length,
@@ -109,7 +110,7 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
       author: form.author.trim(),
       coAuthors: form.coAuthors,
     });
-    setSavedMessage(`Saved as Draft${saved?.title ? ` · ${saved.title}` : ''}`);
+    setSavedMessage(publishedUpdate ? `Saved as Draft update${saved?.title ? ` · ${saved.title}` : ''}` : `Saved as Draft${saved?.title ? ` · ${saved.title}` : ''}`);
     return true;
   }
 
@@ -133,12 +134,13 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
             <h1>{isNew ? 'Create a new BONSAI course' : `Edit ${course?.title || 'course'}`}</h1>
             <p>Draft freely, organize your work, add co-authors, and connect the course to official BONSAI tracks when it is ready.</p>
           </div>
-          <aside><span>Current status</span><strong>{course?.status || 'New course'}</strong><small>Save always sets status to Draft.</small></aside>
+          <aside><span>Current status</span><strong>{course?.status || 'New course'}</strong><small>{publishedUpdate ? 'Saving creates a Draft update. The current Published version stays live until the update completes review and is published.' : 'Save keeps this work in Draft until it completes review.'}</small></aside>
         </div>
       </section>
 
       <form className="teacher-course-editor-body" onSubmit={save}>
         <div className="teacher-editor-main-stack">
+          {publishedUpdate && <section className="teacher-editor-form-card"><span className="section-kicker">Published content update</span><h2>Changes require review again</h2><p>The current learner-visible version will not be replaced by these edits. Saving creates a Draft update that must be submitted, approved by both the Lead Author and Admin, then published by the Lead Author or Admin.</p></section>}
           <section className="teacher-editor-form-card">
             <div className="teacher-editor-card-heading"><div><span className="section-kicker">Course metadata</span><h2>Basic information</h2></div><span className="teacher-required-note">Required fields *</span></div>
             <label className="teacher-editor-field"><span>Course Title *</span><input value={form.title} onChange={(event) => update('title', event.target.value)} placeholder="Enter course title" /></label>
@@ -175,10 +177,10 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
           </section>
 
           <section className="teacher-editor-form-card teacher-editor-actions-card">
-            <span className="section-kicker">Course actions</span><h2>Save or preview</h2><p>Preview uses the current form values even when they have not been saved.</p>
+            <span className="section-kicker">Course actions</span><h2>Save or preview</h2><p>{publishedUpdate ? 'Saving starts a Draft update revision. Preview uses the current edited values while the existing Published version remains live.' : 'Preview uses the current form values even when they have not been saved.'}</p>
             {errors.length > 0 && <div className="teacher-editor-errors" role="alert"><strong>Check the required fields</strong>{errors.map((error) => <span key={error}>{error}</span>)}</div>}
             {savedMessage && <div className="teacher-editor-saved" role="status">✓ {savedMessage}</div>}
-            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">Save as Draft</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview learner view</button></div>
+            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">{publishedUpdate ? 'Save Draft Update' : 'Save as Draft'}</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview learner view</button></div>
           </section>
         </aside>
       </form>
