@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
+import RoleSessionBridge from './RoleSessionBridge.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
@@ -29,10 +30,12 @@ import './teacher-learner-preview.css';
 import './teacher-publication.css';
 import './teacher-feedback-overview.css';
 import './workflow-version.css';
+import './role-session.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
+    <RoleSessionBridge />
     <TeacherDashboardBridge />
     <PublicationWorkflowBridge />
     <TeacherProgressResultsBridge />
