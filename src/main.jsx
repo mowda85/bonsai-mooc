@@ -18,6 +18,7 @@ import './teacher-dashboard.css';
 import './teacher-dashboard-layout-fix.css';
 import './teacher-course-editor.css';
 import './teacher-unit-editor.css';
+import './teacher-activity-editor.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
