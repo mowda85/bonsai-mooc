@@ -4,6 +4,7 @@ import App from './App.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
+import TeacherFeedbackOverviewBridge from './TeacherFeedbackOverview.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -24,6 +25,7 @@ import './teacher-activity-editor.css';
 import './teacher-quiz-editor.css';
 import './teacher-learner-preview.css';
 import './teacher-publication.css';
+import './teacher-feedback-overview.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -31,5 +33,6 @@ createRoot(document.getElementById('root')).render(
     <TeacherDashboardBridge />
     <PublicationWorkflowBridge />
     <TeacherProgressResultsBridge />
+    <TeacherFeedbackOverviewBridge />
   </React.StrictMode>,
 );
