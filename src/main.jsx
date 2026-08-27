@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
+import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -29,5 +30,6 @@ createRoot(document.getElementById('root')).render(
     <App />
     <TeacherDashboardBridge />
     <PublicationWorkflowBridge />
+    <TeacherProgressResultsBridge />
   </React.StrictMode>,
 );
