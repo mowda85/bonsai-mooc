@@ -12,6 +12,7 @@ import './lesson-content.css';
 import './learner-activity.css';
 import './learner-quiz.css';
 import './quiz-results.css';
+import './learner-completion.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
