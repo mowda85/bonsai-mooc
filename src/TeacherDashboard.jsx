@@ -9,6 +9,9 @@ export const mockTeacherPortfolio = [
     areas: ['Foundation'],
     description: 'This pilot course introduces the relationship between data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.',
     objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 24,
     status: 'Published',
     pilot: true,
@@ -20,6 +23,9 @@ export const mockTeacherPortfolio = [
     areas: ['Dike Stability and Erosion'],
     description: '',
     objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 14,
     status: 'Under Review',
   },
@@ -30,6 +36,9 @@ export const mockTeacherPortfolio = [
     areas: ['Vegetation and Nature-based Solutions'],
     description: '',
     objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 11,
     status: 'Draft',
   },
@@ -40,6 +49,9 @@ export const mockTeacherPortfolio = [
     areas: ['Flood Risk and Emergency Management'],
     description: '',
     objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 18,
     status: 'Approved',
   },
@@ -58,7 +70,8 @@ function readTeacherQuery() {
 
 function areaLabel(course) {
   const values = course.areas?.length ? course.areas : course.area ? [course.area] : [];
-  return values.join(' · ');
+  if (values.length) return values.join(' · ');
+  return course.draftFolder ? `Unassigned draft · ${course.draftFolder}` : 'Unassigned draft';
 }
 
 function ProgressPlaceholder({ course, onBack }) {
@@ -102,9 +115,11 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic }) {
           </div>
           <aside className="teacher-assigned-summary" aria-label="Assigned course summary">
             <div><span>Learning area</span><strong>{areaLabel(course)}</strong></div>
+            {course.draftFolder && <div><span>Draft folder</span><strong>{course.draftFolder}</strong></div>}
             <div><span>Enrolled learners</span><strong>{course.learners} <small>prototype</small></strong></div>
             <div><span>Course status</span><strong>{course.status}</strong></div>
-            <div><span>Teacher</span><strong>Dr. Anna Kontokosta</strong></div>
+            <div><span>Primary author</span><strong>{course.author || 'Dr. Anna Kontokosta'}</strong></div>
+            <div><span>Co-authors</span><strong>{course.coAuthors?.length ? course.coAuthors.join(', ') : 'None'}</strong></div>
           </aside>
         </div>
       </section>
@@ -128,7 +143,7 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic }) {
             <span className="section-kicker">Quick links</span>
             <h2>Manage this course</h2>
             <div className="teacher-quick-link-grid">
-              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Edit course metadata, learning areas and Draft state.</small></div><b>→</b></button>
+              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Edit metadata, draft organization, authors and official track assignment.</small></div><b>→</b></button>
               <button type="button" onClick={onProgress}><span>↗</span><div><strong>Progress & Results</strong><small>Open the later-task progress/results handoff.</small></div><b>→</b></button>
             </div>
           </section>
@@ -154,7 +169,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
   const [teacherQuery, setTeacherQuery] = useState(readTeacherQuery);
   const [portfolio, setPortfolio] = useState(mockTeacherPortfolio);
   const totalLearners = useMemo(() => portfolio.reduce((sum, course) => sum + course.learners, 0), [portfolio]);
-  const learningAreas = useMemo(() => new Set(portfolio.flatMap((course) => course.areas?.length ? course.areas : [course.area])).size, [portfolio]);
+  const learningAreas = useMemo(() => new Set(portfolio.flatMap((course) => course.areas?.length ? course.areas : course.area ? [course.area] : []).filter(Boolean)).size, [portfolio]);
   const activeSlug = teacherQuery.editor && teacherQuery.editor !== 'new' ? teacherQuery.editor : teacherQuery.course || teacherQuery.progress;
   const selectedCourse = activeSlug ? portfolio.find((course) => course.slug === activeSlug) : null;
 
@@ -183,10 +198,10 @@ export default function TeacherDashboard({ user, onNavigate }) {
       let slug = baseSlug;
       let suffix = 2;
       while (portfolio.some((course) => course.slug === slug)) { slug = `${baseSlug}-${suffix}`; suffix += 1; }
-      savedCourse = { ...data, slug, area: data.areas[0], learners: 0, status: 'Draft', pilot: false };
+      savedCourse = { ...data, slug, area: data.areas[0] || '', learners: 0, status: 'Draft', pilot: false };
       setPortfolio((current) => [...current, savedCourse]);
     } else {
-      savedCourse = { ...selectedCourse, ...data, area: data.areas[0], status: 'Draft' };
+      savedCourse = { ...selectedCourse, ...data, area: data.areas[0] || '', status: 'Draft' };
       setPortfolio((current) => current.map((course) => course.slug === selectedCourse.slug ? savedCourse : course));
     }
     window.history.pushState({}, '', `/teacher?course=${savedCourse.slug}`);
@@ -197,7 +212,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
 
   if (teacherQuery.editor) {
     const isNew = teacherQuery.editor === 'new';
-    return <TeacherCourseEditor course={selectedCourse} isNew={isNew} onSave={saveCourseDraft} onBack={() => isNew ? openDashboard() : openCourse(teacherQuery.editor)} />;
+    return <TeacherCourseEditor course={selectedCourse} isNew={isNew} authorName={user?.name || ''} onSave={saveCourseDraft} onBack={() => isNew ? openDashboard() : openCourse(teacherQuery.editor)} />;
   }
 
   if (teacherQuery.progress && selectedCourse) {
