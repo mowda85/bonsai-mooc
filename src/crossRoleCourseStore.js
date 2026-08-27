@@ -158,12 +158,14 @@ export function saveLearnerProgressRecord(input) {
   const records = readResults();
   const id = `${input.learnerId}:${input.courseSlug}`;
   const existing = records.find((item) => item.id === id) || {};
-  const record = {
-    ...existing,
-    ...clone(input),
-    id,
-    updatedAt: new Date().toISOString(),
-  };
+  const candidate = { ...existing, ...clone(input), id };
+  const existingComparable = { ...existing };
+  const candidateComparable = { ...candidate };
+  delete existingComparable.updatedAt;
+  delete candidateComparable.updatedAt;
+  if (existing.id && JSON.stringify(existingComparable) === JSON.stringify(candidateComparable)) return clone(existing);
+
+  const record = { ...candidate, updatedAt: new Date().toISOString() };
   const next = [...records.filter((item) => item.id !== id), record];
   saveResults(next);
   return clone(record);
