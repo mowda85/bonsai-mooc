@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { CourseLearnerPreview } from './TeacherLearnerPreview.jsx';
 
 export const teacherLearningAreas = [
   { name: 'Foundation', note: 'Required common core · not a specialization track' },
@@ -32,45 +33,6 @@ function initialForm(course, isNew, authorName) {
   };
 }
 
-function LearnerPreviewHandoff({ form, onBack }) {
-  const objectives = form.objectives.split('\n').map((item) => item.trim()).filter(Boolean);
-
-  return (
-    <main className="teacher-course-preview-page">
-      <section className="teacher-course-preview-hero">
-        <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Course Editor</button>
-        <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><span>Course Editor</span><b>/</b><strong>Learner preview</strong></div>
-        <div className="teacher-hero-badges"><span className="pill">Learner-view preview handoff</span><span className="teacher-kicker-badge">KAN-36</span></div>
-        <h1>{form.title.trim() || 'Untitled course'}</h1>
-        <p>This lightweight preview uses the current editor values, including unsaved changes. The full learner-view preview experience belongs to KAN-36.</p>
-      </section>
-
-      <section className="teacher-course-preview-body">
-        <div className="teacher-preview-main-card">
-          <span className="section-kicker">Current unsaved editor state</span>
-          <h2>Course description</h2>
-          <p>{form.description.trim() || 'No description entered yet.'}</p>
-          <h2>Learning objectives</h2>
-          {objectives.length ? <ol>{objectives.map((objective) => <li key={objective}>{objective}</li>)}</ol> : <p>No objectives entered yet.</p>}
-          <h2>Authors</h2>
-          <p><strong>Primary author:</strong> {form.author.trim() || 'Not set'}</p>
-          <p><strong>Co-authors:</strong> {form.coAuthors.length ? form.coAuthors.join(', ') : 'None added yet'}</p>
-        </div>
-
-        <aside className="teacher-preview-side-card">
-          <span className="section-kicker">Course organization</span>
-          <h2>Official track assignment</h2>
-          {form.areas.length ? <div className="teacher-preview-tags">{form.areas.map((area) => <span key={area}>{area}</span>)}</div> : <p>Unassigned Draft — no official track selected yet.</p>}
-          <h2>Draft folder</h2>
-          <p>{form.draftFolder.trim() || 'No personal Draft folder selected.'}</p>
-          <div className="teacher-preview-note"><strong>Preview only</strong><span>Returning to the editor preserves these unsaved values.</span></div>
-          <button className="button button-primary" type="button" onClick={onBack}>Return to editor</button>
-        </aside>
-      </section>
-    </main>
-  );
-}
-
 export default function TeacherCourseEditor({ course, isNew, onBack, onSave, authorName }) {
   const [form, setForm] = useState(() => initialForm(course, isNew, authorName));
   const [previewing, setPreviewing] = useState(false);
@@ -93,6 +55,7 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
     setSavedMessage('');
+    setErrors([]);
   }
 
   function addArea(name) {
@@ -100,11 +63,13 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
     setAreaSearch('');
     setAreaOpen(false);
     setSavedMessage('');
+    setErrors([]);
   }
 
   function removeArea(name) {
     setForm((current) => ({ ...current, areas: current.areas.filter((area) => area !== name) }));
     setSavedMessage('');
+    setErrors([]);
   }
 
   function addCoAuthor() {
@@ -117,22 +82,23 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
     setForm((current) => ({ ...current, coAuthors: current.coAuthors.some((item) => item.toLowerCase() === value.toLowerCase()) ? current.coAuthors : [...current.coAuthors, value] }));
     setCoAuthorInput('');
     setSavedMessage('');
+    setErrors([]);
   }
 
   function removeCoAuthor(name) {
     setForm((current) => ({ ...current, coAuthors: current.coAuthors.filter((item) => item !== name) }));
     setSavedMessage('');
+    setErrors([]);
   }
 
-  function save(event) {
-    event.preventDefault();
+  function validateAndSave() {
     const nextErrors = [];
     if (!form.title.trim()) nextErrors.push('Course Title is required.');
     if (!form.description.trim()) nextErrors.push('Description is required.');
     if (!objectiveCount) nextErrors.push('Add at least one learning objective.');
     if (!form.author.trim()) nextErrors.push('Primary Author is required.');
     setErrors(nextErrors);
-    if (nextErrors.length) return;
+    if (nextErrors.length) return false;
 
     const saved = onSave({
       title: form.title.trim(),
@@ -144,9 +110,17 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
       coAuthors: form.coAuthors,
     });
     setSavedMessage(`Saved as Draft${saved?.title ? ` · ${saved.title}` : ''}`);
+    return true;
   }
 
-  if (previewing) return <LearnerPreviewHandoff form={form} onBack={() => setPreviewing(false)} />;
+  function save(event) {
+    event.preventDefault();
+    validateAndSave();
+  }
+
+  if (previewing) {
+    return <CourseLearnerPreview form={form} course={course} errors={errors} onBack={() => { setPreviewing(false); setErrors([]); }} onSave={validateAndSave} />;
+  }
 
   return (
     <main className="teacher-course-editor-page">
