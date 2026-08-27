@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
+import TeacherCourseEditor from './TeacherCourseEditor.jsx';
 
 export const mockTeacherPortfolio = [
   {
     slug: 'information-systems-knowledge-dissemination',
     title: 'Information Systems and Knowledge Dissemination',
     area: 'Foundation',
+    areas: ['Foundation'],
+    description: 'This pilot course introduces the relationship between data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.',
+    objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 24,
     status: 'Published',
     pilot: true,
@@ -13,6 +20,12 @@ export const mockTeacherPortfolio = [
     slug: 'dike-stability',
     title: 'Dike Stability',
     area: 'Dike Stability and Erosion',
+    areas: ['Dike Stability and Erosion'],
+    description: '',
+    objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 14,
     status: 'Under Review',
   },
@@ -20,6 +33,12 @@ export const mockTeacherPortfolio = [
     slug: 'vegetation-management',
     title: 'Vegetation Management',
     area: 'Vegetation and Nature-based Solutions',
+    areas: ['Vegetation and Nature-based Solutions'],
+    description: '',
+    objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 11,
     status: 'Draft',
   },
@@ -27,6 +46,12 @@ export const mockTeacherPortfolio = [
     slug: 'flood-risk-management',
     title: 'Flood Risk Management',
     area: 'Flood Risk and Emergency Management',
+    areas: ['Flood Risk and Emergency Management'],
+    description: '',
+    objectives: [],
+    draftFolder: '',
+    author: 'Dr. Anna Kontokosta',
+    coAuthors: [],
     learners: 18,
     status: 'Approved',
   },
@@ -43,34 +68,10 @@ function readTeacherQuery() {
   };
 }
 
-function CourseEditorPlaceholder({ course, isNew, onBack }) {
-  return (
-    <main className="teacher-editor-placeholder-page">
-      <section className="teacher-editor-placeholder-hero">
-        <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> {isNew ? 'Back to Teacher Dashboard' : 'Back to Assigned Course'}</button>
-        <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><strong>{isNew ? 'Create Course' : 'Edit Course'}</strong></div>
-        <div className="teacher-editor-placeholder-grid">
-          <div>
-            <div className="teacher-hero-badges"><span className="pill">Course Editor handoff</span><span className="teacher-kicker-badge">KAN-32</span></div>
-            <h1>{isNew ? 'Create a new BONSAI course' : `Edit ${course?.title || 'course'}`}</h1>
-            <p>This lightweight destination keeps the teacher flow connected. The complete course-editing workflow, fields and save behavior belong to KAN-32.</p>
-          </div>
-          <aside className="teacher-editor-placeholder-summary">
-            <div><span>Mode</span><strong>{isNew ? 'New course' : 'Edit existing'}</strong></div>
-            <div><span>Course</span><strong>{isNew ? 'Blank course' : course?.title}</strong></div>
-            <div><span>Next implementation</span><strong>KAN-32 Course Editor</strong></div>
-          </aside>
-        </div>
-      </section>
-      <section className="teacher-editor-placeholder-body">
-        <div className="teacher-editor-placeholder-card">
-          <span className="teacher-placeholder-icon" aria-hidden="true">✎</span>
-          <div><span className="section-kicker">Editor placeholder</span><h2>{isNew ? 'Blank Course Editor will open here' : 'Course Editor will open here'}</h2><p>No editor fields are invented here. KAN-32 will replace this handoff with the actual editing experience.</p></div>
-          <button className="button button-primary" type="button" onClick={onBack}>{isNew ? 'Return to dashboard' : 'Return to course'}</button>
-        </div>
-      </section>
-    </main>
-  );
+function areaLabel(course) {
+  const values = course.areas?.length ? course.areas : course.area ? [course.area] : [];
+  if (values.length) return values.join(' · ');
+  return course.draftFolder ? `Unassigned draft · ${course.draftFolder}` : 'Unassigned draft';
 }
 
 function ProgressPlaceholder({ course, onBack }) {
@@ -81,7 +82,7 @@ function ProgressPlaceholder({ course, onBack }) {
         <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><span>{course.title}</span><b>/</b><strong>Progress & Results</strong></div>
         <div className="teacher-hero-badges"><span className="pill">Progress & Results handoff</span><span className="teacher-kicker-badge">Later teacher task</span></div>
         <h1>Progress & Results</h1>
-        <p>Detailed learner progress, results and feedback for <strong>{course.title}</strong> will be implemented in the later progress/results task. KAN-31 only verifies the teacher navigation handoff.</p>
+        <p>Detailed learner progress, results and feedback for <strong>{course.title}</strong> will be implemented in the later progress/results task. This page only verifies the teacher navigation handoff.</p>
       </section>
       <section className="teacher-assigned-body">
         <div className="teacher-placeholder-wide-card">
@@ -113,10 +114,12 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic }) {
             </div>
           </div>
           <aside className="teacher-assigned-summary" aria-label="Assigned course summary">
-            <div><span>Learning area</span><strong>{course.area}</strong></div>
+            <div><span>Learning area</span><strong>{areaLabel(course)}</strong></div>
+            {course.draftFolder && <div><span>Draft folder</span><strong>{course.draftFolder}</strong></div>}
             <div><span>Enrolled learners</span><strong>{course.learners} <small>prototype</small></strong></div>
             <div><span>Course status</span><strong>{course.status}</strong></div>
-            <div><span>Teacher</span><strong>Dr. Anna Kontokosta</strong></div>
+            <div><span>Primary author</span><strong>{course.author || 'Dr. Anna Kontokosta'}</strong></div>
+            <div><span>Co-authors</span><strong>{course.coAuthors?.length ? course.coAuthors.join(', ') : 'None'}</strong></div>
           </aside>
         </div>
       </section>
@@ -140,7 +143,7 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic }) {
             <span className="section-kicker">Quick links</span>
             <h2>Manage this course</h2>
             <div className="teacher-quick-link-grid">
-              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Open the KAN-32 editor handoff for this course.</small></div><b>→</b></button>
+              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Edit metadata, draft organization, authors and official track assignment.</small></div><b>→</b></button>
               <button type="button" onClick={onProgress}><span>↗</span><div><strong>Progress & Results</strong><small>Open the later-task progress/results handoff.</small></div><b>→</b></button>
             </div>
           </section>
@@ -158,12 +161,17 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic }) {
   );
 }
 
+function slugify(title) {
+  return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'new-course';
+}
+
 export default function TeacherDashboard({ user, onNavigate }) {
   const [teacherQuery, setTeacherQuery] = useState(readTeacherQuery);
-  const totalLearners = useMemo(() => mockTeacherPortfolio.reduce((sum, course) => sum + course.learners, 0), []);
-  const learningAreas = useMemo(() => new Set(mockTeacherPortfolio.map((course) => course.area)).size, []);
+  const [portfolio, setPortfolio] = useState(mockTeacherPortfolio);
+  const totalLearners = useMemo(() => portfolio.reduce((sum, course) => sum + course.learners, 0), [portfolio]);
+  const learningAreas = useMemo(() => new Set(portfolio.flatMap((course) => course.areas?.length ? course.areas : course.area ? [course.area] : []).filter(Boolean)).size, [portfolio]);
   const activeSlug = teacherQuery.editor && teacherQuery.editor !== 'new' ? teacherQuery.editor : teacherQuery.course || teacherQuery.progress;
-  const selectedCourse = activeSlug ? mockTeacherPortfolio.find((course) => course.slug === activeSlug) : null;
+  const selectedCourse = activeSlug ? portfolio.find((course) => course.slug === activeSlug) : null;
 
   useEffect(() => {
     const syncQuery = () => setTeacherQuery(readTeacherQuery());
@@ -182,8 +190,29 @@ export default function TeacherDashboard({ user, onNavigate }) {
   function openProgress(slug) { setWorkspaceQuery('progress', slug); }
   function openDashboard() { setWorkspaceQuery(null, null); }
 
+  function saveCourseDraft(data) {
+    const isNew = teacherQuery.editor === 'new';
+    let savedCourse;
+    if (isNew) {
+      const baseSlug = slugify(data.title);
+      let slug = baseSlug;
+      let suffix = 2;
+      while (portfolio.some((course) => course.slug === slug)) { slug = `${baseSlug}-${suffix}`; suffix += 1; }
+      savedCourse = { ...data, slug, area: data.areas[0] || '', learners: 0, status: 'Draft', pilot: false };
+      setPortfolio((current) => [...current, savedCourse]);
+    } else {
+      savedCourse = { ...selectedCourse, ...data, area: data.areas[0] || '', status: 'Draft' };
+      setPortfolio((current) => current.map((course) => course.slug === selectedCourse.slug ? savedCourse : course));
+    }
+    window.history.pushState({}, '', `/teacher?course=${savedCourse.slug}`);
+    setTeacherQuery(readTeacherQuery());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return savedCourse;
+  }
+
   if (teacherQuery.editor) {
-    return <CourseEditorPlaceholder course={selectedCourse} isNew={teacherQuery.editor === 'new'} onBack={() => teacherQuery.editor === 'new' ? openDashboard() : openCourse(teacherQuery.editor)} />;
+    const isNew = teacherQuery.editor === 'new';
+    return <TeacherCourseEditor course={selectedCourse} isNew={isNew} authorName={user?.name || ''} onSave={saveCourseDraft} onBack={() => isNew ? openDashboard() : openCourse(teacherQuery.editor)} />;
   }
 
   if (teacherQuery.progress && selectedCourse) {
@@ -210,10 +239,10 @@ export default function TeacherDashboard({ user, onNavigate }) {
       </section>
 
       <section className="teacher-overview" aria-label="Teacher overview">
-        <article><span>My courses</span><strong>{mockTeacherPortfolio.length}</strong><small>prototype teaching portfolio</small></article>
+        <article><span>My courses</span><strong>{portfolio.length}</strong><small>prototype teaching portfolio</small></article>
         <article><span>Learners</span><strong>{totalLearners}</strong><small>aggregate mock enrollments</small></article>
         <article><span>Learning areas</span><strong>{learningAreas}</strong><small>Foundation + specializations</small></article>
-        <article><span>Pilot courses</span><strong>{mockTeacherPortfolio.filter((course) => course.pilot).length}</strong><small>prototype-only overview metric</small></article>
+        <article><span>Pilot courses</span><strong>{portfolio.filter((course) => course.pilot).length}</strong><small>prototype-only overview metric</small></article>
       </section>
 
       <section className="teacher-dashboard-content">
@@ -227,10 +256,10 @@ export default function TeacherDashboard({ user, onNavigate }) {
             <div className="teacher-course-table-head" role="row">
               <span role="columnheader">Course</span><span role="columnheader">Track / learning area</span><span role="columnheader">Learners</span><span role="columnheader">Actions</span>
             </div>
-            {mockTeacherPortfolio.map((course) => (
+            {portfolio.map((course) => (
               <div className="teacher-course-row" role="row" key={course.slug}>
                 <div className="teacher-course-name" role="cell"><div className="teacher-course-icon">{course.pilot ? 'P' : 'C'}</div><div><button className="teacher-course-open" type="button" onClick={() => openCourse(course.slug)}>{course.title}</button>{course.pilot && <span className="pilot-badge">Pilot course</span>}<span className="teacher-row-status">{course.status}</span></div></div>
-                <div className="teacher-course-area" role="cell"><span>{course.area}</span></div>
+                <div className="teacher-course-area" role="cell"><span>{areaLabel(course)}</span></div>
                 <div className="teacher-course-learners" role="cell"><strong>{course.learners}</strong><small>prototype learners</small></div>
                 <div className="teacher-course-action" role="cell"><button className="button button-primary teacher-row-view" type="button" onClick={() => openCourse(course.slug)}>View</button><button className="button button-outline" type="button" onClick={() => openEditor(course.slug)}>Edit</button></div>
               </div>
@@ -243,8 +272,8 @@ export default function TeacherDashboard({ user, onNavigate }) {
           <h2>{totalLearners} learner enrollments</h2>
           <p>This dashboard stays at aggregate level. Open an assigned course for its course-level status and quick links.</p>
           <div className="teacher-learner-breakdown">
-            {mockTeacherPortfolio.map((course) => (
-              <div key={course.slug}><div><strong>{course.title}</strong><span>{course.learners}</span></div><div className="teacher-count-track"><span style={{ width: `${Math.round((course.learners / Math.max(...mockTeacherPortfolio.map((item) => item.learners))) * 100)}%` }} /></div></div>
+            {portfolio.map((course) => (
+              <div key={course.slug}><div><strong>{course.title}</strong><span>{course.learners}</span></div><div className="teacher-count-track"><span style={{ width: `${Math.round((course.learners / Math.max(...portfolio.map((item) => item.learners), 1)) * 100)}%` }} /></div></div>
             ))}
           </div>
           <button className="button button-outline" type="button" onClick={() => onNavigate('/courses')}>View public course catalogue</button>
