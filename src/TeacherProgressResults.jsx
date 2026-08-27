@@ -9,6 +9,10 @@ function progressSlug() {
   return new URLSearchParams(window.location.search).get('progress') || '';
 }
 
+function locationKey() {
+  return `${window.location.pathname}${window.location.search}`;
+}
+
 function navigate(path) {
   window.history.pushState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
@@ -178,28 +182,31 @@ function TeacherProgressResultsPage({ course, onBack }) {
 }
 
 export default function TeacherProgressResultsBridge() {
-  const [version, setVersion] = useState(0);
+  const [, setRouteKey] = useState(locationKey);
   const [target, setTarget] = useState(null);
   const slug = progressSlug();
   const course = slug ? mockTeacherPortfolio.find((item) => item.slug === slug) : null;
 
   useEffect(() => {
     let queued = false;
-    const scan = () => {
+    const scanTarget = () => {
       if (queued) return;
       queued = true;
       window.requestAnimationFrame(() => {
         queued = false;
         const nextTarget = document.querySelector('.dashboard-placeholder');
         setTarget((current) => current === nextTarget ? current : nextTarget);
-        setVersion((value) => value + 1);
       });
     };
-    const observer = new MutationObserver(scan);
+    const handleRoute = () => {
+      setRouteKey(locationKey());
+      scanTarget();
+    };
+    const observer = new MutationObserver(scanTarget);
     observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener('popstate', scan);
-    scan();
-    return () => { observer.disconnect(); window.removeEventListener('popstate', scan); };
+    window.addEventListener('popstate', handleRoute);
+    scanTarget();
+    return () => { observer.disconnect(); window.removeEventListener('popstate', handleRoute); };
   }, []);
 
   useEffect(() => {
@@ -207,7 +214,7 @@ export default function TeacherProgressResultsBridge() {
     const active = Boolean(slug && course);
     target.classList.toggle('teacher-progress-results-active', active);
     return () => target?.classList.remove('teacher-progress-results-active');
-  }, [course, slug, target, version]);
+  }, [course, slug, target]);
 
   if (!target || !slug || !course) return null;
   return createPortal(<TeacherProgressResultsPage course={course} onBack={() => navigate(`/teacher?course=${course.slug}`)} />, target);
