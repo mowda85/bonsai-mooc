@@ -1,45 +1,11 @@
 import { useMemo, useState } from 'react';
+import { UnitLearnerPreview } from './TeacherLearnerPreview.jsx';
 
 function formatBytes(bytes) {
   if (!bytes) return '0 KB';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-function UnitPreviewHandoff({ form, portfolio, onBack }) {
-  const assignedCourses = portfolio.filter((course) => form.assignedCourseSlugs.includes(course.slug));
-  return (
-    <main className="teacher-unit-preview-page">
-      <section className="teacher-unit-preview-hero">
-        <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Unit Editor</button>
-        <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><span>Unit Editor</span><b>/</b><strong>Course Preview</strong></div>
-        <div className="teacher-hero-badges"><span className="pill">Course Preview handoff</span><span className="teacher-kicker-badge">KAN-36</span></div>
-        <h1>{form.title.trim() || 'Untitled unit'}</h1>
-        <p>This lightweight preview uses the current Unit Editor values, including unsaved changes. The full teacher Course Preview belongs to KAN-36.</p>
-      </section>
-
-      <section className="teacher-unit-preview-body">
-        <article className="teacher-unit-preview-card">
-          <span className="section-kicker">Current unit content</span>
-          <h2>Description</h2>
-          <p>{form.description.trim() || 'No description entered yet.'}</p>
-          <h2>Exercise / activity</h2>
-          <p>{form.exercise.trim() || 'No exercise added to this unit yet.'}</p>
-        </article>
-
-        <aside className="teacher-unit-preview-card teacher-unit-preview-summary">
-          <span className="section-kicker">Placement</span>
-          <h2>Assigned courses</h2>
-          {assignedCourses.length ? <div className="teacher-unit-preview-tags">{assignedCourses.map((course) => <span key={course.slug}>{course.title}</span>)}</div> : <p>No course selected yet.</p>}
-          <h2>Attached file</h2>
-          {form.file ? <div className="teacher-unit-file-summary"><strong>{form.file.name}</strong><span>{form.file.type} · {formatBytes(form.file.size)}</span></div> : <p>No file selected.</p>}
-          <div className="teacher-preview-note"><strong>Preview only</strong><span>Returning to the editor keeps all unsaved values.</span></div>
-          <button className="button button-primary" type="button" onClick={onBack}>Return to editor</button>
-        </aside>
-      </section>
-    </main>
-  );
 }
 
 export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack, onSave }) {
@@ -62,6 +28,7 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
 
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
+    setErrors([]);
   }
 
   function toggleCourse(slug) {
@@ -71,16 +38,16 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
         ? current.assignedCourseSlugs.filter((item) => item !== slug)
         : [...current.assignedCourseSlugs, slug],
     }));
+    setErrors([]);
   }
 
-  function submit(event) {
-    event.preventDefault();
+  function validateAndSave() {
     const nextErrors = [];
     if (!form.title.trim()) nextErrors.push('Unit Title is required.');
     if (!form.description.trim()) nextErrors.push('Description is required.');
     if (!form.assignedCourseSlugs.length) nextErrors.push('Assign the unit to at least one course.');
     setErrors(nextErrors);
-    if (nextErrors.length) return;
+    if (nextErrors.length) return false;
     onSave({
       title: form.title.trim(),
       description: form.description.trim(),
@@ -88,9 +55,17 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
       assignedCourseSlugs: form.assignedCourseSlugs,
       file: form.file,
     });
+    return true;
   }
 
-  if (previewing) return <UnitPreviewHandoff form={form} portfolio={portfolio} onBack={() => setPreviewing(false)} />;
+  function submit(event) {
+    event.preventDefault();
+    validateAndSave();
+  }
+
+  if (previewing) {
+    return <UnitLearnerPreview form={form} portfolio={portfolio} errors={errors} onBack={() => { setPreviewing(false); setErrors([]); }} onSave={validateAndSave} />;
+  }
 
   return (
     <main className="teacher-unit-editor-page">
@@ -140,7 +115,7 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
             <span className="section-kicker">Unit actions</span>
             <h2>Save or preview</h2>
             {errors.length > 0 && <div className="teacher-editor-errors" role="alert"><strong>Check the required fields</strong>{errors.map((error) => <span key={error}>{error}</span>)}</div>}
-            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">Save Unit</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview course view</button></div>
+            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">Save Unit</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview learner view</button></div>
           </section>
         </aside>
       </form>
