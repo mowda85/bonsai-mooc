@@ -38,7 +38,7 @@ function isAnswered(question, value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
-export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onBack }) {
+export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onBack, onQuizSubmitted }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [validationMessage, setValidationMessage] = useState('');
@@ -70,12 +70,14 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
     const mcqs = prototypeQuestions.filter((item) => item.type === 'mcq');
     const score = mcqs.reduce((total, item) => total + (answers[item.id] === item.answer ? 1 : 0), 0);
     const writtenResponseCount = prototypeQuestions.filter((item) => item.type !== 'mcq' && isAnswered(item, answers[item.id])).length;
-    setResult({
+    const submittedResult = {
       score,
       mcqTotal: mcqs.length,
       responseCount: answeredCount,
       writtenResponseCount,
-    });
+    };
+    setResult(submittedResult);
+    onQuizSubmitted?.(submittedResult);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
