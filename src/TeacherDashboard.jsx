@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import TeacherCourseEditor from './TeacherCourseEditor.jsx';
 import TeacherUnitEditor from './TeacherUnitEditor.jsx';
+import TeacherActivityEditor from './TeacherActivityEditor.jsx';
+import { getPrototypeActivity, savePrototypeActivity } from './prototypeActivityStore.js';
 
 const pilotUnits = [
   { id: 'pilot-unit-1', title: 'Introduction to Data, Information and Knowledge', source: 'pilot' },
@@ -77,6 +79,7 @@ function readTeacherQuery() {
     course: query.get('course'),
     progress: query.get('progress'),
     unit: query.get('unit'),
+    activity: query.get('activity'),
   };
 }
 
@@ -107,7 +110,7 @@ function ProgressPlaceholder({ course, onBack }) {
   );
 }
 
-function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAddUnit }) {
+function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAddUnit, onActivity }) {
   const currentStatusIndex = workflowStatuses.indexOf(course.status);
   const units = course.units || [];
   return (
@@ -146,13 +149,19 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAd
               <div><span className="section-kicker">Units & content</span><h2>Course units</h2><p>Build and organize the unit-level structure for this course.</p></div>
               <button className="button button-primary" type="button" onClick={onAddUnit}>+ Add Unit</button>
             </div>
-            {units.length ? <div className="teacher-course-units">{units.map((unit, index) => (
-              <div className="teacher-course-unit-row" key={unit.id || `${unit.title}-${index}`}>
-                <span>{index + 1}</span>
-                <div><strong>{unit.title}</strong><small>{unit.source === 'pilot' ? 'Established pilot structure' : unit.file ? `Teacher-created unit · ${unit.file.name}` : 'Teacher-created unit'}</small></div>
-                {unit.source === 'pilot' ? <em>Existing</em> : <em>Saved</em>}
-              </div>
-            ))}</div> : <div className="teacher-course-unit-empty">No units have been added to this course yet. Use Add Unit to create the first one.</div>}
+            {units.length ? <div className="teacher-course-units">{units.map((unit, index) => {
+              const activity = getPrototypeActivity(course.slug, unit.id);
+              return (
+                <div className="teacher-course-unit-row" key={unit.id || `${unit.title}-${index}`}>
+                  <span>{index + 1}</span>
+                  <div><strong>{unit.title}</strong><small>{unit.source === 'pilot' ? 'Established pilot structure' : unit.file ? `Teacher-created unit · ${unit.file.name}` : 'Teacher-created unit'}</small></div>
+                  <div className="teacher-course-unit-actions">
+                    <em>{unit.source === 'pilot' ? 'Existing' : 'Saved'}</em>
+                    <button className="teacher-unit-activity-link" type="button" onClick={() => onActivity(unit.id)}>{activity ? 'Edit Activity' : 'Add Activity'}</button>
+                  </div>
+                </div>
+              );
+            })}</div> : <div className="teacher-course-unit-empty">No units have been added to this course yet. Use Add Unit to create the first one.</div>}
           </section>
 
           <section className="teacher-assigned-card">
@@ -224,6 +233,11 @@ export default function TeacherDashboard({ user, onNavigate }) {
     setTeacherQuery(readTeacherQuery());
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+  function openActivityEditor(courseSlug, unitId) {
+    window.history.pushState({}, '', `/teacher?activity=${unitId}&course=${courseSlug}`);
+    setTeacherQuery(readTeacherQuery());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   function saveCourseDraft(data) {
     const isNew = teacherQuery.editor === 'new';
@@ -257,9 +271,22 @@ export default function TeacherDashboard({ user, onNavigate }) {
       : course));
     const destination = data.assignedCourseSlugs[0];
     window.history.pushState({}, '', `/teacher?course=${destination}`);
-    setTeacherQuery({ editor: null, course: destination, progress: null, unit: null });
+    setTeacherQuery({ editor: null, course: destination, progress: null, unit: null, activity: null });
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return savedUnit;
+  }
+
+  function saveActivity(data) {
+    const savedActivity = savePrototypeActivity(data);
+    const destination = data.courseSlug;
+    window.history.pushState({}, '', `/teacher?course=${destination}`);
+    setTeacherQuery({ editor: null, course: destination, progress: null, unit: null, activity: null });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return savedActivity;
+  }
+
+  if (teacherQuery.activity) {
+    return <TeacherActivityEditor portfolio={portfolio} initialCourseSlug={teacherQuery.course || ''} initialUnitId={teacherQuery.activity} onSave={saveActivity} onBack={() => teacherQuery.course ? openCourse(teacherQuery.course) : openDashboard()} />;
   }
 
   if (teacherQuery.unit === 'new') {
@@ -276,7 +303,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
   }
 
   if (teacherQuery.course && selectedCourse) {
-    return <AssignedCoursePage course={selectedCourse} onBack={openDashboard} onEdit={() => openEditor(selectedCourse.slug)} onAddUnit={() => openUnitEditor(selectedCourse.slug)} onProgress={() => openProgress(selectedCourse.slug)} onPublic={() => onNavigate(`/courses/${selectedCourse.slug}`)} />;
+    return <AssignedCoursePage course={selectedCourse} onBack={openDashboard} onEdit={() => openEditor(selectedCourse.slug)} onAddUnit={() => openUnitEditor(selectedCourse.slug)} onActivity={(unitId) => openActivityEditor(selectedCourse.slug, unitId)} onProgress={() => openProgress(selectedCourse.slug)} onPublic={() => onNavigate(`/courses/${selectedCourse.slug}`)} />;
   }
 
   return (
