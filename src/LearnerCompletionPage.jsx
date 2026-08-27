@@ -1,7 +1,35 @@
+import { useState } from 'react';
+import { getCourseFeedback, saveCourseFeedback } from './feedbackStore.js';
+
 export default function LearnerCompletionPage({ user, course, progress, quizResult, certificate, onCourseOverview, onDashboard }) {
   const totalUnits = progress.totalUnits || 0;
   const completedUnits = progress.completedUnits?.length || 0;
   const scoreLabel = quizResult ? `${quizResult.score} / ${quizResult.mcqTotal}` : 'Not recorded';
+  const existingFeedback = getCourseFeedback(user?.id, course?.slug);
+  const [feedbackText, setFeedbackText] = useState(existingFeedback?.comment || '');
+  const [feedbackRecord, setFeedbackRecord] = useState(existingFeedback);
+  const [feedbackError, setFeedbackError] = useState('');
+
+  function submitFeedback(event) {
+    event.preventDefault();
+    const comment = feedbackText.trim();
+    if (!comment) {
+      setFeedbackError('Enter a comment before submitting feedback.');
+      return;
+    }
+
+    const saved = saveCourseFeedback({
+      learnerId: user?.id,
+      learnerName: user?.name,
+      courseSlug: course?.slug,
+      courseTitle: course?.title,
+      comment,
+    });
+
+    setFeedbackRecord(saved);
+    setFeedbackText(saved?.comment || comment);
+    setFeedbackError('');
+  }
 
   return (
     <main className="learner-completion-page">
@@ -60,6 +88,29 @@ export default function LearnerCompletionPage({ user, course, progress, quizResu
               </div>
             )}
             <div className="certificate-record"><span>Certificate name</span><strong>{certificate?.name}</strong><p>{certificate?.source}</p></div>
+          </section>
+
+          <section className="completion-card completion-feedback-card" aria-labelledby="feedback-heading">
+            <div className="completion-section-heading">
+              <div><span className="section-kicker">Feedback / Comment</span><h2 id="feedback-heading">Share feedback on this course</h2><p>Your latest comment is kept for this prototype session and will be available to the later teacher feedback and progress views.</p></div>
+              {feedbackRecord && <span className="completion-earned-badge">✓ Submitted</span>}
+            </div>
+            <form className="completion-feedback-form" onSubmit={submitFeedback}>
+              <label htmlFor="course-feedback">Your comment</label>
+              <textarea
+                id="course-feedback"
+                rows="7"
+                value={feedbackText}
+                onChange={(event) => { setFeedbackText(event.target.value); setFeedbackError(''); }}
+                placeholder="Tell the BONSAI teaching team what worked well or what could be improved…"
+              />
+              {feedbackError && <div className="completion-feedback-error" role="alert">{feedbackError}</div>}
+              {feedbackRecord && <div className="completion-feedback-success" role="status"><strong>Feedback submitted.</strong><span>You can edit the comment above and submit again to update this same-session record.</span></div>}
+              <div className="completion-feedback-actions">
+                <span>{feedbackText.trim().length} characters</span>
+                <button className="button button-primary" type="submit">{feedbackRecord ? 'Update feedback' : 'Submit feedback'} →</button>
+              </div>
+            </form>
           </section>
         </div>
 
