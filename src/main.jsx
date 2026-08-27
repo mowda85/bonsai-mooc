@@ -15,6 +15,7 @@ import './learner-quiz.css';
 import './quiz-results.css';
 import './learner-completion.css';
 import './teacher-dashboard.css';
+import './teacher-dashboard-layout-fix.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
