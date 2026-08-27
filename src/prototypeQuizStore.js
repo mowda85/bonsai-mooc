@@ -62,7 +62,7 @@ function learnerFacingRoute() {
 export function getPrototypeQuiz(courseSlug, unitId) {
   if (learnerFacingRoute()) {
     const liveQuiz = getLiveCourseContent(courseSlug)?.quizzes?.[unitId];
-    if (liveQuiz) return cloneQuiz({ ...liveQuiz, source: 'teacher-published' });
+    if (liveQuiz) return cloneQuiz({ ...liveQuiz, source: 'teacher' });
     if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_UNIT_ONE_ID) return cloneQuiz(PILOT_QUIZ_FALLBACK);
     return null;
   }
