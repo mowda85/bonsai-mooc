@@ -288,8 +288,8 @@ export default function PublicationWorkflowBridge() {
         queued = false;
         const actions = document.querySelector('.teacher-assigned-actions');
         const dashboard = document.querySelector('.dashboard-placeholder');
-        const heading = dashboard?.querySelector(':scope > h1')?.textContent || '';
-        const dashboardRole = heading === 'Admin Dashboard' ? 'admin' : heading === 'Teacher Dashboard' ? 'teacher' : '';
+        const directHeading = Array.from(dashboard?.children || []).find((child) => child.tagName === 'H1')?.textContent || '';
+        const dashboardRole = directHeading === 'Admin Dashboard' ? 'admin' : directHeading === 'Teacher Dashboard' ? 'teacher' : '';
         setTargets((current) => current.actions === actions && current.dashboard === dashboard && current.dashboardRole === dashboardRole ? current : { actions, dashboard, dashboardRole });
         updateTeacherStatusDom();
         updatePublicVisibility();
