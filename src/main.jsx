@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
+import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -13,9 +14,12 @@ import './learner-activity.css';
 import './learner-quiz.css';
 import './quiz-results.css';
 import './learner-completion.css';
+import './teacher-dashboard.css';
+import './teacher-dashboard-layout-fix.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
+    <TeacherDashboardBridge />
   </React.StrictMode>,
 );
