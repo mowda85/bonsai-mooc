@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LearnerUnitPage from './LearnerUnitPage.jsx';
+import LearnerCompletionPage from './LearnerCompletionPage.jsx';
 
 const pilotCourseUnits = [
   { title: 'Introduction to Data, Information and Knowledge', lessons: 3 },
@@ -7,7 +8,7 @@ const pilotCourseUnits = [
   { title: 'Knowledge Dissemination in BONSAI', lessons: 1 },
 ];
 
-function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo, onOpenUnit }) {
+function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo, onOpenUnit, onOpenCompletion, certificateEarned }) {
   const units = course?.pilot ? pilotCourseUnits : [];
   const completedUnitNumbers = progress.completedUnits || [];
   const totalUnits = progress.totalUnits || units.length;
@@ -27,7 +28,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
             <h1>{course?.title}</h1>
             <p>{course?.description}</p>
             <div className="learner-course-overview-actions">
-              <button className="button button-primary" type="button" disabled={!nextUnitNumber} onClick={() => nextUnitNumber && onOpenUnit(nextUnitNumber)}>{percent >= 100 ? 'Course complete ✓' : completedCount ? 'Continue Course →' : 'Start Course →'}</button>
+              {percent >= 100 ? <button className="button button-primary" type="button" onClick={onOpenCompletion}>View completion & certificate →</button> : <button className="button button-primary" type="button" disabled={!nextUnitNumber} onClick={() => nextUnitNumber && onOpenUnit(nextUnitNumber)}>{completedCount ? 'Continue Course →' : 'Start Course →'}</button>}
               <button className="button button-outline" type="button" onClick={onPublicInfo}>Public course information</button>
             </div>
           </div>
@@ -45,7 +46,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
           <section className="learner-course-progress-banner" aria-label={`Course ${percent}% complete`}>
             <div className="learner-course-progress-heading"><div><span className="section-kicker">Your progress</span><h2>{completedCount} of {totalUnits} units complete</h2></div><strong>{percent}%</strong></div>
             <div className="learner-progress-track"><span style={{ width: `${percent}%` }} /></div>
-            <p>{nextUnitNumber ? `Your next step is Unit ${nextUnitNumber}: ${units[nextUnitNumber - 1]?.title || 'Course unit'}.` : 'All available units are complete.'}</p>
+            <p>{nextUnitNumber ? `Your next step is Unit ${nextUnitNumber}: ${units[nextUnitNumber - 1]?.title || 'Course unit'}.` : certificateEarned ? 'All units are complete and your course-completion certificate has been added to the learner dashboard.' : 'All available units are complete.'}</p>
           </section>
 
           <section className="learner-enrolled-course-section">
@@ -85,7 +86,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
           <p>{nextUnitNumber ? units[nextUnitNumber - 1]?.title : 'You have completed all currently available units.'}</p>
           <div className="learner-course-side-percent"><strong>{percent}%</strong><span>course complete</span></div>
           <div className="learner-progress-track"><span style={{ width: `${percent}%` }} /></div>
-          {nextUnitNumber && <button className="button button-primary" type="button" onClick={() => onOpenUnit(nextUnitNumber)}>Continue Course →</button>}
+          {nextUnitNumber ? <button className="button button-primary" type="button" onClick={() => onOpenUnit(nextUnitNumber)}>Continue Course →</button> : <button className="button button-primary" type="button" onClick={onOpenCompletion}>View completion →</button>}
           <button className="button button-outline" type="button" onClick={onBackDashboard}>Back to dashboard</button>
         </aside>
       </section>
@@ -104,41 +105,82 @@ export default function LearnerDashboard({
   allCourses,
   onNavigate,
 }) {
+  const [courseProgress, setCourseProgress] = useState(() => ({
+    ...progress.currentCourse,
+    completedUnits: [...(progress.currentCourse.completedUnits || [])],
+  }));
+  const [certificates, setCertificates] = useState(() => [...(progress.certificates || [])]);
+  const [quizResult, setQuizResult] = useState(progress.currentCourse.quizResult || null);
+  const [completedActivityIds, setCompletedActivityIds] = useState(progress.currentCourse.completedActivityIds || []);
   const completedFoundationCount = completedFoundationCourses.length;
   const foundationPercent = foundationCourses.length ? Math.round((completedFoundationCount / foundationCourses.length) * 100) : 0;
-  const currentCourse = allCourses.find((course) => course.slug === progress.currentCourse.slug);
-  const completedUnits = progress.currentCourse.completedUnits.length;
-  const totalUnits = progress.currentCourse.totalUnits;
+  const currentCourse = allCourses.find((course) => course.slug === courseProgress.slug);
+  const completedUnits = courseProgress.completedUnits.length;
+  const totalUnits = courseProgress.totalUnits;
   const remainingUnits = Math.max(totalUnits - completedUnits, 0);
   const currentCoursePercent = totalUnits ? Math.round((completedUnits / totalUnits) * 100) : 0;
-  const certificates = progress.certificates || [];
+  const courseComplete = totalUnits > 0 && completedUnits === totalUnits;
+  const certificate = certificates.find((item) => item.courseSlug === courseProgress.slug) || null;
   const query = new URLSearchParams(window.location.search);
-  const initialCourseOpen = query.get('course') === progress.currentCourse.slug;
+  const initialCourseOpen = query.get('course') === courseProgress.slug;
   const initialUnit = Number(query.get('unit')) || null;
-  const [workspaceView, setWorkspaceView] = useState(initialUnit ? 'unit' : initialCourseOpen ? 'course' : 'dashboard');
+  const initialCompletion = query.get('completion') === '1';
+  const [workspaceView, setWorkspaceView] = useState(initialCompletion ? 'completion' : initialUnit ? 'unit' : initialCourseOpen ? 'course' : 'dashboard');
   const [activeUnit, setActiveUnit] = useState(initialUnit);
-  const [completedActivityIds, setCompletedActivityIds] = useState(progress.currentCourse.completedActivityIds || []);
 
   function setLearnerUrl(params = '') {
     window.history.pushState({}, '', `/learner${params}`);
   }
 
   function openCourseOverview() {
-    setLearnerUrl(`?course=${progress.currentCourse.slug}`);
+    setLearnerUrl(`?course=${courseProgress.slug}`);
     setActiveUnit(null);
     setWorkspaceView('course');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function openUnit(unitNumber) {
-    setLearnerUrl(`?course=${progress.currentCourse.slug}&unit=${unitNumber}`);
+    setLearnerUrl(`?course=${courseProgress.slug}&unit=${unitNumber}`);
     setActiveUnit(unitNumber);
     setWorkspaceView('unit');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function openCompletion() {
+    if (!courseComplete) return;
+    setLearnerUrl(`?course=${courseProgress.slug}&completion=1`);
+    setActiveUnit(null);
+    setWorkspaceView('completion');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function completeActivity(activityId) {
     setCompletedActivityIds((current) => current.includes(activityId) ? current : [...current, activityId]);
+  }
+
+  function recordQuizResult(result) {
+    setQuizResult(result);
+  }
+
+  function completeUnit(unitNumber) {
+    if (courseProgress.completedUnits.includes(unitNumber)) return;
+    const nextCompletedUnits = [...courseProgress.completedUnits, unitNumber].sort((a, b) => a - b);
+    const nextProgress = { ...courseProgress, completedUnits: nextCompletedUnits };
+    setCourseProgress(nextProgress);
+
+    if (nextCompletedUnits.length === courseProgress.totalUnits) {
+      const earnedCertificate = {
+        id: `certificate-${courseProgress.slug}`,
+        courseSlug: courseProgress.slug,
+        name: `Certificate of Completion — ${currentCourse?.title || 'BONSAI course'}`,
+        source: currentCourse?.title || 'BONSAI-MOOC',
+      };
+      setCertificates((current) => current.some((item) => item.courseSlug === courseProgress.slug) ? current : [...current, earnedCertificate]);
+      setLearnerUrl(`?course=${courseProgress.slug}&completion=1`);
+      setActiveUnit(null);
+      setWorkspaceView('completion');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   function backToDashboard() {
@@ -148,12 +190,22 @@ export default function LearnerDashboard({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  if (workspaceView === 'completion' && courseComplete) {
+    const completionCertificate = certificate || {
+      id: `certificate-${courseProgress.slug}`,
+      courseSlug: courseProgress.slug,
+      name: `Certificate of Completion — ${currentCourse?.title || 'BONSAI course'}`,
+      source: currentCourse?.title || 'BONSAI-MOOC',
+    };
+    return <LearnerCompletionPage user={user} course={currentCourse} progress={courseProgress} quizResult={quizResult} certificate={completionCertificate} onCourseOverview={openCourseOverview} onDashboard={backToDashboard} />;
+  }
+
   if (workspaceView === 'unit') {
-    return <LearnerUnitPage course={currentCourse} unitNumber={activeUnit || 1} completedUnits={progress.currentCourse.completedUnits} completedActivityIds={completedActivityIds} onCompleteActivity={completeActivity} onBack={openCourseOverview} onOpenUnit={openUnit} />;
+    return <LearnerUnitPage course={currentCourse} unitNumber={activeUnit || 1} completedUnits={courseProgress.completedUnits} completedActivityIds={completedActivityIds} onCompleteActivity={completeActivity} onCompleteUnit={completeUnit} onQuizSubmitted={recordQuizResult} onBack={openCourseOverview} onOpenUnit={openUnit} />;
   }
 
   if (workspaceView === 'course') {
-    return <LearnerCourseOverview course={currentCourse} progress={progress.currentCourse} onBackDashboard={backToDashboard} onPublicInfo={() => onNavigate(`/courses/${progress.currentCourse.slug}`)} onOpenUnit={openUnit} />;
+    return <LearnerCourseOverview course={currentCourse} progress={courseProgress} onBackDashboard={backToDashboard} onPublicInfo={() => onNavigate(`/courses/${courseProgress.slug}`)} onOpenUnit={openUnit} onOpenCompletion={openCompletion} certificateEarned={Boolean(certificate)} />;
   }
 
   return (
@@ -180,11 +232,11 @@ export default function LearnerDashboard({
         </article>
 
         <article className="learner-dashboard-card current-course-dashboard-card">
-          <div className="learner-card-heading"><div><span className="section-kicker">Continue learning</span><h2>Current course</h2></div><span className="pilot-badge">Pilot course</span></div>
+          <div className="learner-card-heading"><div><span className="section-kicker">{courseComplete ? 'Completed course' : 'Continue learning'}</span><h2>Current course</h2></div><span className="pilot-badge">Pilot course</span></div>
           <span className="learner-course-area">{currentCourse?.area || 'Foundation'}</span><h3>{currentCourse?.title || 'Course'}</h3><p>{currentCourse?.description}</p>
           <div className="learner-unit-progress"><div><strong>{completedUnits}/{totalUnits}</strong><span>units complete</span></div><div><strong>{remainingUnits}</strong><span>units left</span></div></div>
           <div className="learner-progress-track" aria-label={`Current course ${currentCoursePercent}% complete`}><span style={{ width: `${currentCoursePercent}%` }} /></div>
-          <div className="current-course-actions"><button className="button button-primary" type="button" onClick={openCourseOverview}>Continue course →</button><button className="button button-outline" type="button" onClick={() => onNavigate(`/courses/${progress.currentCourse.slug}`)}>Public course information</button></div>
+          <div className="current-course-actions"><button className="button button-primary" type="button" onClick={courseComplete ? openCompletion : openCourseOverview}>{courseComplete ? 'View completion & certificate →' : 'Continue course →'}</button><button className="button button-outline" type="button" onClick={() => onNavigate(`/courses/${courseProgress.slug}`)}>Public course information</button></div>
         </article>
       </section>
 
@@ -195,7 +247,7 @@ export default function LearnerDashboard({
 
       <section className="learner-dashboard-section learner-achievements-section" aria-labelledby="learner-achievements-heading">
         <div className="learner-section-heading"><div><span className="section-kicker">Your progress</span><h2 id="learner-achievements-heading">Achievements & certificates</h2><p>Certificates shown here come from learner progress data; the prototype does not create certificates that have not been earned.</p></div></div>
-        {certificates.length ? <div className="learner-certificate-grid">{certificates.map((certificate) => <article key={certificate.id} className="learner-certificate-card"><span>Certificate</span><strong>{certificate.name}</strong><p>{certificate.source}</p></article>)}</div> : <div className="learner-empty-achievement"><span aria-hidden="true">◇</span><div><strong>No certificates earned yet</strong><p>Complete eligible learning milestones and future certificates will appear here.</p></div></div>}
+        {certificates.length ? <div className="learner-certificate-grid">{certificates.map((item) => <article key={item.id} className="learner-certificate-card"><span>Certificate</span><strong>{item.name}</strong><p>{item.source}</p>{item.courseSlug === courseProgress.slug && <button className="button button-outline" type="button" onClick={openCompletion}>View certificate →</button>}</article>)}</div> : <div className="learner-empty-achievement"><span aria-hidden="true">◇</span><div><strong>No certificates earned yet</strong><p>Complete eligible learning milestones and future certificates will appear here.</p></div></div>}
       </section>
     </main>
   );
