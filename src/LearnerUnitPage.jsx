@@ -111,13 +111,24 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
   );
 }
 
-export default function LearnerUnitPage({ course, unitNumber, completedUnits = [], completedActivityIds = [], onCompleteActivity, onBack, onOpenUnit }) {
+export default function LearnerUnitPage({
+  course,
+  unitNumber,
+  completedUnits = [],
+  completedActivityIds = [],
+  onCompleteActivity,
+  onCompleteUnit,
+  onQuizSubmitted,
+  onBack,
+  onOpenUnit,
+}) {
   const [activeLessonIndex, setActiveLessonIndex] = useState(null);
   const [activityOpen, setActivityOpen] = useState(false);
   const [quizOpen, setQuizOpen] = useState(false);
   const unit = pilotUnits[unitNumber - 1];
   const totalUnits = pilotUnits.length;
   const activityComplete = completedActivityIds.includes(UNIT_TWO_ACTIVITY_ID);
+  const unitComplete = completedUnits.includes(unitNumber);
 
   function openLesson(index) {
     setActivityOpen(false);
@@ -157,7 +168,7 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
   }
 
   if (quizOpen && unitNumber === 1) {
-    return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} />;
+    return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />;
   }
 
   if (activityOpen && unitNumber === 2) {
@@ -240,7 +251,7 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
             {unitNumber === 1 && (
               <section className="learner-unit-quiz" aria-labelledby="unit-quiz-heading">
                 <div className="learner-unit-quiz-heading">
-                  <div><span className="section-kicker">Quiz</span><h2 id="unit-quiz-heading">Unit 1 prototype quiz</h2><p>Test MCQ scoring, writing responses and the KAN-27 Results handoff. Final five questions remain KAN-50.</p></div>
+                  <div><span className="section-kicker">Quiz</span><h2 id="unit-quiz-heading">Unit 1 prototype quiz</h2><p>Test MCQ scoring, writing responses and the KAN-27 Results page. Final five questions remain KAN-50.</p></div>
                   <span className="learner-unit-quiz-badge">4 prototype questions</span>
                 </div>
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
@@ -273,6 +284,11 @@ export default function LearnerUnitPage({ course, unitNumber, completedUnits = [
           <p>{status === 'Upcoming' ? 'This unit follows the current learning step and is available to preview in the prototype.' : status.startsWith('Completed') ? 'This unit is complete and remains available for review.' : 'This is the learner’s current unit.'}</p>
           <div className="learner-progress-track" aria-label={`Course ${coursePercent}% complete`}><span style={{ width: `${coursePercent}%` }} /></div>
           <strong className="learner-unit-course-percent">{coursePercent}% course complete</strong>
+          <div className="learner-unit-completion-control">
+            <span className="section-kicker">KAN-28 completion</span>
+            <p>{unitComplete ? 'This unit is already counted in course progress.' : unitNumber === totalUnits ? 'Mark this final unit complete to finish the course when all other units are complete.' : 'Use this prototype action when you have finished this unit.'}</p>
+            <button className={unitComplete ? 'button button-outline' : 'button button-primary'} type="button" disabled={unitComplete} onClick={() => !unitComplete && onCompleteUnit?.(unitNumber)}>{unitComplete ? '✓ Unit completed' : unitNumber === totalUnits ? 'Complete final unit →' : 'Mark Unit complete ✓'}</button>
+          </div>
         </aside>
       </section>
 
