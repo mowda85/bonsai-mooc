@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'bonsai-mooc.prototype.course-publication.v1';
+const STORAGE_KEY = 'bonsai-mooc.prototype.course-publication.v2';
 
 export const workflowStatuses = ['Draft', 'Under Review', 'Approved', 'Published'];
 
@@ -15,6 +15,17 @@ export const prototypePublicationTitles = {
   'vegetation-management': 'Vegetation Management',
   'flood-risk-management': 'Flood Risk Management',
 };
+
+function defaultStateFor(slug, fallback = 'Published') {
+  const status = prototypePublicationDefaults[slug] || fallback;
+  const reviewed = status === 'Approved' || status === 'Published';
+  return {
+    status,
+    leadAuthorApproved: reviewed,
+    adminApproved: reviewed,
+    changeRequest: null,
+  };
+}
 
 function readStore() {
   try {
@@ -33,27 +44,90 @@ function writeStore(next) {
   }
 }
 
-export function getCoursePublicationStatus(slug, fallback = 'Published') {
-  if (!slug) return fallback;
-  const stored = readStore()[slug];
-  return stored || prototypePublicationDefaults[slug] || fallback;
+function normalizeState(slug, value, fallback = 'Published') {
+  const base = defaultStateFor(slug, fallback);
+  if (!value || typeof value !== 'object') return base;
+  return {
+    status: workflowStatuses.includes(value.status) ? value.status : base.status,
+    leadAuthorApproved: Boolean(value.leadAuthorApproved),
+    adminApproved: Boolean(value.adminApproved),
+    changeRequest: value.changeRequest && typeof value.changeRequest === 'object'
+      ? {
+          text: String(value.changeRequest.text || ''),
+          status: value.changeRequest.status === 'approved' ? 'approved' : 'pending',
+        }
+      : null,
+  };
 }
 
-export function setCoursePublicationStatus(slug, status) {
-  if (!slug || !workflowStatuses.includes(status)) return null;
-  const next = { ...readStore(), [slug]: status };
+function saveCourseState(slug, state) {
+  if (!slug) return null;
+  const next = { ...readStore(), [slug]: state };
   writeStore(next);
-  window.dispatchEvent(new CustomEvent('bonsai:publication-status-changed', { detail: { slug, status } }));
-  return status;
+  window.dispatchEvent(new CustomEvent('bonsai:publication-status-changed', { detail: { slug, state } }));
+  return state;
+}
+
+export function getCoursePublicationState(slug, fallback = 'Published') {
+  if (!slug) return defaultStateFor(slug, fallback);
+  return normalizeState(slug, readStore()[slug], fallback);
+}
+
+export function getCoursePublicationStatus(slug, fallback = 'Published') {
+  return getCoursePublicationState(slug, fallback).status;
+}
+
+export function submitCourseForReview(slug) {
+  const current = getCoursePublicationState(slug, 'Draft');
+  if (current.status !== 'Draft') return current;
+  return saveCourseState(slug, {
+    status: 'Under Review',
+    leadAuthorApproved: false,
+    adminApproved: false,
+    changeRequest: null,
+  });
+}
+
+export function requestCoauthorChange(slug, text) {
+  const current = getCoursePublicationState(slug, 'Draft');
+  const requestText = String(text || '').trim();
+  if (current.status !== 'Under Review' || !requestText) return current;
+  return saveCourseState(slug, {
+    ...current,
+    leadAuthorApproved: false,
+    changeRequest: { text: requestText, status: 'pending' },
+  });
+}
+
+export function approveCoauthorChange(slug) {
+  const current = getCoursePublicationState(slug, 'Draft');
+  if (current.status !== 'Under Review' || current.changeRequest?.status !== 'pending') return current;
+  return saveCourseState(slug, {
+    ...current,
+    changeRequest: { ...current.changeRequest, status: 'approved' },
+  });
+}
+
+export function approveCourseReview(slug, actor) {
+  const current = getCoursePublicationState(slug, 'Draft');
+  if (current.status !== 'Under Review' || !['leadAuthor', 'admin'].includes(actor)) return current;
+  if (current.changeRequest?.status === 'pending') return current;
+
+  const next = {
+    ...current,
+    leadAuthorApproved: actor === 'leadAuthor' ? true : current.leadAuthorApproved,
+    adminApproved: actor === 'admin' ? true : current.adminApproved,
+  };
+  if (next.leadAuthorApproved && next.adminApproved) next.status = 'Approved';
+  return saveCourseState(slug, next);
+}
+
+export function publishCourse(slug, actor) {
+  const current = getCoursePublicationState(slug, 'Draft');
+  if (current.status !== 'Approved' || !['leadAuthor', 'admin'].includes(actor)) return current;
+  return saveCourseState(slug, { ...current, status: 'Published' });
 }
 
 export function isCoursePublished(slug) {
   return getCoursePublicationStatus(slug, 'Published') === 'Published';
-}
-
-export function getNextPublicationAction(status) {
-  if (status === 'Draft') return { label: 'Submit for Review', nextStatus: 'Under Review', note: 'Send the course into the prototype review stage.' };
-  if (status === 'Under Review') return { label: 'Approve', nextStatus: 'Approved', note: 'Prototype reviewer/admin stand-in: approve the reviewed course.' };
-  if (status === 'Approved') return { label: 'Publish', nextStatus: 'Published', note: 'Make the approved course visible on learner-facing discovery screens.' };
-  return null;
 }
