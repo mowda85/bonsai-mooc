@@ -26,6 +26,12 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
     return portfolio.filter((course) => `${course.title} ${course.area || ''} ${(course.areas || []).join(' ')}`.toLowerCase().includes(query));
   }, [courseSearch, portfolio]);
 
+  const publishedAssignments = useMemo(
+    () => form.assignedCourseSlugs.map((slug) => portfolio.find((course) => course.slug === slug)).filter((course) => course?.status === 'Published'),
+    [form.assignedCourseSlugs, portfolio],
+  );
+  const publishedUpdate = publishedAssignments.length > 0;
+
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors([]);
@@ -44,7 +50,7 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
   function validateAndSave() {
     const nextErrors = [];
     if (!form.title.trim()) nextErrors.push('Unit Title is required.');
-    if (!form.description.trim()) nextErrors.push('Description is required.');
+    if (!form.description.trim()) nextErrors.push('Description / Lesson 1 content is required.');
     if (!form.assignedCourseSlugs.length) nextErrors.push('Assign the unit to at least one course.');
     setErrors(nextErrors);
     if (nextErrors.length) return false;
@@ -75,18 +81,19 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
         <div className="teacher-unit-editor-heading">
           <div>
             <div className="teacher-hero-badges"><span className="pill">Unit / Content Editor</span><span className="teacher-kicker-badge">KAN-33</span></div>
-            <h1>Create a course unit</h1>
-            <p>Draft unit-level content, assign it to one or more courses, attach a prototype file, save it, or preview the current unsaved version.</p>
+            <h1>Create or update course content</h1>
+            <p>Draft unit and Lesson 1 content, assign it to one or more courses, attach a prototype file, save it, or preview the current unsaved version.</p>
           </div>
-          <aside><span>Prototype storage</span><strong>Same session</strong><small>Selected files are represented by metadata only; no backend file storage is connected yet.</small></aside>
+          <aside><span>Prototype storage</span><strong>{publishedUpdate ? 'Draft update' : 'Same session'}</strong><small>{publishedUpdate ? 'Content assigned to a Published course must complete the review process before it replaces the learner-visible version.' : 'Selected files are represented by metadata only; no backend file storage is connected yet.'}</small></aside>
         </div>
       </section>
 
       <form className="teacher-unit-editor-body" onSubmit={submit}>
         <section className="teacher-unit-form-card">
-          <div className="teacher-editor-card-heading"><div><span className="section-kicker">Unit content</span><h2>Basic information</h2></div><span className="teacher-required-note">Required fields *</span></div>
+          {publishedUpdate && <div className="teacher-unassigned-note"><strong>Published content update</strong><span>Saving this Unit / Lesson content creates a Draft update. The current Published version stays live until Lead Author + Admin approval and final publication.</span></div>}
+          <div className="teacher-editor-card-heading"><div><span className="section-kicker">Unit & lesson content</span><h2>Basic information</h2></div><span className="teacher-required-note">Required fields *</span></div>
           <label className="teacher-editor-field"><span>Unit Title *</span><input value={form.title} onChange={(event) => update('title', event.target.value)} placeholder="Enter unit title" /></label>
-          <label className="teacher-editor-field"><span>Description *</span><textarea rows="5" value={form.description} onChange={(event) => update('description', event.target.value)} placeholder="Describe what this unit covers" /></label>
+          <label className="teacher-editor-field"><span>Unit description / Lesson 1 content *</span><small>For this prototype, the unit instructional text is also the Lesson 1 learner-content shell. Updating it is treated as a Lesson-content revision.</small><textarea rows="6" value={form.description} onChange={(event) => update('description', event.target.value)} placeholder="Describe the unit and add the Lesson 1 instructional content" /></label>
           <label className="teacher-editor-field"><span>Exercise / activity instructions</span><small>Optional for the prototype.</small><textarea rows="6" value={form.exercise} onChange={(event) => update('exercise', event.target.value)} placeholder="Add an exercise, activity or learner task" /></label>
         </section>
 
@@ -99,7 +106,7 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
             <input className="teacher-unit-course-search" value={courseSearch} onChange={(event) => setCourseSearch(event.target.value)} placeholder="Search courses…" aria-label="Search teacher courses" />
             <div className="teacher-unit-course-options">{filteredCourses.map((course) => {
               const selected = form.assignedCourseSlugs.includes(course.slug);
-              return <button className={selected ? 'teacher-unit-course-option selected' : 'teacher-unit-course-option'} type="button" key={course.slug} onClick={() => toggleCourse(course.slug)}><span><strong>{course.title}</strong><small>{course.area || course.draftFolder || 'Unassigned draft'}</small></span><b>{selected ? '✓' : '+'}</b></button>;
+              return <button className={selected ? 'teacher-unit-course-option selected' : 'teacher-unit-course-option'} type="button" key={course.slug} onClick={() => toggleCourse(course.slug)}><span><strong>{course.title}</strong><small>{course.area || course.draftFolder || 'Unassigned draft'}{course.status === 'Published' ? ' · Published' : ''}</small></span><b>{selected ? '✓' : '+'}</b></button>;
             })}</div>
           </section>
 
@@ -114,8 +121,9 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
           <section className="teacher-unit-form-card teacher-unit-actions-card">
             <span className="section-kicker">Unit actions</span>
             <h2>Save or preview</h2>
+            <p>{publishedUpdate ? 'Saving creates a Draft Unit / Lesson update that must go through Review & Publication.' : 'Save this content to the assigned course, then continue through the normal course review process before first publication.'}</p>
             {errors.length > 0 && <div className="teacher-editor-errors" role="alert"><strong>Check the required fields</strong>{errors.map((error) => <span key={error}>{error}</span>)}</div>}
-            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">Save Unit</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview learner view</button></div>
+            <div className="teacher-editor-actions"><button className="button button-primary" type="submit">{publishedUpdate ? 'Save Draft Update' : 'Save Unit'}</button><button className="button button-outline" type="button" onClick={() => { setErrors([]); setPreviewing(true); }}>Preview learner view</button></div>
           </section>
         </aside>
       </form>
