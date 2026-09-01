@@ -67,6 +67,8 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
   const area = course?.areas?.[0] || course?.area || 'Unassigned Draft';
   const title = form.title.trim() || 'Untitled unit';
   const lessonContent = form.description.trim();
+  const videoUrl = form.videoUrl?.trim() || '';
+  const videoTitle = form.videoTitle?.trim() || 'Lesson video';
   const isPublishedUpdate = course?.status === 'Published';
 
   return (
@@ -92,6 +94,8 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
             {lessonContent ? <p>{lessonContent}</p> : <div className="teacher-preview-empty"><strong>No lesson content yet</strong><span>Return to edit and add unit instructional text. No teaching content is invented in preview.</span></div>}
           </section>
 
+          {videoUrl && <section className="teacher-learner-preview-card"><span className="section-kicker">Lesson video</span><h2>{videoTitle}</h2><div className="lesson-video-placeholder"><div className="lesson-video-caption"><strong>{videoTitle}</strong><span>{videoUrl}</span></div></div><p>This preview confirms that the video is attached to Lesson 1. The learner view will render supported YouTube/Vimeo links as embeds and direct video URLs with browser controls after publication.</p></section>}
+
           {form.exercise.trim() && <section className="teacher-learner-preview-card teacher-preview-activity-block"><span className="section-kicker">Activity</span><h2>Learner activity</h2><p>{form.exercise.trim()}</p><div className="teacher-preview-response-shell">Learner response area would appear here.</div></section>}
         </div>
 
@@ -100,6 +104,7 @@ export function UnitLearnerPreview({ form, portfolio, onBack, onSave, errors }) 
             <span className="section-kicker">Unit details</span>
             <div className="teacher-preview-detail"><span>Course</span><strong>{courseName}</strong></div>
             <div className="teacher-preview-detail"><span>Preview assignment</span><strong>{form.assignedCourseSlugs?.length > 1 ? `First of ${form.assignedCourseSlugs.length} assigned courses` : 'Assigned course'}</strong></div>
+            <div className="teacher-preview-detail"><span>Lesson video</span><strong>{videoUrl ? videoTitle : 'No video attached'}</strong></div>
             <div className="teacher-preview-detail"><span>Resource</span><strong>{form.file?.name || 'No attached file'}</strong></div>
             <div className="teacher-preview-detail"><span>Status</span><strong>{isPublishedUpdate ? 'Draft update · review required' : 'Preview only · not published'}</strong></div>
           </section>
