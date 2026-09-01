@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import RoleSessionBridge from './RoleSessionBridge.jsx';
 import GlobalSidebarBridge from './GlobalSidebarBridge.jsx';
+import TeacherWorkspaceRouteSyncBridge from './TeacherWorkspaceRouteSyncBridge.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
@@ -47,6 +48,7 @@ createRoot(document.getElementById('root')).render(
     <App />
     <RoleSessionBridge />
     <GlobalSidebarBridge />
+    <TeacherWorkspaceRouteSyncBridge />
     <TeacherDashboardBridge />
     <PublicationWorkflowBridge />
     <TeacherProgressResultsBridge />
