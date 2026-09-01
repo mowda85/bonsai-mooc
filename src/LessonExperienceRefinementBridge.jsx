@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { getLiveCourseContent, stageUnitContent } from './crossRoleCourseStore.js';
 
 const QUIZ_HANDOFF_KEY = 'bonsai-mooc.prototype.kan63.open-unit-1-quiz.v1';
+const PILOT_SLUG = 'information-systems-knowledge-dissemination';
 const PILOT_BASE_UNIT_COUNT = 3;
 
 function query() {
@@ -145,7 +146,7 @@ function videoEmbedUrl(value) {
     }
 
     if (host === 'vimeo.com' || host === 'player.vimeo.com') {
-      const id = url.pathname.split('/').filter(Boolean).findLast((part) => /^\d+$/.test(part));
+      const id = url.pathname.split('/').filter(Boolean).reverse().find((part) => /^\d+$/.test(part));
       return id ? `https://player.vimeo.com/video/${id}` : null;
     }
   } catch {
@@ -211,6 +212,35 @@ function ensureStaticLessonVideoSlot() {
   }));
 }
 
+function patchStaticPublishedLessonVideo() {
+  const root = document.querySelector('.lesson-content-page');
+  if (!root) return;
+  const kicker = root.querySelector('.learner-unit-kicker')?.textContent || '';
+  const match = kicker.match(/Unit\s+(\d+)\s+·\s+Lesson\s+(\d+)/i);
+  if (!match) return;
+  const unitNumber = Number(match[1]);
+  const lessonNumber = Number(match[2]);
+  if (unitNumber < 1 || unitNumber > PILOT_BASE_UNIT_COUNT) return;
+
+  const slug = query().get('course') || PILOT_SLUG;
+  const live = getLiveCourseContent(slug);
+  const unit = live?.units?.find((item) => item.id === `pilot-unit-${unitNumber}`);
+  const lesson = unit?.lessons?.[lessonNumber - 1];
+  const video = lesson?.video;
+  if (!video?.url) return;
+
+  let section = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
+  if (!section) {
+    const main = root.querySelector('.lesson-content-main');
+    if (!main) return;
+    section = createVideoSection({ title: video.title || 'Lesson video', message: 'Published lesson video.' });
+    main.appendChild(section);
+  }
+  if (section.dataset.kan63PublishedVideo === video.url) return;
+  section.dataset.kan63PublishedVideo = video.url;
+  renderVideo(section, video);
+}
+
 function patchTeacherPublishedLessonVideo() {
   if (window.location.pathname !== '/learner') return;
   const root = document.querySelector('.learner-unit-page[data-cross-role-rendered]');
@@ -241,6 +271,7 @@ function scan() {
   patchFinalLessonQuiz();
   continueQuizHandoff();
   ensureStaticLessonVideoSlot();
+  patchStaticPublishedLessonVideo();
   patchTeacherPublishedLessonVideo();
 }
 
