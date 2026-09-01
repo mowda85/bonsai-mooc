@@ -9,6 +9,7 @@ import TeacherFeedbackOverviewBridge from './TeacherFeedbackOverview.jsx';
 import WorkflowVersionBridge from './WorkflowVersionBridge.jsx';
 import CrossRoleDataBridge from './CrossRoleDataBridge.jsx';
 import Epic5PilotContentBridge from './Epic5PilotContentBridge.jsx';
+import LessonExperienceRefinementBridge from './LessonExperienceRefinementBridge.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -44,5 +45,6 @@ createRoot(document.getElementById('root')).render(
     <WorkflowVersionBridge />
     <CrossRoleDataBridge />
     <Epic5PilotContentBridge />
+    <LessonExperienceRefinementBridge />
   </React.StrictMode>,
 );
