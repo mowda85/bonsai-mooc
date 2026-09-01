@@ -14,10 +14,25 @@ const roleLabels = {
 };
 
 function protectedRoleForPath(path) {
-  if (path === '/learner') return 'learner';
+  if (path === '/learner' || path.startsWith('/learn/')) return 'learner';
   if (path === '/teacher') return 'teacher';
   if (path === '/admin') return 'admin';
   return null;
+}
+
+function learnerWorkspaceFromLegacyPath(path) {
+  const match = path.match(/^\/learn\/([^/]+)\/unit-(\d+)\/?$/);
+  if (!match) return null;
+  return `/learner?course=${encodeURIComponent(match[1])}&unit=${Number(match[2])}`;
+}
+
+function safeLearnerNext(value) {
+  if (!value || !value.startsWith('/learner')) return null;
+  return value;
+}
+
+function loginNext() {
+  return safeLearnerNext(new URLSearchParams(window.location.search).get('next'));
 }
 
 function locationKey() {
@@ -25,7 +40,7 @@ function locationKey() {
 }
 
 function replaceNavigate(path) {
-  if (window.location.pathname === path && !window.location.search) return;
+  if (`${window.location.pathname}${window.location.search}` === path) return;
   window.history.replaceState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -59,6 +74,7 @@ export default function RoleSessionBridge() {
 
     function normalizeRoute(path) {
       const protectedRole = protectedRoleForPath(path);
+      const legacyLearnerTarget = learnerWorkspaceFromLegacyPath(path);
       const pendingLogin = pendingLoginRef.current;
 
       if (pendingLogin && protectedRole) {
@@ -69,17 +85,39 @@ export default function RoleSessionBridge() {
           identifier: pendingLogin.identifier,
           role: protectedRole,
         });
+        if (protectedRole === 'learner' && pendingLogin.next) {
+          window.setTimeout(() => replaceNavigate(pendingLogin.next), 0);
+        } else if (protectedRole === 'learner' && legacyLearnerTarget) {
+          window.setTimeout(() => replaceNavigate(legacyLearnerTarget), 0);
+        }
         return;
       }
 
       const current = sessionRef.current;
       if (!current) {
-        if (protectedRole) window.setTimeout(() => replaceNavigate('/login'), 0);
+        if (protectedRole) {
+          const learnerTarget = protectedRole === 'learner'
+            ? legacyLearnerTarget || `${window.location.pathname}${window.location.search}`
+            : null;
+          const loginPath = learnerTarget ? `/login?next=${encodeURIComponent(learnerTarget)}` : '/login';
+          window.setTimeout(() => replaceNavigate(loginPath), 0);
+        }
         return;
       }
 
       const home = roleHomePaths[current.role];
-      if (path === '/login' || (protectedRole && protectedRole !== current.role)) {
+      if (current.role === 'learner' && legacyLearnerTarget) {
+        window.setTimeout(() => replaceNavigate(legacyLearnerTarget), 0);
+        return;
+      }
+
+      if (path === '/login') {
+        const next = current.role === 'learner' ? loginNext() : null;
+        window.setTimeout(() => replaceNavigate(next || home), 0);
+        return;
+      }
+
+      if (protectedRole && protectedRole !== current.role) {
         window.setTimeout(() => replaceNavigate(home), 0);
       }
     }
@@ -101,7 +139,7 @@ export default function RoleSessionBridge() {
         return;
       }
 
-      pendingLoginRef.current = { identifier };
+      pendingLoginRef.current = { identifier, next: loginNext() };
       window.clearTimeout(pendingExpiryRef.current);
       pendingExpiryRef.current = window.setTimeout(() => {
         pendingLoginRef.current = null;
