@@ -1,0 +1,26 @@
+[
+  {
+    "learnerId": "sample-feedback-a",
+    "learnerName": "Learner A",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "courseTitle": "Information Systems and Knowledge Dissemination",
+    "comment": "Clear explanation of the data-to-knowledge pipeline.",
+    "source": "sample-content"
+  },
+  {
+    "learnerId": "sample-feedback-b",
+    "learnerName": "Learner B",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "courseTitle": "Information Systems and Knowledge Dissemination",
+    "comment": "It would be helpful to see a real screenshot of the BONSAI information system in the case-study unit.",
+    "source": "sample-content"
+  },
+  {
+    "learnerId": "sample-feedback-c",
+    "learnerName": "Learner C",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "courseTitle": "Information Systems and Knowledge Dissemination",
+    "comment": "The knowledge dissemination unit was very relevant to my role.",
+    "source": "sample-content"
+  }
+]
