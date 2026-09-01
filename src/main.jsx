@@ -43,6 +43,7 @@ import './teacher-feedback-overview.css';
 import './teacher-lesson-video.css';
 import './teacher-networking.css';
 import './admin-dashboard.css';
+import './admin-dashboard-layout-fix.css';
 import './workflow-version.css';
 import './role-session.css';
 
