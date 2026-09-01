@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import RoleSessionBridge from './RoleSessionBridge.jsx';
 import GlobalSidebarBridge from './GlobalSidebarBridge.jsx';
+import OfficialTrackSyncBridge from './OfficialTrackSyncBridge.jsx';
 import TeacherWorkspaceRouteSyncBridge from './TeacherWorkspaceRouteSyncBridge.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
+import AdminDashboardBridge from './AdminDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
 import TeacherFeedbackOverviewBridge from './TeacherFeedbackOverview.jsx';
@@ -40,6 +42,8 @@ import './teacher-publication.css';
 import './teacher-feedback-overview.css';
 import './teacher-lesson-video.css';
 import './teacher-networking.css';
+import './admin-dashboard.css';
+import './admin-dashboard-layout-fix.css';
 import './workflow-version.css';
 import './role-session.css';
 
@@ -48,8 +52,10 @@ createRoot(document.getElementById('root')).render(
     <App />
     <RoleSessionBridge />
     <GlobalSidebarBridge />
+    <OfficialTrackSyncBridge />
     <TeacherWorkspaceRouteSyncBridge />
     <TeacherDashboardBridge />
+    <AdminDashboardBridge />
     <PublicationWorkflowBridge />
     <TeacherProgressResultsBridge />
     <TeacherFeedbackOverviewBridge />
