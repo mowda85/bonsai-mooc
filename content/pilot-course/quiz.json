@@ -1,0 +1,57 @@
+{
+  "courseSlug": "information-systems-knowledge-dissemination",
+  "unitId": "pilot-unit-1",
+  "source": "pilot-content",
+  "questions": [
+    {
+      "id": "pilot-q1",
+      "type": "mcq",
+      "prompt": "In the data → information → knowledge pipeline, what comes immediately after data?",
+      "options": ["Information", "Knowledge", "Dissemination", "A decision"],
+      "answer": "Information"
+    },
+    {
+      "id": "pilot-q2",
+      "type": "mcq",
+      "prompt": "According to the BONSAI proposal, the project partnership includes 17 partners from how many member states?",
+      "options": ["2", "3", "4", "6"],
+      "answer": "4"
+    },
+    {
+      "id": "pilot-q3",
+      "type": "mcq",
+      "prompt": "Which statement best matches BONSAI's overall objective?",
+      "options": [
+        "Make flood-defence systems in tidal estuaries of North-West Europe more resilient to climate change",
+        "Replace all regional flood authorities with one European agency",
+        "Develop a single commercial water-monitoring product",
+        "Study only urban drinking-water consumption"
+      ],
+      "answer": "Make flood-defence systems in tidal estuaries of North-West Europe more resilient to climate change"
+    },
+    {
+      "id": "pilot-q4",
+      "type": "mcq",
+      "prompt": "Why does the BONSAI proposal emphasise transnational cooperation?",
+      "options": [
+        "Estuarine systems and climate change cross borders, creating opportunities for mutual learning",
+        "Every partner uses exactly the same local conditions",
+        "Only one country has experience with flood resilience",
+        "The project is designed to avoid sharing lessons between regions"
+      ],
+      "answer": "Estuarine systems and climate change cross borders, creating opportunities for mutual learning"
+    },
+    {
+      "id": "pilot-q5",
+      "type": "mcq",
+      "prompt": "What turns organised information into knowledge in the Unit 1 lesson?",
+      "options": [
+        "Interpreting information so it can support understanding, learning and decisions",
+        "Collecting more raw values without context",
+        "Removing the source and context from records",
+        "Keeping information isolated within one partner organisation"
+      ],
+      "answer": "Interpreting information so it can support understanding, learning and decisions"
+    }
+  ]
+}
