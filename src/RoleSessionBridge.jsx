@@ -27,8 +27,9 @@ function learnerWorkspaceFromLegacyPath(path) {
 }
 
 function safeLearnerNext(value) {
-  if (!value || !value.startsWith('/learner')) return null;
-  return value;
+  if (!value) return null;
+  if (value.startsWith('/learner') || value.startsWith('/learn/')) return value;
+  return null;
 }
 
 function loginNext() {
@@ -97,7 +98,7 @@ export default function RoleSessionBridge() {
       if (!current) {
         if (protectedRole) {
           const learnerTarget = protectedRole === 'learner'
-            ? legacyLearnerTarget || `${window.location.pathname}${window.location.search}`
+            ? `${window.location.pathname}${window.location.search}`
             : null;
           const loginPath = learnerTarget ? `/login?next=${encodeURIComponent(learnerTarget)}` : '/login';
           window.setTimeout(() => replaceNavigate(loginPath), 0);
