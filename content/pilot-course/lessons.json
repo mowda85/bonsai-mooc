@@ -1,0 +1,11 @@
+[
+  {
+    "id": "pilot-unit-1-lesson-1",
+    "unitId": "pilot-unit-1",
+    "unitNumber": 1,
+    "lessonNumber": 1,
+    "title": "Data → Information → Knowledge",
+    "format": "text",
+    "body": "Data, information and knowledge are closely related, but they are not the same thing. Data are raw observations or recorded facts. In a water-sector project, data might include rainfall measurements, water levels, soil properties, inspection records or survey results. On their own, these values can be difficult to interpret.\n\nData become information when they are organised, processed and presented in a way that gives them meaning. A set of water-level readings, for example, becomes more useful when it is arranged over time, compared with a threshold or displayed on a map. Information helps us understand what is happening and identify patterns, differences or changes.\n\nKnowledge develops when people interpret that information in context and connect it with expertise, experience and other evidence. Knowledge supports decisions: what a result means, why it matters and what action may be appropriate. The pipeline can therefore be summarised as data → information → knowledge: observations are organised into meaningful information, and that information is interpreted so it can support understanding and action.\n\nThis process is especially important in BONSAI because the project brings together 17 partner organisations across four countries. Different partners may collect different datasets, use different tools and contribute different expertise. Without a shared information system, useful material can remain scattered or difficult to compare. Shared structures make it easier to store, find, understand and combine contributions, reduce duplicated effort and preserve the context needed to interpret them. In this way, a common information system helps BONSAI turn distributed project data into information that partners can use together and, ultimately, into shared knowledge that supports collaboration and decision-making."
+  }
+]
