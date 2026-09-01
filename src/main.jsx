@@ -11,6 +11,7 @@ import CrossRoleDataBridge from './CrossRoleDataBridge.jsx';
 import Epic5PilotContentBridge from './Epic5PilotContentBridge.jsx';
 import LessonExperienceRefinementBridge from './LessonExperienceRefinementBridge.jsx';
 import TeacherLessonVideoBridge from './TeacherLessonVideoBridge.jsx';
+import StudentNetworkingBridge from './StudentNetworkingBridge.jsx';
 import './styles.css';
 import './learning-area.css';
 import './catalogue.css';
@@ -23,6 +24,7 @@ import './learner-activity.css';
 import './learner-quiz.css';
 import './quiz-results.css';
 import './learner-completion.css';
+import './student-networking.css';
 import './teacher-dashboard.css';
 import './teacher-dashboard-layout-fix.css';
 import './teacher-course-editor.css';
@@ -49,5 +51,6 @@ createRoot(document.getElementById('root')).render(
     <Epic5PilotContentBridge />
     <LessonExperienceRefinementBridge />
     <TeacherLessonVideoBridge />
+    <StudentNetworkingBridge />
   </React.StrictMode>,
 );
