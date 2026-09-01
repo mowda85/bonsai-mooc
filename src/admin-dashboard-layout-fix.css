@@ -1,0 +1,32 @@
+.admin-dashboard-host{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:left!important;
+  align-self:stretch;
+}
+
+.admin-dashboard-page{
+  width:100%;
+  max-width:none;
+}
+
+@media (min-width:1200px){
+  .admin-hero,
+  .admin-tabs,
+  .admin-section-stack{
+    padding-left:clamp(48px,6vw,104px);
+    padding-right:clamp(48px,6vw,104px);
+  }
+
+  .admin-notice{
+    margin-left:clamp(48px,6vw,104px);
+    margin-right:clamp(48px,6vw,104px);
+  }
+
+  .admin-wide-card{
+    margin-left:clamp(48px,6vw,104px);
+    margin-right:clamp(48px,6vw,104px);
+  }
+}
