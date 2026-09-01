@@ -1,3 +1,4 @@
+import pilotQuiz from '../content/pilot-course/quiz.json';
 import { getLiveCourseContent, stageQuizContent } from './crossRoleCourseStore.js';
 
 export const PROTOTYPE_QUIZ_STORAGE_KEY = 'bonsai-mooc.prototype.quizzes.v1';
@@ -6,37 +7,8 @@ const PILOT_COURSE_SLUG = 'information-systems-knowledge-dissemination';
 const PILOT_UNIT_ONE_ID = 'pilot-unit-1';
 
 const PILOT_QUIZ_FALLBACK = {
-  courseSlug: PILOT_COURSE_SLUG,
-  unitId: PILOT_UNIT_ONE_ID,
-  source: 'prototype',
-  questions: [
-    {
-      id: 'q1',
-      type: 'mcq',
-      prompt: 'In the established Unit 1 lesson sequence, which lesson follows Data?',
-      options: ['Information', 'Knowledge', 'BONSAI information system'],
-      answer: 'Information',
-    },
-    {
-      id: 'q2',
-      type: 'mcq',
-      prompt: 'Which established Unit 1 lesson appears third?',
-      options: ['Data', 'Information', 'Knowledge'],
-      answer: 'Knowledge',
-    },
-    {
-      id: 'q3',
-      type: 'short',
-      prompt: 'Prototype short-response field',
-      helper: 'Enter a short response to test this answer type. Final instructional wording will be supplied in KAN-50.',
-    },
-    {
-      id: 'q4',
-      type: 'project',
-      prompt: 'Prototype extended-response field',
-      helper: 'Enter a longer response to test the project-style answer area. Final instructional wording will be supplied in KAN-50.',
-    },
-  ],
+  ...pilotQuiz,
+  source: 'pilot-content',
 };
 
 function cloneQuiz(quiz) {
