@@ -1,0 +1,8 @@
+{
+  "jiraTask": "KAN-43",
+  "slug": "information-systems-knowledge-dissemination",
+  "title": "Information Systems and Knowledge Dissemination",
+  "estimatedDuration": "2–3 hours",
+  "description": "A 2–3 hour course for the water sector that explains how data is collected, managed and transformed into information and knowledge, and how information systems support data-driven decisions. BONSAI is used as a practical case study of building shared knowledge across partner organisations and disseminating that knowledge to partners and the public.",
+  "integrationStatus": "Content approved for later wiring into the prototype screens in KAN-53."
+}
