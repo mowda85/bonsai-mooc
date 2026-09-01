@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Data to Information to Knowledge</title>
+  <desc id="desc">Three connected boxes show the progression from raw observations, to organised information, to knowledge that supports decisions.</desc>
+  <rect width="1200" height="420" rx="28" fill="#F8FAFC"/>
+  <text x="600" y="66" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#1F2A37">From Data to Information to Knowledge</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="70" y="130" width="285" height="185" rx="22" fill="#EAF2FB" stroke="#0F4D9D" stroke-width="3"/>
+    <text x="212.5" y="185" text-anchor="middle" font-size="29" font-weight="700" fill="#0F4D9D">DATA</text>
+    <text x="212.5" y="230" text-anchor="middle" font-size="19" fill="#1F2A37">Raw observations</text>
+    <text x="212.5" y="260" text-anchor="middle" font-size="17" fill="#475569">Measurements, readings, records</text>
+
+    <path d="M370 222 H430" stroke="#64748B" stroke-width="5" stroke-linecap="round"/>
+    <path d="M420 208 L440 222 L420 236" fill="none" stroke="#64748B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="455" y="130" width="290" height="185" rx="22" fill="#E9F6EA" stroke="#4C9C53" stroke-width="3"/>
+    <text x="600" y="185" text-anchor="middle" font-size="29" font-weight="700" fill="#3C7E43">INFORMATION</text>
+    <text x="600" y="230" text-anchor="middle" font-size="19" fill="#1F2A37">Data with context</text>
+    <text x="600" y="260" text-anchor="middle" font-size="17" fill="#475569">Organised, compared, interpreted</text>
+
+    <path d="M760 222 H820" stroke="#64748B" stroke-width="5" stroke-linecap="round"/>
+    <path d="M810 208 L830 222 L810 236" fill="none" stroke="#64748B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="845" y="130" width="285" height="185" rx="22" fill="#EAF2FB" stroke="#0F4D9D" stroke-width="3"/>
+    <text x="987.5" y="185" text-anchor="middle" font-size="29" font-weight="700" fill="#0F4D9D">KNOWLEDGE</text>
+    <text x="987.5" y="230" text-anchor="middle" font-size="19" fill="#1F2A37">Useful understanding</text>
+    <text x="987.5" y="260" text-anchor="middle" font-size="17" fill="#475569">Evidence used to learn and decide</text>
+
+    <text x="600" y="368" text-anchor="middle" font-size="18" fill="#475569">BONSAI pilot-course diagram · Unit 1</text>
+  </g>
+</svg>
