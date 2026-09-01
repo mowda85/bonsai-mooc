@@ -1,0 +1,31 @@
+BONSAI Knowledge Sharing Checklist
+Pilot course: Information Systems and Knowledge Dissemination
+Unit 3 — Knowledge Dissemination in BONSAI
+
+Use this prototype checklist before sharing a BONSAI project result or lesson learned.
+
+[ ] 1. Define the audience.
+Identify who needs the information: project partners, authorities, practitioners, learners, societal partners, or the public.
+
+[ ] 2. State the purpose.
+Explain what the audience should understand, decide, or do after receiving the information.
+
+[ ] 3. Check the source and context.
+Record where the data or evidence came from, what it represents, and any important limitations.
+
+[ ] 4. Turn results into a clear message.
+Summarise the main finding in plain language and explain why it matters for flood resilience or disaster management.
+
+[ ] 5. Choose an appropriate format.
+Match the format to the audience: short summary, visual, technical document, training material, course content, or presentation.
+
+[ ] 6. Make the material reusable.
+Use a clear title, date/version, responsible partner, and enough context for another BONSAI partner to understand the material later.
+
+[ ] 7. Support transnational learning.
+Where relevant, explain what partners in other regions or countries can learn from the result and what local differences should be considered.
+
+[ ] 8. Review before dissemination.
+Check accuracy, clarity, permissions, and whether the message is suitable for the intended audience.
+
+Prototype note: This checklist is sample MOOC content, not an official BONSAI project procedure.
