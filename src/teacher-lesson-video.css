@@ -1,0 +1,85 @@
+.dashboard-placeholder.teacher-lesson-video-active {
+  padding: 0;
+  max-width: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dashboard-placeholder.teacher-lesson-video-active > :not(.teacher-lesson-video-editor-page) {
+  display: none !important;
+}
+
+.teacher-lesson-video-editor-page {
+  display: block;
+  width: 100%;
+}
+
+.teacher-lesson-video-body {
+  align-items: start;
+}
+
+.teacher-lesson-video-list > p {
+  margin-top: 0;
+}
+
+.teacher-lesson-video-row {
+  padding: 1.1rem 0;
+  border-top: 1px solid rgba(31, 42, 55, 0.12);
+}
+
+.teacher-lesson-video-row:first-of-type {
+  margin-top: 1rem;
+}
+
+.teacher-lesson-video-heading {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.teacher-lesson-video-heading > span {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 999px;
+  background: #eaf2fb;
+  color: #0f4d9d;
+  font-weight: 800;
+}
+
+.teacher-lesson-video-heading div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.teacher-lesson-video-heading small,
+.teacher-lesson-video-state {
+  color: #667085;
+}
+
+.teacher-lesson-video-row .teacher-editor-field + .teacher-editor-field {
+  margin-top: 0.75rem;
+}
+
+.teacher-unit-lesson-video-link {
+  border: 0;
+  background: transparent;
+  color: #0f4d9d;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+
+.teacher-unit-lesson-video-link:hover,
+.teacher-unit-lesson-video-link:focus-visible {
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .teacher-lesson-video-row {
+    padding: 1rem 0;
+  }
+}
