@@ -14,6 +14,8 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
     title: '',
     description: '',
     exercise: '',
+    videoTitle: '',
+    videoUrl: '',
     assignedCourseSlugs: initialCourseSlug ? [initialCourseSlug] : [],
     file: null,
   }));
@@ -53,12 +55,22 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
     if (!form.title.trim()) nextErrors.push('Unit Title is required.');
     if (!form.description.trim()) nextErrors.push('Description / Lesson 1 content is required.');
     if (!form.assignedCourseSlugs.length) nextErrors.push('Assign the unit to at least one course.');
+    if (form.videoUrl.trim()) {
+      try {
+        const url = new URL(form.videoUrl.trim());
+        if (!['http:', 'https:'].includes(url.protocol)) nextErrors.push('Lesson Video URL must use http or https.');
+      } catch {
+        nextErrors.push('Lesson Video URL must be a valid URL.');
+      }
+    }
     setErrors(nextErrors);
     if (nextErrors.length) return false;
     onSave({
       title: form.title.trim(),
       description: form.description.trim(),
       exercise: form.exercise.trim(),
+      videoTitle: form.videoTitle.trim(),
+      videoUrl: form.videoUrl.trim(),
       assignedCourseSlugs: form.assignedCourseSlugs,
       file: form.file,
     });
@@ -81,9 +93,9 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
         <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><strong>Unit / Content Editor</strong></div>
         <div className="teacher-unit-editor-heading">
           <div>
-            <div className="teacher-hero-badges"><span className="pill">Unit / Content Editor</span><span className="teacher-kicker-badge">KAN-33</span></div>
+            <div className="teacher-hero-badges"><span className="pill">Unit / Content Editor</span><span className="teacher-kicker-badge">KAN-33 + KAN-63</span></div>
             <h1>Create or update course content</h1>
-            <p>Draft unit and Lesson 1 content, assign it to one or more courses, attach a prototype file, save it, or preview the current unsaved version.</p>
+            <p>Draft unit and Lesson 1 content, add an optional lesson video, assign it to one or more courses, attach a prototype file, save it, or preview the current unsaved version.</p>
           </div>
           <aside><span>Prototype storage</span><strong>{publishedUpdate ? 'Draft update' : 'Same session'}</strong><small>{publishedUpdate ? 'Content assigned to a Published course must complete the review process before it replaces the learner-visible version.' : 'Selected files are represented by metadata only; no backend file storage is connected yet.'}</small></aside>
         </div>
@@ -95,6 +107,12 @@ export default function TeacherUnitEditor({ portfolio, initialCourseSlug, onBack
           <div className="teacher-editor-card-heading"><div><span className="section-kicker">Unit & lesson content</span><h2>Basic information</h2></div><span className="teacher-required-note">Required fields *</span></div>
           <label className="teacher-editor-field"><span>Unit Title *</span><input value={form.title} onChange={(event) => update('title', event.target.value)} placeholder="Enter unit title" /></label>
           <label className="teacher-editor-field"><span>Unit description / Lesson 1 content *</span><small>For this prototype, the unit instructional text is also the Lesson 1 learner-content shell. Updating it is treated as a Lesson-content revision.</small><textarea rows="6" value={form.description} onChange={(event) => update('description', event.target.value)} placeholder="Describe the unit and add the Lesson 1 instructional content" /></label>
+
+          <div className="teacher-editor-card-heading"><div><span className="section-kicker">Optional lesson media</span><h2>Lesson 1 video</h2></div></div>
+          <p>Each lesson can carry its own optional video. This prototype Unit Editor authors Lesson 1 for a newly created unit, so the video entered here belongs only to that lesson.</p>
+          <label className="teacher-editor-field"><span>Video title</span><input name="lessonVideoTitle" value={form.videoTitle} onChange={(event) => update('videoTitle', event.target.value)} placeholder="Optional lesson video title" /></label>
+          <label className="teacher-editor-field"><span>Video URL</span><small>Optional. Use a YouTube/Vimeo link or a direct http(s) video URL. The URL is stored as lesson metadata in the prototype.</small><input name="lessonVideoUrl" type="url" value={form.videoUrl} onChange={(event) => update('videoUrl', event.target.value)} placeholder="https://example.com/video" /></label>
+
           <label className="teacher-editor-field"><span>Exercise / activity instructions</span><small>Optional for the prototype.</small><textarea rows="6" value={form.exercise} onChange={(event) => update('exercise', event.target.value)} placeholder="Add an exercise, activity or learner task" /></label>
         </section>
 
