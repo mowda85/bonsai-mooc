@@ -1,14 +1,13 @@
+import pilotActivity from '../content/pilot-course/activity.json';
+
 export const PROTOTYPE_ACTIVITY_STORAGE_KEY = 'bonsai-mooc.prototype.activities.v1';
 
 const PILOT_COURSE_SLUG = 'information-systems-knowledge-dissemination';
 const PILOT_UNIT_TWO_ID = 'pilot-unit-2';
 
 const PILOT_ACTIVITY_FALLBACK = {
-  courseSlug: PILOT_COURSE_SLUG,
-  unitId: PILOT_UNIT_TWO_ID,
-  title: 'Prototype submission activity',
-  instructions: 'Enter a short response in the field below and submit it. This prototype checks the submission interaction only; the final instructional prompt belongs to the later activity-content task.',
-  source: 'prototype',
+  ...pilotActivity,
+  source: 'pilot-content',
 };
 
 function readStoredActivities() {
