@@ -2,6 +2,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import RoleSessionBridge from './RoleSessionBridge.jsx';
+import GlobalSidebarBridge from './GlobalSidebarBridge.jsx';
+import TeacherWorkspaceRouteSyncBridge from './TeacherWorkspaceRouteSyncBridge.jsx';
 import TeacherDashboardBridge from './TeacherDashboardBridge.jsx';
 import PublicationWorkflowBridge from './PublicationWorkflowBridge.jsx';
 import TeacherProgressResultsBridge from './TeacherProgressResults.jsx';
@@ -14,6 +16,7 @@ import TeacherLessonVideoBridge from './TeacherLessonVideoBridge.jsx';
 import StudentNetworkingBridge from './StudentNetworkingBridge.jsx';
 import TeacherNetworkingBridge from './TeacherNetworkingBridge.jsx';
 import './styles.css';
+import './global-sidebar.css';
 import './learning-area.css';
 import './catalogue.css';
 import './course-info.css';
@@ -44,6 +47,8 @@ createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
     <RoleSessionBridge />
+    <GlobalSidebarBridge />
+    <TeacherWorkspaceRouteSyncBridge />
     <TeacherDashboardBridge />
     <PublicationWorkflowBridge />
     <TeacherProgressResultsBridge />
