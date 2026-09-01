@@ -1,0 +1,29 @@
+[
+  {
+    "learnerId": "sample-learner-a",
+    "learnerName": "Learner A",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "quizScore": 4,
+    "quizScoreTotal": 5,
+    "quizStatus": "Submitted",
+    "source": "sample-content"
+  },
+  {
+    "learnerId": "sample-learner-b",
+    "learnerName": "Learner B",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "quizScore": 5,
+    "quizScoreTotal": 5,
+    "quizStatus": "Submitted",
+    "source": "sample-content"
+  },
+  {
+    "learnerId": "sample-learner-c",
+    "learnerName": "Learner C",
+    "courseSlug": "information-systems-knowledge-dissemination",
+    "quizScore": 3,
+    "quizScoreTotal": 5,
+    "quizStatus": "Submitted",
+    "source": "sample-content"
+  }
+]
