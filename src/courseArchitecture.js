@@ -1,3 +1,48 @@
+export const PILOT_COURSE_SLUG = 'flood-crisis-management-estuarine-areas';
+export const PILOT_COURSE_TITLE = 'Flood Crisis Management in Estuarine Areas';
+export const PILOT_COURSE_DESCRIPTION = 'Flood Crisis Management in Estuarine Areas introduces the key principles, tools, and practices used to prepare for and respond to flood-related crises. The course covers the fundamentals of crisis management, emergency response, situational awareness, communication, stakeholder coordination, readiness, leadership, and flood risk assessment. Learners are also introduced to flood inundation forecasting, dike and levee inspection, dike-breach modelling, and the effects of climate change on flood defence systems. Particular attention is given to understanding how flood waves propagate, how flood risk and resilience can be assessed, and how forecasting methods, including AI-based approaches, can support crisis management. Through practical and scenario-based exercises, participants learn how to interpret evolving flood situations, evaluate possible impacts, and support timely decision-making. The course aims to strengthen the capacity of learners to contribute to effective flood preparedness, response, recovery, and long-term resilience in estuarine and flood-prone areas.';
+export const PILOT_COURSE_DURATION = 'To be confirmed';
+export const PILOT_COURSE_OBJECTIVES = [
+  'Explain the main phases and principles of flood crisis management in estuarine and flood-prone areas.',
+  'Interpret flood-risk, situational-awareness and forecasting information to support crisis decisions.',
+  'Describe how flood-wave propagation, inundation forecasting, dike and levee inspection, and breach modelling inform emergency response.',
+  'Explain the roles of communication, stakeholder coordination, readiness and leadership during flood crises.',
+  'Evaluate an evolving flood scenario and identify appropriate preparedness, response, recovery and resilience actions.',
+];
+export const PILOT_COURSE_UNITS = [
+  {
+    id: 'pilot-unit-1',
+    title: 'Flood Crisis Management Fundamentals',
+    lessons: [
+      'Crisis Management and Emergency Response',
+      'Preparedness, Readiness and Leadership',
+      'Situational Awareness and Decision-Making',
+    ],
+  },
+  {
+    id: 'pilot-unit-2',
+    title: 'Flood Risk, Forecasting and Defence Systems',
+    lessons: [
+      'Flood Risk and Resilience Assessment',
+      'Flood-Wave Propagation and Inundation Forecasting',
+      'Dike and Levee Inspection',
+      'Dike-Breach Modelling and Climate-Change Effects',
+      'AI-Based Forecasting Approaches',
+    ],
+  },
+  {
+    id: 'pilot-unit-3',
+    title: 'Coordination, Communication and Scenario Response',
+    lessons: [
+      'Crisis Communication',
+      'Stakeholder Coordination',
+      'Interpreting Evolving Flood Situations',
+      'Evaluating Impacts and Response Options',
+      'Preparedness, Response, Recovery and Long-Term Resilience',
+    ],
+  },
+];
+
 export const BONSAI_CATEGORIES = [
   {
     slug: 'erosion',
@@ -80,15 +125,13 @@ export const BONSAI_CATEGORIES = [
   {
     slug: 'information-systems-knowledge-dissemination',
     name: 'Information Systems & Knowledge Dissemination',
-    description: 'The BONSAI information-systems and knowledge-dissemination category, currently represented by the functional pilot course.',
+    description: 'The BONSAI information-systems and knowledge-dissemination category, covering data, information, knowledge, information systems and knowledge dissemination.',
     specialistCertificate: 'BONSAI Specialist Certificate — Information Systems & Knowledge Dissemination',
     courses: [
       {
         slug: 'information-systems-knowledge-dissemination',
         title: 'Information Systems and Knowledge Dissemination',
         description: 'Data, information, knowledge, the BONSAI information-system context and knowledge dissemination.',
-        pilot: true,
-        duration: '2–3 hours',
         topics: [
           'Introduction to Data, Information and Knowledge',
           'Information Systems in BONSAI',
@@ -99,11 +142,6 @@ export const BONSAI_CATEGORIES = [
           'Describe methods for collecting, managing and transforming data.',
           'Analyze the role of information systems in the BONSAI project.',
           'Identify effective approaches for knowledge dissemination.',
-        ],
-        units: [
-          { title: 'Introduction to Data, Information and Knowledge', lessons: ['Data', 'Information', 'Knowledge'] },
-          { title: 'Information Systems in BONSAI', lessons: ['BONSAI information system', 'BONSAI information-system case study'] },
-          { title: 'Knowledge Dissemination in BONSAI', lessons: ['Knowledge dissemination in BONSAI'] },
         ],
       },
     ],
@@ -149,9 +187,19 @@ export const BONSAI_CATEGORIES = [
   {
     slug: 'crisis-management',
     name: 'Crisis Management',
-    description: 'Courses on preparedness, flood-risk management, emergency response, crisisology and practical flood-event response.',
+    description: 'Courses on flood-crisis management, preparedness, flood-risk management, emergency response, forecasting, crisisology and practical flood-event response.',
     specialistCertificate: 'BONSAI Specialist Certificate — Crisis Management',
     courses: [
+      {
+        slug: PILOT_COURSE_SLUG,
+        title: PILOT_COURSE_TITLE,
+        description: PILOT_COURSE_DESCRIPTION,
+        pilot: true,
+        duration: PILOT_COURSE_DURATION,
+        objectives: PILOT_COURSE_OBJECTIVES,
+        units: PILOT_COURSE_UNITS,
+        topics: PILOT_COURSE_UNITS.flatMap((unit) => unit.lessons),
+      },
       {
         slug: 'flood-risk-management-preparedness',
         title: 'Flood Risk Management / Preparedness',
