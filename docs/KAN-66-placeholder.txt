@@ -1,1 +1,0 @@
-KAN-66 implementation branch marker. Remove after implementation if desired.

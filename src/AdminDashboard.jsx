@@ -7,13 +7,13 @@ import {
   registerCourseContentChange,
 } from './coursePublicationStore.js';
 import {
-  FOUNDATION_AREA,
-  createOfficialTrack,
-  deleteOfficialTrack,
-  getOfficialTracks,
-  moveOfficialTrack,
-  updateOfficialTrack,
+  createOfficialCategory,
+  deleteOfficialCategory,
+  getOfficialCategories,
+  moveOfficialCategory,
+  updateOfficialCategory,
 } from './officialLearningAreaStore.js';
+import { BONSAI_COURSES } from './courseArchitecture.js';
 
 const USER_STORAGE_KEY = 'bonsai-mooc.prototype.admin-users.v1';
 
@@ -59,19 +59,19 @@ function StatCard({ label, value, detail }) {
 export default function AdminDashboard({ user }) {
   const [section, setSection] = useState('overview');
   const [users, setUsers] = useState(readUsers);
-  const [tracks, setTracks] = useState(getOfficialTracks);
+  const [categories, setCategories] = useState(getOfficialCategories);
   const [reviews, setReviews] = useState(currentReviews);
-  const [newTrack, setNewTrack] = useState('');
+  const [newCategory, setNewCategory] = useState('');
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
     const syncReviews = () => setReviews(currentReviews());
-    const syncTracks = () => setTracks(getOfficialTracks());
+    const syncCategories = () => setCategories(getOfficialCategories());
     window.addEventListener('bonsai:publication-status-changed', syncReviews);
-    window.addEventListener('bonsai:official-learning-areas-changed', syncTracks);
+    window.addEventListener('bonsai:official-learning-areas-changed', syncCategories);
     return () => {
       window.removeEventListener('bonsai:publication-status-changed', syncReviews);
-      window.removeEventListener('bonsai:official-learning-areas-changed', syncTracks);
+      window.removeEventListener('bonsai:official-learning-areas-changed', syncCategories);
     };
   }, []);
 
@@ -86,11 +86,12 @@ export default function AdminDashboard({ user }) {
       learners,
       teachers,
       admins,
-      courses: 20,
+      courses: BONSAI_COURSES.length,
+      categories: categories.filter((item) => item.active).length,
       enrollments: 67,
       completions: 19,
     };
-  }, [users]);
+  }, [users, categories]);
 
   const reviewQueue = reviews.filter((item) => item.state?.status === 'Under Review');
 
@@ -116,41 +117,41 @@ export default function AdminDashboard({ user }) {
     setNotice('Course returned to Draft for revision.');
   }
 
-  function addTrack(event) {
+  function addCategory(event) {
     event.preventDefault();
-    if (!newTrack.trim()) return;
-    setTracks(createOfficialTrack(newTrack));
-    setNewTrack('');
-    setNotice('Official specialization track created.');
+    if (!newCategory.trim()) return;
+    setCategories(createOfficialCategory(newCategory));
+    setNewCategory('');
+    setNotice('Official Category created.');
   }
 
-  function renameTrack(id, name) {
-    setTracks(updateOfficialTrack(id, { name }));
-    setNotice('Official specialization track renamed.');
+  function renameCategory(id, name) {
+    setCategories(updateOfficialCategory(id, { name }));
+    setNotice('Official Category renamed.');
   }
 
-  function toggleTrack(id, active) {
-    setTracks(updateOfficialTrack(id, { active }));
-    setNotice(active ? 'Track activated for teacher assignment.' : 'Track deactivated from teacher assignment.');
+  function toggleCategory(id, active) {
+    setCategories(updateOfficialCategory(id, { active }));
+    setNotice(active ? 'Category activated for teacher assignment.' : 'Category deactivated from teacher assignment.');
   }
 
-  function moveTrack(id, direction) {
-    setTracks(moveOfficialTrack(id, direction));
-    setNotice('Official track order updated.');
+  function moveCategory(id, direction) {
+    setCategories(moveOfficialCategory(id, direction));
+    setNotice('Official Category order updated.');
   }
 
-  function removeTrack(id) {
-    setTracks(deleteOfficialTrack(id));
-    setNotice('Specialization track deleted from prototype governance.');
+  function removeCategory(id) {
+    setCategories(deleteOfficialCategory(id));
+    setNotice('Category deleted from prototype governance.');
   }
 
   return (
     <main className="admin-dashboard-page">
       <section className="admin-hero">
         <div>
-          <div className="admin-hero-badges"><span className="pill">Admin workspace</span><span className="admin-kicker">KAN-62</span></div>
+          <div className="admin-hero-badges"><span className="pill">Admin workspace</span><span className="admin-kicker">KAN-66</span></div>
           <h1>Admin Dashboard</h1>
-          <p>Govern users, course review and the official BONSAI learning structure from one prototype workspace.</p>
+          <p>Govern users, course review and the five-Category BONSAI learning structure from one prototype workspace.</p>
         </div>
         <aside><span>Signed in as</span><strong>{user.name}</strong><small>{user.id} · Admin</small></aside>
       </section>
@@ -160,7 +161,7 @@ export default function AdminDashboard({ user }) {
           ['overview', 'Overview'],
           ['reviews', `Course reviews${reviewQueue.length ? ` (${reviewQueue.length})` : ''}`],
           ['users', 'Users & roles'],
-          ['structure', 'Learning structure'],
+          ['structure', 'Categories'],
         ].map(([key, label]) => <button key={key} type="button" className={section === key ? 'active' : ''} onClick={() => { setSection(key); setNotice(''); }}>{label}</button>)}
       </nav>
 
@@ -170,9 +171,9 @@ export default function AdminDashboard({ user }) {
         <section className="admin-section-stack">
           <div className="admin-stat-grid">
             <StatCard label="Total users" value={analytics.users} detail={`${analytics.learners} learners · ${analytics.teachers} teachers · ${analytics.admins} admin`} />
-            <StatCard label="Courses" value={analytics.courses} detail="Foundation + specialization catalogue" />
-            <StatCard label="Enrollments" value={analytics.enrollments} detail="Prototype course enrollments" />
-            <StatCard label="Completions" value={analytics.completions} detail="Prototype completed enrollments" />
+            <StatCard label="Courses" value={analytics.courses} detail="Current mapped BONSAI course catalogue" />
+            <StatCard label="Categories" value={analytics.categories} detail="Official active learning Categories" />
+            <StatCard label="Completions" value={analytics.completions} detail="Prototype completed course enrollments" />
           </div>
 
           <div className="admin-overview-grid">
@@ -187,12 +188,12 @@ export default function AdminDashboard({ user }) {
               </div>
             </section>
             <section className="admin-card">
-              <span className="section-kicker">Recent activity</span><h2>Website activity</h2>
+              <span className="section-kicker">Current architecture</span><h2>Open course access</h2>
               <ul className="admin-activity-list">
-                <li><strong>Course review</strong><span>Dike Stability is waiting for review.</span></li>
-                <li><strong>Learner result</strong><span>A quiz result was recorded for the pilot course.</span></li>
-                <li><strong>Content</strong><span>Information Systems and Knowledge Dissemination is Published.</span></li>
-                <li><strong>Governance</strong><span>{tracks.filter((track) => track.active).length} active specialization tracks are available to teachers.</span></li>
+                <li><strong>Five Categories</strong><span>Erosion; Animal Activities / Burrows; Information Systems & Knowledge Dissemination; Vegetation / Biodiversity; Crisis Management.</span></li>
+                <li><strong>Independent courses</strong><span>Learners may start any course unless an explicit required dependency is configured.</span></li>
+                <li><strong>Course achievement</strong><span>Each completed course can award a badge/certificate.</span></li>
+                <li><strong>Specialist achievement</strong><span>Completing every course in a Category can award its Specialist Certificate.</span></li>
               </ul>
             </section>
           </div>
@@ -201,7 +202,7 @@ export default function AdminDashboard({ user }) {
 
       {section === 'reviews' && (
         <section className="admin-card admin-wide-card">
-          <span className="section-kicker">Course governance</span><h2>Courses waiting for review</h2><p>Admin approval is one half of the dual-approval workflow. Lead Author approval is still required before a course reaches Approved.</p>
+          <span className="section-kicker">Course governance</span><h2>Courses waiting for review</h2><p>Admin approval is part of the existing publication workflow.</p>
           {reviewQueue.length ? <div className="admin-review-list">{reviewQueue.map(({ slug, title, state }) => (
             <article key={slug} className="admin-review-row">
               <div><strong>{title}</strong><span>Under Review · version {state.version || 1}</span><small>Lead Author: {state.leadAuthorApproved ? 'approved' : 'pending'} · Admin: {state.adminApproved ? 'approved' : 'pending'}</small></div>
@@ -228,19 +229,14 @@ export default function AdminDashboard({ user }) {
 
       {section === 'structure' && (
         <section className="admin-section-stack">
-          <section className="admin-card admin-foundation-card">
-            <span className="section-kicker">Required common core</span><div className="admin-foundation-heading"><div><h2>{FOUNDATION_AREA.name}</h2><p>{FOUNDATION_AREA.note}</p></div><span>Protected structure</span></div>
-            <p>Foundation is intentionally governed separately and cannot be deleted or converted into a specialization track.</p>
-          </section>
-
           <section className="admin-card admin-wide-card">
-            <span className="section-kicker">Official specialization structure</span><h2>Specialization tracks / learning areas</h2><p>Only Admin changes this list. Active tracks are synchronized into the teacher Course Editor assignment control; teacher Draft folders remain personal organization only.</p>
-            <form className="admin-add-track" onSubmit={addTrack}><input value={newTrack} onChange={(event) => setNewTrack(event.target.value)} placeholder="New specialization track name" /><button className="button button-primary" type="submit">Create track</button></form>
-            <div className="admin-track-list">{tracks.map((track, index) => <article className="admin-track-row" key={track.id}>
+            <span className="section-kicker">Official learning structure</span><h2>BONSAI Categories</h2><p>These are the official course Categories available for learner discovery and teacher course assignment. Category membership does not create a prerequisite or lock by itself.</p>
+            <form className="admin-add-track" onSubmit={addCategory}><input value={newCategory} onChange={(event) => setNewCategory(event.target.value)} placeholder="New Category name" /><button className="button button-primary" type="submit">Create Category</button></form>
+            <div className="admin-track-list">{categories.map((category, index) => <article className="admin-track-row" key={category.id}>
               <span className="admin-track-order">{String(index + 1).padStart(2, '0')}</span>
-              <label><span className="sr-only">Track name</span><input value={track.name} onChange={(event) => renameTrack(track.id, event.target.value)} /></label>
-              <span className={`admin-status ${track.active ? 'active' : 'blocked'}`}>{track.active ? 'Active' : 'Inactive'}</span>
-              <div className="admin-track-actions"><button type="button" disabled={index === 0} onClick={() => moveTrack(track.id, 'up')} aria-label={`Move ${track.name} up`}>↑</button><button type="button" disabled={index === tracks.length - 1} onClick={() => moveTrack(track.id, 'down')} aria-label={`Move ${track.name} down`}>↓</button><button type="button" onClick={() => toggleTrack(track.id, !track.active)}>{track.active ? 'Deactivate' : 'Activate'}</button><button type="button" className="danger" onClick={() => removeTrack(track.id)}>Delete</button></div>
+              <label><span className="sr-only">Category name</span><input value={category.name} onChange={(event) => renameCategory(category.id, event.target.value)} /></label>
+              <span className={`admin-status ${category.active ? 'active' : 'blocked'}`}>{category.active ? 'Active' : 'Inactive'}</span>
+              <div className="admin-track-actions"><button type="button" disabled={index === 0} onClick={() => moveCategory(category.id, 'up')} aria-label={`Move ${category.name} up`}>↑</button><button type="button" disabled={index === categories.length - 1} onClick={() => moveCategory(category.id, 'down')} aria-label={`Move ${category.name} down`}>↓</button><button type="button" onClick={() => toggleCategory(category.id, !category.active)}>{category.active ? 'Deactivate' : 'Activate'}</button><button type="button" className="danger" onClick={() => removeCategory(category.id)}>Delete</button></div>
             </article>)}</div>
           </section>
         </section>
