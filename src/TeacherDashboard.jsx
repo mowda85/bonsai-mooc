@@ -16,8 +16,8 @@ export const mockTeacherPortfolio = [
   {
     slug: 'information-systems-knowledge-dissemination',
     title: 'Information Systems and Knowledge Dissemination',
-    area: 'Foundation',
-    areas: ['Foundation'],
+    area: 'Information Systems & Knowledge Dissemination',
+    areas: ['Information Systems & Knowledge Dissemination'],
     description: 'This pilot course introduces the relationship between data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.',
     objectives: [],
     draftFolder: '',
@@ -29,10 +29,10 @@ export const mockTeacherPortfolio = [
     units: pilotUnits,
   },
   {
-    slug: 'dike-stability',
-    title: 'Dike Stability',
-    area: 'Dike Stability and Erosion',
-    areas: ['Dike Stability and Erosion'],
+    slug: 'dike-stability-lagrangian-numerical-modelling',
+    title: 'Dike Stability: Lagrangian Methods and Numerical Modeling',
+    area: 'Erosion',
+    areas: ['Erosion'],
     description: '',
     objectives: [],
     draftFolder: '',
@@ -44,9 +44,9 @@ export const mockTeacherPortfolio = [
   },
   {
     slug: 'vegetation-management',
-    title: 'Vegetation Management',
-    area: 'Vegetation and Nature-based Solutions',
-    areas: ['Vegetation and Nature-based Solutions'],
+    title: 'Vegetation and Management',
+    area: 'Vegetation / Biodiversity',
+    areas: ['Vegetation / Biodiversity'],
     description: '',
     objectives: [],
     draftFolder: '',
@@ -57,10 +57,10 @@ export const mockTeacherPortfolio = [
     units: [],
   },
   {
-    slug: 'flood-risk-management',
-    title: 'Flood Risk Management',
-    area: 'Flood Risk and Emergency Management',
-    areas: ['Flood Risk and Emergency Management'],
+    slug: 'flood-risk-management-preparedness',
+    title: 'Flood Risk Management / Preparedness',
+    area: 'Crisis Management',
+    areas: ['Crisis Management'],
     description: '',
     objectives: [],
     draftFolder: '',
@@ -86,7 +86,7 @@ function readTeacherQuery() {
   };
 }
 
-function areaLabel(course) {
+function categoryLabel(course) {
   const values = course.areas?.length ? course.areas : course.area ? [course.area] : [];
   if (values.length) return values.join(' · ');
   return course.draftFolder ? `Unassigned draft · ${course.draftFolder}` : 'Unassigned draft';
@@ -125,7 +125,7 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAd
           <div>
             <div className="teacher-hero-badges"><span className="pill">Assigned course</span>{course.pilot && <span className="pilot-badge">Pilot course</span>}<span className={`teacher-status-chip teacher-status-${course.status.toLowerCase().replaceAll(' ', '-')}`}>{course.status}</span></div>
             <h1>{course.title}</h1>
-            <p>Teacher view for this assigned BONSAI course. Learner count and workflow status are prototype/mock data for the current teacher experience.</p>
+            <p>Teacher view for this assigned BONSAI course. Category assignment does not create an access lock; course access is controlled only by explicit prerequisites or dependencies.</p>
             <div className="teacher-assigned-actions">
               <button className="button button-primary" type="button" onClick={onEdit}>Edit Course</button>
               <button className="button button-outline" type="button" onClick={onAddUnit}>+ Add Unit</button>
@@ -134,7 +134,7 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAd
             </div>
           </div>
           <aside className="teacher-assigned-summary" aria-label="Assigned course summary">
-            <div><span>Learning area</span><strong>{areaLabel(course)}</strong></div>
+            <div><span>Category</span><strong>{categoryLabel(course)}</strong></div>
             {course.draftFolder && <div><span>Draft folder</span><strong>{course.draftFolder}</strong></div>}
             <div><span>Units</span><strong>{units.length}</strong></div>
             <div><span>Enrolled learners</span><strong>{course.learners} <small>prototype</small></strong></div>
@@ -186,7 +186,7 @@ function AssignedCoursePage({ course, onBack, onEdit, onProgress, onPublic, onAd
             <span className="section-kicker">Quick links</span>
             <h2>Manage this course</h2>
             <div className="teacher-quick-link-grid">
-              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Edit metadata, draft organization, authors and official track assignment.</small></div><b>→</b></button>
+              <button type="button" onClick={onEdit}><span>✎</span><div><strong>Course Editor</strong><small>Edit metadata, authors, Category assignment and prerequisites/dependencies.</small></div><b>→</b></button>
               <button type="button" onClick={onAddUnit}><span>＋</span><div><strong>Unit / Content Editor</strong><small>Create unit content and assign it to one or more courses.</small></div><b>→</b></button>
               <button type="button" onClick={onProgress}><span>↗</span><div><strong>Progress & Results</strong><small>Open the later-task progress/results handoff.</small></div><b>→</b></button>
             </div>
@@ -213,7 +213,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
   const [teacherQuery, setTeacherQuery] = useState(readTeacherQuery);
   const [portfolio, setPortfolio] = useState(mockTeacherPortfolio);
   const totalLearners = useMemo(() => portfolio.reduce((sum, course) => sum + course.learners, 0), [portfolio]);
-  const learningAreas = useMemo(() => new Set(portfolio.flatMap((course) => course.areas?.length ? course.areas : course.area ? [course.area] : []).filter(Boolean)).size, [portfolio]);
+  const categoryCount = useMemo(() => new Set(portfolio.flatMap((course) => course.areas?.length ? course.areas : course.area ? [course.area] : []).filter(Boolean)).size, [portfolio]);
   const activeSlug = teacherQuery.editor && teacherQuery.editor !== 'new' ? teacherQuery.editor : teacherQuery.course || teacherQuery.progress;
   const selectedCourse = activeSlug ? portfolio.find((course) => course.slug === activeSlug) : null;
 
@@ -333,9 +333,9 @@ export default function TeacherDashboard({ user, onNavigate }) {
     <main className="teacher-dashboard-page">
       <section className="teacher-dashboard-hero">
         <div>
-          <div className="teacher-hero-badges"><span className="pill">Teacher dashboard</span><span className="teacher-kicker-badge">Prototype workspace</span></div>
+          <div className="teacher-hero-badges"><span className="pill">Teacher dashboard</span><span className="teacher-kicker-badge">Category model</span></div>
           <h1>Welcome, {user?.name}</h1>
-          <p>Manage your BONSAI courses and see a simple overview of the learners currently attached to your prototype teaching portfolio.</p>
+          <p>Manage BONSAI courses, assign them to official Categories, and configure prerequisites or dependencies only when a course genuinely requires them.</p>
           <small>Course assignments, workflow statuses and learner counts below are prototype/mock data for the teacher workflow.</small>
         </div>
         <div className="teacher-dashboard-hero-actions">
@@ -347,25 +347,25 @@ export default function TeacherDashboard({ user, onNavigate }) {
       <section className="teacher-overview" aria-label="Teacher overview">
         <article><span>My courses</span><strong>{portfolio.length}</strong><small>prototype teaching portfolio</small></article>
         <article><span>Learners</span><strong>{totalLearners}</strong><small>aggregate mock enrollments</small></article>
-        <article><span>Learning areas</span><strong>{learningAreas}</strong><small>Foundation + specializations</small></article>
+        <article><span>Categories</span><strong>{categoryCount}</strong><small>official course Categories in this portfolio</small></article>
         <article><span>Pilot courses</span><strong>{portfolio.filter((course) => course.pilot).length}</strong><small>prototype-only overview metric</small></article>
       </section>
 
       <section className="teacher-dashboard-content">
         <section className="teacher-courses-panel" aria-labelledby="teacher-courses-heading">
           <div className="teacher-section-heading">
-            <div><span className="section-kicker">Course management</span><h2 id="teacher-courses-heading">My Courses</h2><p>Open an assigned course for its status and teacher quick links, edit it directly, or start a new course.</p></div>
+            <div><span className="section-kicker">Course management</span><h2 id="teacher-courses-heading">My Courses</h2><p>Open an assigned course for its status and teacher tools, edit it directly, or start a new course.</p></div>
             <button className="button button-primary" type="button" onClick={() => openEditor('new')}>+ Create Course</button>
           </div>
 
           <div className="teacher-course-table" role="table" aria-label="My Courses">
             <div className="teacher-course-table-head" role="row">
-              <span role="columnheader">Course</span><span role="columnheader">Track / learning area</span><span role="columnheader">Learners</span><span role="columnheader">Actions</span>
+              <span role="columnheader">Course</span><span role="columnheader">Category</span><span role="columnheader">Learners</span><span role="columnheader">Actions</span>
             </div>
             {portfolio.map((course) => (
               <div className="teacher-course-row" role="row" key={course.slug}>
                 <div className="teacher-course-name" role="cell"><div className="teacher-course-icon">{course.pilot ? 'P' : 'C'}</div><div><button className="teacher-course-open" type="button" onClick={() => openCourse(course.slug)}>{course.title}</button>{course.pilot && <span className="pilot-badge">Pilot course</span>}<span className="teacher-row-status">{course.status}</span></div></div>
-                <div className="teacher-course-area" role="cell"><span>{areaLabel(course)}</span></div>
+                <div className="teacher-course-area" role="cell"><span>{categoryLabel(course)}</span></div>
                 <div className="teacher-course-learners" role="cell"><strong>{course.learners}</strong><small>prototype learners</small></div>
                 <div className="teacher-course-action" role="cell"><button className="button button-primary teacher-row-view" type="button" onClick={() => openCourse(course.slug)}>View</button><button className="button button-outline" type="button" onClick={() => openEditor(course.slug)}>Edit</button></div>
               </div>
@@ -376,7 +376,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
         <aside className="teacher-learners-panel">
           <span className="section-kicker">Students overview</span>
           <h2>{totalLearners} learner enrollments</h2>
-          <p>This dashboard stays at aggregate level. Open an assigned course for its course-level status and quick links.</p>
+          <p>This dashboard stays at aggregate level. Open an assigned course for course-level status, Category assignment, content editing and prerequisites/dependencies.</p>
           <div className="teacher-learner-breakdown">
             {portfolio.map((course) => (
               <div key={course.slug}><div><strong>{course.title}</strong><span>{course.learners}</span></div><div className="teacher-count-track"><span style={{ width: `${Math.round((course.learners / Math.max(...portfolio.map((item) => item.learners), 1)) * 100)}%` }} /></div></div>
