@@ -1,6 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './pilotMigrationConfig.js';
 import App from './App.jsx';
 import RoleSessionBridge from './RoleSessionBridge.jsx';
 import GlobalSidebarBridge from './GlobalSidebarBridge.jsx';
