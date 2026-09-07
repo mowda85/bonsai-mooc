@@ -3,6 +3,17 @@ import { getPrototypeActivity } from './prototypeActivityStore.js';
 
 export const PILOT_SCENARIO_ACTIVITY_ID = 'pilot-scenario-response-activity';
 export const UNIT_TWO_ACTIVITY_ID = PILOT_SCENARIO_ACTIVITY_ID;
+export const PILOT_ACTIVITY_COMPLETION_KEY = 'bonsai-mooc.prototype.pilot-activity-completed.v1';
+
+function saveActivityCompletion(courseSlug, unitNumber) {
+  const record = { courseSlug, unitNumber, activityId: PILOT_SCENARIO_ACTIVITY_ID, completedAt: new Date().toISOString() };
+  try {
+    window.sessionStorage.setItem(PILOT_ACTIVITY_COMPLETION_KEY, JSON.stringify(record));
+  } catch {
+    // The in-memory learner state still records the completed activity.
+  }
+  window.dispatchEvent(new CustomEvent('bonsai:pilot-activity-completed', { detail: record }));
+}
 
 export default function LearnerActivityPage({ course, unitTitle, unitNumber, completed = false, onBack, onComplete }) {
   const [response, setResponse] = useState('');
@@ -18,6 +29,7 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
     event.preventDefault();
     if (!canSubmit) return;
     onComplete?.(PILOT_SCENARIO_ACTIVITY_ID);
+    saveActivityCompletion(course?.slug, unitNumber);
     setSubmittedNow(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -34,7 +46,7 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
             <div className="learner-activity-badges">
               <span className="pill">Flood crisis scenario</span>
               {teacherConfigured && <span className="learner-activity-status">Teacher configured</span>}
-              <span className={`learner-activity-status ${isComplete ? 'learner-activity-status-done' : ''}`}>{isComplete ? '✓ Completed' : 'To complete'}</span>
+              <span className={`learner-activity-status ${isComplete ? 'learner-activity-status-done' : ''}`}>{isComplete ? '✓ Completed' : 'Required pilot activity'}</span>
             </div>
             <span className="learner-unit-kicker">Unit {unitNumber} · Scenario activity</span>
             <h1>{activityTitle}</h1>
@@ -44,7 +56,7 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
             <div><span>Course</span><strong>{course?.title}</strong></div>
             <div><span>Unit</span><strong>{unitTitle}</strong></div>
             <div><span>Submission</span><strong>Free-text scenario response</strong></div>
-            <div><span>Status</span><strong>{isComplete ? 'Completed' : 'Not submitted'}</strong></div>
+            <div><span>Completion</span><strong>Required for Unit {unitNumber}</strong></div>
           </aside>
         </div>
       </section>
@@ -93,7 +105,7 @@ export default function LearnerActivityPage({ course, unitTitle, unitNumber, com
         <aside className="learner-activity-side-panel">
           <span className="section-kicker">Activity status</span>
           <h2>{isComplete ? 'Completed' : 'Ready when you are'}</h2>
-          <p>{isComplete ? 'Your scenario response has been recorded for this prototype session.' : 'Complete the scenario response to mark this activity as done.'}</p>
+          <p>{isComplete ? 'Your scenario response has been recorded for this prototype session.' : 'Complete the scenario response before Unit 3 can be marked complete.'}</p>
           <div className={`learner-activity-status-card ${isComplete ? 'learner-activity-status-card-done' : ''}`}>
             <span aria-hidden="true">{isComplete ? '✓' : '○'}</span>
             <div><strong>{isComplete ? 'Submission recorded' : 'Not submitted'}</strong><small>{isComplete ? 'Scenario activity complete' : 'Free-text response required'}</small></div>

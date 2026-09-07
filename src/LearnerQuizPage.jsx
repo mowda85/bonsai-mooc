@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import LearnerQuizResultsPage from './LearnerQuizResultsPage.jsx';
 import { getPrototypeQuiz } from './prototypeQuizStore.js';
 
+export const PILOT_QUIZ_COMPLETION_KEY = 'bonsai-mooc.prototype.pilot-quiz-completed.v1';
+
 function isAnswered(question, value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
@@ -10,6 +12,16 @@ function questionTypeLabel(type) {
   if (type === 'mcq') return 'Multiple choice';
   if (type === 'short') return 'Short writing';
   return 'Scenario response';
+}
+
+function saveQuizCompletion(courseSlug, unitNumber, result) {
+  const record = { courseSlug, unitNumber, result, completedAt: new Date().toISOString() };
+  try {
+    window.sessionStorage.setItem(PILOT_QUIZ_COMPLETION_KEY, JSON.stringify(record));
+  } catch {
+    // The in-memory learner state still records the submitted result.
+  }
+  window.dispatchEvent(new CustomEvent('bonsai:pilot-quiz-completed', { detail: record }));
 }
 
 export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onBack, onQuizSubmitted }) {
@@ -55,6 +67,7 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
     };
     setResult(submittedResult);
     onQuizSubmitted?.(submittedResult);
+    saveQuizCompletion(course?.slug, unitNumber, submittedResult);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -108,7 +121,7 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
         </div>
         <div className="learner-quiz-hero-grid">
           <div>
-            <div className="learner-unit-badges"><span className="pill">Flood crisis knowledge check</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">Pilot assessment</span></div>
+            <div className="learner-unit-badges"><span className="pill">Flood crisis knowledge check</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">Required pilot assessment</span></div>
             <span className="learner-unit-kicker">Unit {unitNumber} · Knowledge check</span>
             <h1>Flood Crisis Management Knowledge Check</h1>
             <p>{teacherConfigured ? 'These questions were configured by the teacher for this course. Complete every question and submit to see the result.' : 'Check your understanding of crisis management, situational awareness, flood forecasting, flood-defence information and decision support.'}</p>
@@ -117,7 +130,7 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
             <div><span>Questions</span><strong>{questions.length}</strong></div>
             <div><span>Answered</span><strong>{answeredCount} / {questions.length}</strong></div>
             <div><span>Auto-scored</span><strong>{mcqCount} MCQ{mcqCount === 1 ? '' : 's'}</strong></div>
-            <div><span>Next step</span><strong>Results</strong></div>
+            <div><span>Completion</span><strong>Required for Unit 1</strong></div>
           </aside>
         </div>
       </section>
