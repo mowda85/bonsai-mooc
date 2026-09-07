@@ -17,6 +17,7 @@ import LessonExperienceRefinementBridge from './LessonExperienceRefinementBridge
 import TeacherLessonVideoBridge from './TeacherLessonVideoBridge.jsx';
 import StudentNetworkingBridge from './StudentNetworkingBridge.jsx';
 import TeacherNetworkingBridge from './TeacherNetworkingBridge.jsx';
+import CategoryArchitectureBridge from './CategoryArchitectureBridge.jsx';
 import './styles.css';
 import './global-sidebar.css';
 import './learning-area.css';
@@ -46,6 +47,7 @@ import './admin-dashboard.css';
 import './admin-dashboard-layout-fix.css';
 import './workflow-version.css';
 import './role-session.css';
+import './category-architecture.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -66,5 +68,6 @@ createRoot(document.getElementById('root')).render(
     <TeacherLessonVideoBridge />
     <StudentNetworkingBridge />
     <TeacherNetworkingBridge />
+    <CategoryArchitectureBridge />
   </React.StrictMode>,
 );
