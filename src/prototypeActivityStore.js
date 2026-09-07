@@ -1,9 +1,9 @@
 import pilotActivity from '../content/pilot-course/activity.json';
+import { PILOT_COURSE_SLUG } from './courseArchitecture.js';
 
-export const PROTOTYPE_ACTIVITY_STORAGE_KEY = 'bonsai-mooc.prototype.activities.v1';
+export const PROTOTYPE_ACTIVITY_STORAGE_KEY = 'bonsai-mooc.prototype.activities.v2';
 
-const PILOT_COURSE_SLUG = 'information-systems-knowledge-dissemination';
-const PILOT_UNIT_TWO_ID = 'pilot-unit-2';
+const PILOT_ACTIVITY_UNIT_ID = 'pilot-unit-3';
 
 const PILOT_ACTIVITY_FALLBACK = {
   ...pilotActivity,
@@ -24,7 +24,7 @@ function readStoredActivities() {
 export function getPrototypeActivity(courseSlug, unitId) {
   const stored = readStoredActivities().find((activity) => activity.courseSlug === courseSlug && activity.unitId === unitId);
   if (stored) return stored;
-  if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_UNIT_TWO_ID) return PILOT_ACTIVITY_FALLBACK;
+  if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_ACTIVITY_UNIT_ID) return PILOT_ACTIVITY_FALLBACK;
   return null;
 }
 
