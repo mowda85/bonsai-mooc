@@ -1,57 +1,67 @@
 {
-  "courseSlug": "information-systems-knowledge-dissemination",
+  "courseSlug": "flood-crisis-management-estuarine-areas",
   "unitId": "pilot-unit-1",
   "source": "pilot-content",
   "questions": [
     {
       "id": "pilot-q1",
       "type": "mcq",
-      "prompt": "In the data → information → knowledge pipeline, what comes immediately after data?",
-      "options": ["Information", "Knowledge", "Dissemination", "A decision"],
-      "answer": "Information"
+      "prompt": "Which combination best reflects the scope of flood crisis management in this course?",
+      "options": [
+        "Preparedness, response, recovery and long-term resilience",
+        "Only post-flood reconstruction",
+        "Only numerical modelling",
+        "Only public communication"
+      ],
+      "answer": "Preparedness, response, recovery and long-term resilience"
     },
     {
       "id": "pilot-q2",
       "type": "mcq",
-      "prompt": "According to the BONSAI proposal, the project partnership includes 17 partners from how many member states?",
-      "options": ["2", "3", "4", "6"],
-      "answer": "4"
+      "prompt": "What is the main purpose of situational awareness during an evolving flood crisis?",
+      "options": [
+        "To build a shared understanding of what is happening, what may happen next and what the consequences could be",
+        "To replace all field observations with one forecast",
+        "To delay decisions until uncertainty disappears",
+        "To focus only on long-term climate policy"
+      ],
+      "answer": "To build a shared understanding of what is happening, what may happen next and what the consequences could be"
     },
     {
       "id": "pilot-q3",
       "type": "mcq",
-      "prompt": "Which statement best matches BONSAI's overall objective?",
+      "prompt": "How can flood-wave propagation and inundation forecasting support crisis management?",
       "options": [
-        "Make flood-defence systems in tidal estuaries of North-West Europe more resilient to climate change",
-        "Replace all regional flood authorities with one European agency",
-        "Develop a single commercial water-monitoring product",
-        "Study only urban drinking-water consumption"
+        "By helping anticipate where flooding may develop and supporting timely decisions",
+        "By guaranteeing that flood defences will not fail",
+        "By eliminating the need for stakeholder coordination",
+        "By replacing flood-risk assessment"
       ],
-      "answer": "Make flood-defence systems in tidal estuaries of North-West Europe more resilient to climate change"
+      "answer": "By helping anticipate where flooding may develop and supporting timely decisions"
     },
     {
       "id": "pilot-q4",
       "type": "mcq",
-      "prompt": "Why does the BONSAI proposal emphasise transnational cooperation?",
+      "prompt": "Why are dike and levee inspections relevant during a flood crisis?",
       "options": [
-        "Estuarine systems and climate change cross borders, creating opportunities for mutual learning",
-        "Every partner uses exactly the same local conditions",
-        "Only one country has experience with flood resilience",
-        "The project is designed to avoid sharing lessons between regions"
+        "They provide field information about flood-defence condition that can contribute to the wider crisis picture",
+        "They are only useful after a crisis is completely over",
+        "They remove the need for forecasting",
+        "They are unrelated to emergency response"
       ],
-      "answer": "Estuarine systems and climate change cross borders, creating opportunities for mutual learning"
+      "answer": "They provide field information about flood-defence condition that can contribute to the wider crisis picture"
     },
     {
       "id": "pilot-q5",
       "type": "mcq",
-      "prompt": "What turns organised information into knowledge in the Unit 1 lesson?",
+      "prompt": "How should AI-based forecasting approaches be used in the crisis-management context described in the course?",
       "options": [
-        "Interpreting information so it can support understanding, learning and decisions",
-        "Collecting more raw values without context",
-        "Removing the source and context from records",
-        "Keeping information isolated within one partner organisation"
+        "As decision-support information interpreted together with other evidence and local context",
+        "As an automatic replacement for human decision-making",
+        "Only after the recovery phase",
+        "Without communicating uncertainty or context"
       ],
-      "answer": "Interpreting information so it can support understanding, learning and decisions"
+      "answer": "As decision-support information interpreted together with other evidence and local context"
     }
   ]
 }
