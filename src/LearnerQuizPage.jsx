@@ -9,7 +9,7 @@ function isAnswered(question, value) {
 function questionTypeLabel(type) {
   if (type === 'mcq') return 'Multiple choice';
   if (type === 'short') return 'Short writing';
-  return 'Project-style response';
+  return 'Scenario response';
 }
 
 export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onBack, onQuizSubmitted }) {
@@ -71,9 +71,9 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
       <main className="learner-quiz-page">
         <section className="learner-quiz-hero">
           <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Unit {unitNumber}</button>
-          <div className="learner-unit-breadcrumb"><span>Learner dashboard</span><b>/</b><span>{course?.title}</span><b>/</b><span>Unit {unitNumber}</span><b>/</b><strong>Quiz</strong></div>
-          <h1>Quiz unavailable</h1>
-          <p>No quiz questions are configured for this unit.</p>
+          <div className="learner-unit-breadcrumb"><span>Learner dashboard</span><b>/</b><span>{course?.title}</span><b>/</b><span>Unit {unitNumber}</span><b>/</b><strong>Knowledge check</strong></div>
+          <h1>Knowledge check unavailable</h1>
+          <p>No questions are configured for this unit.</p>
         </section>
       </main>
     );
@@ -104,20 +104,20 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
       <section className="learner-quiz-hero">
         <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Unit {unitNumber}</button>
         <div className="learner-unit-breadcrumb" aria-label="Learner quiz breadcrumb">
-          <span>Learner dashboard</span><b>/</b><span>{course?.title}</span><b>/</b><span>Unit {unitNumber}</span><b>/</b><strong>Quiz</strong>
+          <span>Learner dashboard</span><b>/</b><span>{course?.title}</span><b>/</b><span>Unit {unitNumber}</span><b>/</b><strong>Knowledge check</strong>
         </div>
         <div className="learner-quiz-hero-grid">
           <div>
-            <div className="learner-unit-badges"><span className="pill">Learner quiz</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">KAN-26 interaction</span></div>
-            <span className="learner-unit-kicker">Unit {unitNumber} · Quiz</span>
-            <h1>Quiz interaction</h1>
-            <p>{teacherConfigured ? 'These questions were configured by the teacher for this browser session. MCQ scoring and written-response behavior still use the KAN-26 learner flow.' : 'The final five instructional questions belong to KAN-50. This page demonstrates the quiz mechanics, answer types and client-side MCQ scoring.'}</p>
+            <div className="learner-unit-badges"><span className="pill">Flood crisis knowledge check</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">Pilot assessment</span></div>
+            <span className="learner-unit-kicker">Unit {unitNumber} · Knowledge check</span>
+            <h1>Flood Crisis Management Knowledge Check</h1>
+            <p>{teacherConfigured ? 'These questions were configured by the teacher for this course. Complete every question and submit to see the result.' : 'Check your understanding of crisis management, situational awareness, flood forecasting, flood-defence information and decision support.'}</p>
           </div>
           <aside className="learner-quiz-summary">
             <div><span>Questions</span><strong>{questions.length}</strong></div>
             <div><span>Answered</span><strong>{answeredCount} / {questions.length}</strong></div>
             <div><span>Auto-scored</span><strong>{mcqCount} MCQ{mcqCount === 1 ? '' : 's'}</strong></div>
-            <div><span>Next step</span><strong>Quiz Results</strong></div>
+            <div><span>Next step</span><strong>Results</strong></div>
           </aside>
         </div>
       </section>
@@ -156,8 +156,8 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
 
             {question.type === 'project' && (
               <div className="quiz-writing-field quiz-project-field">
-                <label htmlFor={`quiz-project-response-${question.id}`}>Project-style response</label>
-                <textarea id={`quiz-project-response-${question.id}`} rows="9" value={answers[question.id] || ''} onChange={(event) => setAnswer(event.target.value)} placeholder="Enter a longer response…" />
+                <label htmlFor={`quiz-project-response-${question.id}`}>Scenario response</label>
+                <textarea id={`quiz-project-response-${question.id}`} rows="9" value={answers[question.id] || ''} onChange={(event) => setAnswer(event.target.value)} placeholder="Enter a longer scenario response…" />
                 <small>This response is collected for the prototype but is not automatically scored.</small>
               </div>
             )}
@@ -170,20 +170,20 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
             {activeIndex < questions.length - 1 ? (
               <button className="button button-primary" type="button" onClick={() => goToQuestion(activeIndex + 1)}>Next Question →</button>
             ) : (
-              <button className="button button-primary" type="submit" disabled={!allAnswered}>Submit Quiz →</button>
+              <button className="button button-primary" type="submit" disabled={!allAnswered}>Submit Knowledge Check →</button>
             )}
           </div>
         </section>
 
         <aside className="learner-quiz-side-panel">
-          <span className="section-kicker">Quiz progress</span>
+          <span className="section-kicker">Knowledge check progress</span>
           <h2>{answeredCount} of {questions.length} answered</h2>
           <div className="quiz-question-dots">
             {questions.map((item, index) => (
               <button key={item.id} type="button" className={`${index === activeIndex ? 'active' : ''} ${isAnswered(item, answers[item.id]) ? 'answered' : ''}`} onClick={() => goToQuestion(index)} aria-label={`Go to question ${index + 1}`}>{index + 1}</button>
             ))}
           </div>
-          <p>All questions require a response before final submission. Only MCQ questions are automatically scored.</p>
+          <p>All questions require a response before final submission. Multiple-choice questions are automatically scored.</p>
           <button className="button button-outline" type="button" onClick={onBack}>Back to Unit {unitNumber}</button>
         </aside>
       </form>
