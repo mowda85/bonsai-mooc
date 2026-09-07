@@ -28,7 +28,7 @@ From the homepage or Course Catalogue, open **Flood Crisis Management in Estuari
 
 **Say:**
 
-> Course information is public, so visitors can inspect the description, objectives, structure, achievement and any configured prerequisites before signing in. Flood Crisis Management in Estuarine Areas is the functional pilot used to demonstrate the complete learner workflow.
+> Course information is public, so visitors can inspect the description, objectives, structure, Course Badge and any configured prerequisites before signing in. Flood Crisis Management in Estuarine Areas is the functional pilot used to demonstrate the complete learner workflow.
 
 Point out the course description, pilot badge, learning objectives, three units and Crisis Management Specialist Certificate pathway.
 
@@ -44,11 +44,12 @@ Press **Start Course** and log in with `alex` and any non-empty password.
 
 Open the first unit and one or two lessons. Briefly show:
 
-- crisis-management and emergency-response lesson content
-- situational-awareness material
-- optional lesson video area
+- realistic prototype lesson text
+- visual-content placeholders and the situation-awareness diagram example
+- per-lesson video placeholders and the forecasting video example
+- resource/download placeholders and the flood-crisis checklist example
 - unit and lesson navigation
-- the handoff from the final Unit 1 lesson to the quiz
+- the required Unit 1 knowledge check
 
 Then briefly show Unit 2 to illustrate the flood-risk and forecasting content, including flood-wave propagation, inundation forecasting, dike/levee inspection, breach modelling, climate-change effects and AI-based forecasting approaches.
 
@@ -56,19 +57,19 @@ Then briefly show Unit 2 to illustrate the flood-risk and forecasting content, i
 
 Open the Unit 1 flood-crisis knowledge check and submit it. Show the result screen.
 
-Then open the scenario-based activity and point out that the learner is asked to interpret an evolving flood situation, identify priority information and stakeholders, and recommend immediate response actions.
+Then open the Unit 3 scenario-based activity and point out that the learner is asked to interpret an evolving flood situation, identify priority information and stakeholders, and recommend immediate response actions.
 
 **Say:**
 
-> The pilot combines knowledge checks with scenario-based work so learners practise interpreting changing flood conditions and supporting timely decisions, rather than only reading static content.
+> The pilot combines knowledge checks with scenario-based work so learners practise interpreting changing flood conditions and supporting timely decisions, rather than only reading static content. The required assessment/activity must be completed before their respective units can be marked complete.
 
 ### 5. Show completion and recognition
 
-Return to the learner dashboard/course overview and point out unit progress. When the course is complete, open the completion view and certificate.
+Return to the learner dashboard/course overview and point out unit progress. When the course is complete, open the completion view and Course Badge.
 
 **Say:**
 
-> Completing the pilot awards the individual BONSAI Course Certificate for Flood Crisis Management in Estuarine Areas. It also contributes one completed course toward the Crisis Management Specialist Certificate.
+> Completing an individual course awards a BONSAI Course Badge. It also contributes one completed course toward the Crisis Management Specialist Certificate. A Specialist Certificate is awarded only after every course in that Category is complete.
 
 ## 3:30–7:00 — Teacher journey: manage → edit → review → publish → inspect results
 
@@ -124,7 +125,7 @@ Then show **Teacher networking** and briefly mention the learner networking spac
 
 **Say:**
 
-> The prototype demonstrates public course discovery, the five-Category learning architecture, configurable prerequisites and dependencies, a complete flood-crisis pilot course, protected learner content, assessment and scenario work, completion and certificates, teacher authoring, review and publication, learner results, admin governance and the future networking layer.
+> The prototype demonstrates public course discovery, the five-Category learning architecture, configurable prerequisites and dependencies, a complete flood-crisis pilot course, protected learner content, visual/video/resource learning slots, assessment and scenario work, Course Badges, Category-level Specialist Certificates, teacher authoring, review and publication, learner results, admin governance and the future networking layer.
 
 ## Acceptance-criteria mapping
 
@@ -134,9 +135,10 @@ Then show **Teacher networking** and briefly mention the learner networking spac
 | New pilot identity | Flood Crisis Management in Estuarine Areas shown as the only pilot |
 | Learner start/login | Pilot Start Course flow |
 | Three-unit pilot learning flow | Units 1–3 |
+| Text + visual/video/resource content | Lesson pages |
 | Quiz/results | Unit 1 flood-crisis knowledge check |
 | Scenario activity | Evolving flood situation exercise |
-| Course completion/certificate | Learner completion page |
+| Course completion/badge | Learner completion page |
 | Specialist progress | Crisis Management Specialist Certificate pathway |
 | Teacher edit | Course/unit/activity/quiz/video controls |
 | Prerequisites/dependencies | Course Editor |
