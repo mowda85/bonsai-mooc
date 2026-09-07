@@ -77,25 +77,85 @@ function paragraphHtml(value) {
   return container.innerHTML;
 }
 
+function patchGenericVisual(imageSection, lesson) {
+  if (!imageSection) return;
+  setText(imageSection.querySelector('h2'), `${lesson.title} — visual placeholder`);
+  const placeholder = imageSection.querySelector('.lesson-image-placeholder');
+  if (!placeholder) return;
+  placeholder.innerHTML = '<div class="lesson-image-symbol" aria-hidden="true">▧</div>';
+  const strong = document.createElement('strong');
+  strong.textContent = `${lesson.title} visual`;
+  const span = document.createElement('span');
+  span.textContent = 'Placeholder for a diagram, map, photograph, model output or infographic supplied by the course team.';
+  placeholder.append(strong, span);
+}
+
+function patchGenericVideo(videoSection, lesson) {
+  if (!videoSection) return;
+  setText(videoSection.querySelector('h2'), `${lesson.title} — video placeholder`);
+  const player = videoSection.querySelector('.lesson-video-placeholder');
+  if (!player) return;
+  player.innerHTML = '<button class="lesson-video-play" type="button" aria-label="Prototype video placeholder" disabled>▶</button>';
+  const caption = document.createElement('div');
+  caption.className = 'lesson-video-caption';
+  const strong = document.createElement('strong');
+  strong.textContent = `${lesson.title} video`;
+  const span = document.createElement('span');
+  span.textContent = 'Video placeholder — a teacher can later attach a lesson-specific recording, animation or field demonstration.';
+  caption.append(strong, span);
+  const controls = document.createElement('div');
+  controls.className = 'lesson-video-controls';
+  controls.innerHTML = '<span class="lesson-video-progress"><b></b></span><span>0:00</span><span>Transcript placeholder</span>';
+  player.append(caption, controls);
+}
+
+function patchGenericResource(downloadSection, lesson) {
+  if (!downloadSection) return;
+  setText(downloadSection.querySelector('h2'), `${lesson.title} — supporting resource`);
+  const card = downloadSection.querySelector('.lesson-download-card');
+  if (!card) return;
+  card.innerHTML = '<div class="lesson-download-file-icon" aria-hidden="true">DOC</div>';
+  const copy = document.createElement('div');
+  const strong = document.createElement('strong');
+  strong.textContent = 'Lesson resource placeholder';
+  const p = document.createElement('p');
+  p.textContent = 'Placeholder for a checklist, reading, briefing note, dataset or exercise file related to this lesson.';
+  const span = document.createElement('span');
+  span.textContent = 'Prototype downloadable resource';
+  copy.append(strong, p, span);
+  const button = document.createElement('button');
+  button.className = 'button button-primary';
+  button.type = 'button';
+  button.disabled = true;
+  button.textContent = 'Resource placeholder';
+  card.append(document.createElement('div'));
+  card.replaceChildren(card.firstChild, copy, button);
+  card.firstChild.className = 'lesson-download-file-icon';
+  card.firstChild.setAttribute('aria-hidden', 'true');
+  card.firstChild.textContent = 'DOC';
+}
+
 function patchLessonContent() {
   const root = document.querySelector('.lesson-content-page');
-  if (!root || root.dataset.kan67PilotIntegrated === 'true') return;
+  if (!root) return;
   const position = lessonPosition(root);
   if (!position) return;
-  root.dataset.kan67PilotIntegrated = 'true';
   const { unitNumber, lessonNumber } = position;
   const lesson = lessons.find((item) => item.unitNumber === unitNumber && item.lessonNumber === lessonNumber);
+  if (!lesson) return;
+  const integrationKey = `${unitNumber}-${lessonNumber}`;
+  if (root.dataset.kan68PilotIntegrated === integrationKey) return;
+  root.dataset.kan68PilotIntegrated = integrationKey;
+
   const hero = root.querySelector('.lesson-content-hero-grid > div');
   setText(hero?.querySelector('.lesson-content-status'), 'Flood crisis pilot content');
+  setText(hero?.querySelector('h1'), lesson.title);
+  setText(hero?.querySelector('p'), 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
 
   const textSection = root.querySelector('.lesson-text-block');
-  if (lesson) {
-    setText(hero?.querySelector('h1'), lesson.title);
-    setText(hero?.querySelector('p'), 'Study this lesson as part of the Flood Crisis Management in Estuarine Areas pilot course, then connect the information to the wider flood-crisis scenario.');
-    setText(textSection?.querySelector('h2'), lesson.title);
-    const textBody = textSection?.querySelector('.lesson-text-placeholder');
-    if (textBody) textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}`;
-  }
+  setText(textSection?.querySelector('h2'), lesson.title);
+  const textBody = textSection?.querySelector('.lesson-text-placeholder');
+  if (textBody) textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}<p><strong>Prototype takeaway:</strong> Connect this lesson to the shared situation picture, the decisions that may be required, and the organisations that would need the information.</p>`;
 
   const imageSection = root.querySelector('#lesson-image-heading')?.closest('.lesson-content-block');
   if (unitNumber === 1 && lessonNumber === 3 && imageSection) {
@@ -103,37 +163,35 @@ function patchLessonContent() {
     const placeholder = imageSection.querySelector('.lesson-image-placeholder');
     if (placeholder) placeholder.innerHTML = `<img src="${diagramUrl}" alt="Flow from observations and inspections through forecasting and risk assessment to a shared situation picture and coordinated crisis decisions" style="display:block;width:100%;height:auto;border-radius:16px" />`;
   } else {
-    imageSection?.remove();
+    patchGenericVisual(imageSection, lesson);
   }
 
   const videoSection = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
   if (unitNumber === 2 && lessonNumber === 2 && videoSection) {
-    setText(hero?.querySelector('p'), video.caption);
     setText(videoSection.querySelector('h2'), video.title);
     const player = videoSection.querySelector('.lesson-video-placeholder');
     if (player) {
       player.innerHTML = `<button class="lesson-video-play" type="button" aria-label="Prototype video placeholder" disabled>▶</button><div class="lesson-video-caption"><strong>${video.title}</strong><span>${video.caption}</span></div><div class="lesson-video-controls"><span class="lesson-video-progress"><b></b></span><span>${video.durationLabel}</span><span>${video.transcriptAvailable ? 'Transcript available' : 'Transcript unavailable'}</span></div>`;
     }
   } else {
-    videoSection?.remove();
+    patchGenericVideo(videoSection, lesson);
   }
 
   const downloadSection = root.querySelector('#lesson-download-heading')?.closest('.lesson-content-block');
   if (unitNumber === 3 && lessonNumber === 5 && downloadSection) {
-    setText(hero?.querySelector('p'), 'Use the response checklist to connect situational awareness, coordination, response decisions, recovery and long-term resilience.');
     setText(downloadSection.querySelector('h2'), 'BONSAI Flood Crisis Response Checklist');
     const card = downloadSection.querySelector('.lesson-download-card');
     if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">TXT</div><div><strong>BONSAI Flood Crisis Response Checklist</strong><p>A prototype checklist covering situational awareness, forecasting, flood-defence information, impacts, coordination, communication, response actions, review and resilience.</p><span>TXT · Sample MOOC resource</span></div><a class="button button-primary" href="${checklistUrl}" download>Download checklist ↓</a>`;
   } else {
-    downloadSection?.remove();
+    patchGenericResource(downloadSection, lesson);
   }
 
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
-    const items = ['✓ Flood crisis lesson'];
-    if (unitNumber === 1 && lessonNumber === 3) items.push('✓ Situation-awareness diagram');
-    if (unitNumber === 2 && lessonNumber === 2) items.push('✓ Forecast-to-decision video placeholder');
-    if (unitNumber === 3 && lessonNumber === 5) items.push('✓ Flood crisis response checklist');
+    const items = ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
+    if (unitNumber === 1 && lessonNumber === 3) items[1] = '✓ Situation-awareness diagram';
+    if (unitNumber === 2 && lessonNumber === 2) items[2] = '✓ Forecast-to-decision video placeholder';
+    if (unitNumber === 3 && lessonNumber === 5) items[3] = '✓ Flood crisis response checklist';
     typeList.innerHTML = items.map((item) => `<span>${item}</span>`).join('');
   }
 }
@@ -148,17 +206,17 @@ function patchLearnerUnit() {
 
   const quizSection = root.querySelector('.learner-unit-quiz');
   if (unitNumber === 1 && quizSection) {
-    setText(quizSection.querySelector('h2'), 'Flood crisis management knowledge check');
-    setText(quizSection.querySelector('.learner-unit-quiz-heading p'), 'Answer five multiple-choice questions covering crisis management, situational awareness, forecasting and flood-defence information.');
+    setText(quizSection.querySelector('h2'), 'Required flood crisis management knowledge check');
+    setText(quizSection.querySelector('.learner-unit-quiz-heading p'), 'Answer five multiple-choice questions covering crisis management, situational awareness, forecasting and flood-defence information before completing Unit 1.');
     setText(quizSection.querySelector('.learner-unit-quiz-badge'), `${quiz.questions.length} questions`);
-    setText(quizSection.querySelector('.learner-unit-quiz-card small'), 'Pilot quiz');
+    setText(quizSection.querySelector('.learner-unit-quiz-card small'), 'Required pilot quiz');
     setText(quizSection.querySelector('.learner-unit-quiz-card strong'), 'Five flood-crisis multiple-choice questions');
   }
 
   const activitySection = root.querySelector('.learner-unit-activity');
   if (unitNumber === 3 && activitySection) {
     setText(activitySection.querySelector('h2'), activity.title);
-    setText(activitySection.querySelector('.learner-unit-activity-heading p'), activity.instructions);
+    setText(activitySection.querySelector('.learner-unit-activity-heading p'), `${activity.instructions} Complete this activity before finishing Unit 3.`);
     const strong = activitySection.querySelector('.learner-unit-activity-card strong');
     if (strong && !strong.textContent.includes('recorded')) setText(strong, `${activity.recommendedLength} scenario response`);
   }
