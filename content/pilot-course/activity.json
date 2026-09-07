@@ -1,9 +1,9 @@
 {
-  "courseSlug": "information-systems-knowledge-dissemination",
-  "unitId": "pilot-unit-2",
-  "title": "Partner information contribution reflection",
-  "instructions": "Pick one BONSAI partner institution and describe, in 3–5 sentences, what information they are likely to contribute to the shared information system and why that information matters for the project.",
+  "courseSlug": "flood-crisis-management-estuarine-areas",
+  "unitId": "pilot-unit-3",
+  "title": "Evolving flood situation — response decision exercise",
+  "instructions": "Imagine that an estuarine flood situation is worsening as new forecast information and field observations arrive. In 5–8 sentences, identify the information you would prioritise, the stakeholders you would coordinate with, the possible impacts you would consider, and one immediate response decision you would support. Explain briefly why.",
   "submissionType": "free-text",
-  "recommendedLength": "3–5 sentences",
+  "recommendedLength": "5–8 sentences",
   "source": "pilot-content"
 }
