@@ -1,20 +1,20 @@
 {
-  "courseSlug": "information-systems-knowledge-dissemination",
+  "courseSlug": "flood-crisis-management-estuarine-areas",
   "units": [
     {
       "id": "pilot-unit-1",
       "order": 1,
-      "title": "Introduction to Data, Information & Knowledge"
+      "title": "Flood Crisis Management Fundamentals"
     },
     {
       "id": "pilot-unit-2",
       "order": 2,
-      "title": "Case Study — Information Systems in BONSAI"
+      "title": "Flood Risk, Forecasting and Defence Systems"
     },
     {
       "id": "pilot-unit-3",
       "order": 3,
-      "title": "Knowledge Dissemination in BONSAI"
+      "title": "Coordination, Communication and Scenario Response"
     }
   ]
 }

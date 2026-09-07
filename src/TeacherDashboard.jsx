@@ -5,21 +5,24 @@ import TeacherActivityEditor from './TeacherActivityEditor.jsx';
 import TeacherQuizEditor from './TeacherQuizEditor.jsx';
 import { getPrototypeActivity, savePrototypeActivity } from './prototypeActivityStore.js';
 import { getPrototypeQuiz, savePrototypeQuiz } from './prototypeQuizStore.js';
+import {
+  PILOT_COURSE_SLUG,
+  PILOT_COURSE_TITLE,
+  PILOT_COURSE_DESCRIPTION,
+  PILOT_COURSE_OBJECTIVES,
+  PILOT_COURSE_UNITS,
+} from './courseArchitecture.js';
 
-const pilotUnits = [
-  { id: 'pilot-unit-1', title: 'Introduction to Data, Information and Knowledge', source: 'pilot' },
-  { id: 'pilot-unit-2', title: 'Information Systems in BONSAI', source: 'pilot' },
-  { id: 'pilot-unit-3', title: 'Knowledge Dissemination in BONSAI', source: 'pilot' },
-];
+const pilotUnits = PILOT_COURSE_UNITS.map((unit) => ({ id: unit.id, title: unit.title, source: 'pilot' }));
 
 export const mockTeacherPortfolio = [
   {
-    slug: 'information-systems-knowledge-dissemination',
-    title: 'Information Systems and Knowledge Dissemination',
-    area: 'Information Systems & Knowledge Dissemination',
-    areas: ['Information Systems & Knowledge Dissemination'],
-    description: 'This pilot course introduces the relationship between data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.',
-    objectives: [],
+    slug: PILOT_COURSE_SLUG,
+    title: PILOT_COURSE_TITLE,
+    area: 'Crisis Management',
+    areas: ['Crisis Management'],
+    description: PILOT_COURSE_DESCRIPTION,
+    objectives: PILOT_COURSE_OBJECTIVES,
     draftFolder: '',
     author: 'Dr. Anna Kontokosta',
     coAuthors: [],
@@ -348,7 +351,7 @@ export default function TeacherDashboard({ user, onNavigate }) {
         <article><span>My courses</span><strong>{portfolio.length}</strong><small>prototype teaching portfolio</small></article>
         <article><span>Learners</span><strong>{totalLearners}</strong><small>aggregate mock enrollments</small></article>
         <article><span>Categories</span><strong>{categoryCount}</strong><small>official course Categories in this portfolio</small></article>
-        <article><span>Pilot courses</span><strong>{portfolio.filter((course) => course.pilot).length}</strong><small>prototype-only overview metric</small></article>
+        <article><span>Pilot courses</span><strong>{portfolio.filter((course) => course.pilot).length}</strong><small>Flood Crisis Management in Estuarine Areas</small></article>
       </section>
 
       <section className="teacher-dashboard-content">

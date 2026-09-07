@@ -1,15 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import LearnerUnitPage from './LearnerUnitPage.jsx';
 import LearnerCompletionPage from './LearnerCompletionPage.jsx';
-import { BONSAI_CATEGORIES, BONSAI_COURSES, getCourseBySlug } from './courseArchitecture.js';
+import { BONSAI_CATEGORIES, BONSAI_COURSES, getCourseBySlug, PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
 const ACHIEVEMENT_KEY = 'bonsai-mooc.prototype.category-achievements.v1';
 
-const pilotCourseUnits = [
-  { title: 'Introduction to Data, Information and Knowledge', lessons: 3 },
-  { title: 'Information Systems in BONSAI', lessons: 2 },
-  { title: 'Knowledge Dissemination in BONSAI', lessons: 1 },
-];
+const pilotCourseUnits = PILOT_COURSE_UNITS.map((unit) => ({
+  title: unit.title,
+  lessons: unit.lessons.length,
+}));
 
 function readAchievements() {
   try {
@@ -49,7 +48,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
   const completedCount = completedUnitNumbers.length;
   const percent = totalUnits ? Math.round((completedCount / totalUnits) * 100) : 0;
   const nextUnitNumber = Array.from({ length: totalUnits }, (_, index) => index + 1).find((number) => !completedUnitNumbers.includes(number));
-  const duration = course?.duration || (course?.pilot ? '2–3 hours' : 'To be confirmed');
+  const duration = course?.duration || 'To be confirmed';
 
   return (
     <main className="learner-course-overview-page">
@@ -68,7 +67,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
           </div>
           <aside className="learner-course-overview-summary" aria-label={`${course?.title} learner progress summary`}>
             <div><span>Category</span><strong>{course?.category || 'BONSAI course'}</strong></div>
-            <div><span>Course type</span><strong>Independent BONSAI course</strong></div>
+            <div><span>Course type</span><strong>{course?.pilot ? 'Functional pilot course' : 'Independent BONSAI course'}</strong></div>
             <div><span>Duration</span><strong>{duration}</strong></div>
             <div><span>Progress</span><strong>{completedCount} of {totalUnits} units · {percent}%</strong></div>
           </aside>
@@ -87,7 +86,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
             <span className="section-kicker">About this course</span>
             <h2>Course description</h2>
             <p>{course?.description}</p>
-            {course?.pilot && <p>This pilot course introduces data, information and knowledge, the BONSAI information-system context, and knowledge dissemination in BONSAI.</p>}
+            {course?.pilot && <p>This pilot develops practical understanding of flood-crisis preparedness and response by connecting crisis management, situational awareness, forecasting, flood-defence information, coordination and scenario-based decision-making.</p>}
           </section>
 
           <section className="learner-enrolled-course-section" aria-labelledby="learner-unit-progress-heading">

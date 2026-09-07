@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { getLiveCourseContent, stageUnitContent } from './crossRoleCourseStore.js';
+import { PILOT_COURSE_SLUG, PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
-const QUIZ_HANDOFF_KEY = 'bonsai-mooc.prototype.kan63.open-unit-1-quiz.v1';
-const PILOT_SLUG = 'information-systems-knowledge-dissemination';
-const PILOT_BASE_UNIT_COUNT = 3;
+const QUIZ_HANDOFF_KEY = 'bonsai-mooc.prototype.kan63.open-unit-1-quiz.v2';
+const PILOT_BASE_UNIT_COUNT = PILOT_COURSE_UNITS.length;
 
 function query() {
   return new URLSearchParams(window.location.search);
@@ -31,7 +31,6 @@ function snapshotEnhancedUnit(root, courseSlug) {
   const file = readFileMetadata(root);
   const id = slugify(title);
   const video = videoUrl ? { title: videoTitle || 'Lesson video', url: videoUrl } : null;
-
   return {
     id,
     title,
@@ -42,13 +41,7 @@ function snapshotEnhancedUnit(root, courseSlug) {
     videoUrl,
     source: 'teacher-published',
     courseSlug,
-    lessons: [{
-      id: `${id}-lesson-1`,
-      title: 'Lesson 1',
-      content: description,
-      file,
-      video,
-    }],
+    lessons: [{ id: `${id}-lesson-1`, title: 'Lesson 1', content: description, file, video }],
   };
 }
 
@@ -65,7 +58,7 @@ function setQuizHandoff(active) {
     if (active) window.sessionStorage.setItem(QUIZ_HANDOFF_KEY, '1');
     else window.sessionStorage.removeItem(QUIZ_HANDOFF_KEY);
   } catch {
-    // The navigation still works through the normal Unit page if sessionStorage is unavailable.
+    // Normal unit navigation remains available when storage is restricted.
   }
 }
 
@@ -79,11 +72,9 @@ function patchFinalLessonQuiz() {
   const lessonNumber = Number(match[2]);
   const lessonTotal = Number(match[3]);
   if (unitNumber !== 1 || lessonNumber !== lessonTotal) return;
-
   const nav = root.querySelector('.lesson-content-navigation');
   const nextButton = nav?.querySelector('button:last-child');
   if (!nav || !nextButton || nextButton.dataset.kan63QuizHandoff === 'true') return;
-
   nextButton.dataset.kan63QuizHandoff = 'true';
   nextButton.disabled = false;
   nextButton.textContent = 'Go to Quiz →';
@@ -106,12 +97,10 @@ function createVideoSection({ title = 'Optional lesson video', message = 'No vid
   const section = document.createElement('section');
   section.className = 'lesson-content-block';
   section.dataset.kan63VideoSlot = 'true';
-
   const heading = document.createElement('div');
   heading.className = 'lesson-content-block-heading';
   heading.innerHTML = '<span class="lesson-type-icon">▶</span><div><span class="section-kicker">Video content</span><h2 id="lesson-video-heading"></h2></div>';
   heading.querySelector('h2').textContent = title;
-
   const player = document.createElement('div');
   player.className = 'lesson-video-placeholder';
   const caption = document.createElement('div');
@@ -122,7 +111,6 @@ function createVideoSection({ title = 'Optional lesson video', message = 'No vid
   span.textContent = message;
   caption.append(strong, span);
   player.appendChild(caption);
-
   section.append(heading, player);
   return section;
 }
@@ -133,18 +121,15 @@ function videoEmbedUrl(value) {
     const url = new URL(value);
     if (!['http:', 'https:'].includes(url.protocol)) return null;
     const host = url.hostname.replace(/^www\./, '').toLowerCase();
-
     if (host === 'youtu.be') {
       const id = url.pathname.split('/').filter(Boolean)[0];
       return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}` : null;
     }
-
     if (host === 'youtube.com' || host === 'm.youtube.com') {
       if (url.pathname.startsWith('/embed/')) return url.toString();
       const id = url.searchParams.get('v');
       return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}` : null;
     }
-
     if (host === 'vimeo.com' || host === 'player.vimeo.com') {
       const id = url.pathname.split('/').filter(Boolean).reverse().find((part) => /^\d+$/.test(part));
       return id ? `https://player.vimeo.com/video/${id}` : null;
@@ -163,7 +148,6 @@ function renderVideo(section, video) {
   const title = video.title || 'Lesson video';
   if (heading) heading.textContent = title;
   player.replaceChildren();
-
   const embed = videoEmbedUrl(video.url);
   if (embed) {
     const iframe = document.createElement('iframe');
@@ -178,7 +162,6 @@ function renderVideo(section, video) {
     player.appendChild(iframe);
     return;
   }
-
   try {
     const url = new URL(video.url);
     if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Unsupported video URL');
@@ -192,11 +175,7 @@ function renderVideo(section, video) {
   } catch {
     const caption = document.createElement('div');
     caption.className = 'lesson-video-caption';
-    const strong = document.createElement('strong');
-    strong.textContent = title;
-    const span = document.createElement('span');
-    span.textContent = 'The saved video URL is not a supported http(s) media address.';
-    caption.append(strong, span);
+    caption.innerHTML = `<strong>${title}</strong><span>The saved video URL is not a supported http(s) media address.</span>`;
     player.appendChild(caption);
   }
 }
@@ -221,14 +200,12 @@ function patchStaticPublishedLessonVideo() {
   const unitNumber = Number(match[1]);
   const lessonNumber = Number(match[2]);
   if (unitNumber < 1 || unitNumber > PILOT_BASE_UNIT_COUNT) return;
-
-  const slug = query().get('course') || PILOT_SLUG;
+  const slug = query().get('course') || PILOT_COURSE_SLUG;
+  if (slug !== PILOT_COURSE_SLUG) return;
   const live = getLiveCourseContent(slug);
   const unit = live?.units?.find((item) => item.id === `pilot-unit-${unitNumber}`);
-  const lesson = unit?.lessons?.[lessonNumber - 1];
-  const video = lesson?.video;
+  const video = unit?.lessons?.[lessonNumber - 1]?.video;
   if (!video?.url) return;
-
   let section = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
   if (!section) {
     const main = root.querySelector('.lesson-content-main');
@@ -250,14 +227,12 @@ function patchTeacherPublishedLessonVideo() {
   if (!match) return;
   const unitNumber = Number(match[1]);
   if (unitNumber <= PILOT_BASE_UNIT_COUNT) return;
-
   const slug = query().get('course');
   const live = slug ? getLiveCourseContent(slug) : null;
   const unit = live?.units?.[unitNumber - PILOT_BASE_UNIT_COUNT - 1];
   const lesson = unit?.lessons?.[0];
   const main = root.querySelector('.lesson-content-main');
   if (!main || main.querySelector('[data-kan63-video-slot]')) return;
-
   const video = lesson?.video || (unit?.videoUrl ? { title: unit.videoTitle || 'Lesson video', url: unit.videoUrl } : null);
   const section = createVideoSection({
     title: video?.title || 'Optional lesson video',
@@ -278,7 +253,6 @@ function scan() {
 export default function LessonExperienceRefinementBridge() {
   useEffect(() => {
     let queued = false;
-
     function scheduleScan() {
       if (queued) return;
       queued = true;
@@ -287,7 +261,6 @@ export default function LessonExperienceRefinementBridge() {
         scan();
       });
     }
-
     function captureTeacherUnitSave(event) {
       const button = event.target.closest?.('button');
       const root = button?.closest?.('.teacher-unit-editor-page');
@@ -296,20 +269,17 @@ export default function LessonExperienceRefinementBridge() {
       if (!courseSlug) return;
       const snapshot = snapshotEnhancedUnit(root, courseSlug);
       if (!snapshot.title || !snapshot.description) return;
-
       window.setTimeout(() => {
         const after = query();
         if (after.get('course') === courseSlug && !after.get('unit')) stageUnitContent(courseSlug, snapshot);
       }, 20);
     }
-
     const observer = new MutationObserver(scheduleScan);
     observer.observe(document.body, { childList: true, subtree: true, characterData: true });
     document.addEventListener('click', captureTeacherUnitSave, true);
     window.addEventListener('popstate', scheduleScan);
     window.addEventListener('bonsai:cross-role-content-changed', scheduleScan);
     scan();
-
     return () => {
       observer.disconnect();
       document.removeEventListener('click', captureTeacherUnitSave, true);
@@ -317,6 +287,5 @@ export default function LessonExperienceRefinementBridge() {
       window.removeEventListener('bonsai:cross-role-content-changed', scheduleScan);
     };
   }, []);
-
   return null;
 }

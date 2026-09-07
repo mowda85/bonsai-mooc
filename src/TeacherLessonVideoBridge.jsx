@@ -3,21 +3,9 @@ import { createPortal } from 'react-dom';
 import { getLiveCourseContent, getPendingCourseContent, stageUnitContent } from './crossRoleCourseStore.js';
 import { prototypePublicationDefaults, registerCourseContentChange } from './coursePublicationStore.js';
 import { mockTeacherPortfolio } from './TeacherDashboard.jsx';
+import { PILOT_COURSE_SLUG, PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
-const pilotUnits = {
-  'pilot-unit-1': {
-    title: 'Introduction to Data, Information & Knowledge',
-    lessons: ['Data', 'Information', 'Knowledge'],
-  },
-  'pilot-unit-2': {
-    title: 'Case Study — Information Systems in BONSAI',
-    lessons: ['BONSAI information system', 'BONSAI information-system case study'],
-  },
-  'pilot-unit-3': {
-    title: 'Knowledge Dissemination in BONSAI',
-    lessons: ['Knowledge dissemination in BONSAI'],
-  },
-};
+const pilotUnits = Object.fromEntries(PILOT_COURSE_UNITS.map((unit) => [unit.id, unit]));
 
 function locationKey() {
   return `${window.location.pathname}${window.location.search}`;
@@ -58,10 +46,14 @@ function storedUnit(courseSlug, unitId) {
   return pending || live || null;
 }
 
+function pilotUnit(courseSlug, unitId) {
+  return courseSlug === PILOT_COURSE_SLUG ? pilotUnits[unitId] || null : null;
+}
+
 function lessonRows(courseSlug, unitId, unitTitle) {
   const stored = storedUnit(courseSlug, unitId);
-  const pilot = pilotUnits[unitId];
   const known = knownCourseUnit(courseSlug, unitId);
+  const pilot = pilotUnit(courseSlug, unitId);
   const baseLessons = stored?.lessons?.length
     ? stored.lessons
     : Array.isArray(known?.lessons) && known.lessons.length
@@ -74,7 +66,7 @@ function lessonRows(courseSlug, unitId, unitTitle) {
     return {
       id: normalized.id || `${unitId}-lesson-${index + 1}`,
       title: normalized.title || `Lesson ${index + 1}`,
-      content: normalized.content || '',
+      content: normalized.content || normalized.body || '',
       file: normalized.file || null,
       videoTitle: normalized.video?.title || '',
       videoUrl: normalized.video?.url || '',
@@ -85,7 +77,7 @@ function lessonRows(courseSlug, unitId, unitTitle) {
 function unitTitleFor(courseSlug, unitId) {
   return storedUnit(courseSlug, unitId)?.title
     || knownCourseUnit(courseSlug, unitId)?.title
-    || pilotUnits[unitId]?.title
+    || pilotUnit(courseSlug, unitId)?.title
     || unitId.replaceAll('-', ' ');
 }
 
@@ -107,7 +99,7 @@ function LessonVideoEditor({ courseSlug, unitId, onBack }) {
       return;
     }
 
-    const existing = storedUnit(courseSlug, unitId) || knownCourseUnit(courseSlug, unitId) || {};
+    const existing = storedUnit(courseSlug, unitId) || knownCourseUnit(courseSlug, unitId) || pilotUnit(courseSlug, unitId) || {};
     const staged = {
       ...existing,
       id: unitId,
@@ -155,7 +147,6 @@ function LessonVideoEditor({ courseSlug, unitId, onBack }) {
         <section className="teacher-unit-form-card teacher-lesson-video-list">
           <div className="teacher-editor-card-heading"><div><span className="section-kicker">Per-lesson media</span><h2>{unitTitle}</h2></div><span className="teacher-required-note">Videos are optional</span></div>
           <p>Use a YouTube/Vimeo link or a direct http(s) video URL. Leaving a URL empty means that lesson has no assigned video.</p>
-
           {lessons.map((lesson, index) => (
             <section className="teacher-lesson-video-row" key={lesson.id}>
               <div className="teacher-lesson-video-heading"><span>{String(index + 1).padStart(2, '0')}</span><div><small>Lesson {index + 1}</small><strong>{lesson.title}</strong></div></div>
@@ -173,7 +164,6 @@ function LessonVideoEditor({ courseSlug, unitId, onBack }) {
             <p>The video metadata is stored on the individual lesson record, so every lesson can have a different video or no video at all.</p>
             <div className="teacher-unassigned-note"><strong>Publication-safe</strong><span>Saving stages a content revision. Learners continue to see the currently Published content until the normal review and publication workflow completes.</span></div>
           </section>
-
           <section className="teacher-unit-form-card teacher-unit-actions-card">
             <span className="section-kicker">Lesson media actions</span>
             <h2>Save video settings</h2>
@@ -194,7 +184,6 @@ export default function TeacherLessonVideoBridge() {
 
   useEffect(() => {
     let queued = false;
-
     function injectButtons() {
       if (window.location.pathname !== '/teacher') return;
       const params = teacherQuery();
@@ -202,7 +191,6 @@ export default function TeacherLessonVideoBridge() {
       if (!slug || params.get('media')) return;
       const course = mockTeacherPortfolio.find((item) => item.slug === slug);
       const rows = Array.from(document.querySelectorAll('.teacher-course-unit-row'));
-
       rows.forEach((row, index) => {
         const actions = row.querySelector('.teacher-course-unit-actions');
         if (!actions || actions.querySelector('[data-kan63-lesson-videos]')) return;

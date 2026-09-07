@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BONSAI_CATEGORIES, BONSAI_COURSES, getCategoryBySlug, getCourseBySlug } from './courseArchitecture.js';
+import { BONSAI_CATEGORIES, BONSAI_COURSES, getCategoryBySlug, getCourseBySlug, PILOT_COURSE_SLUG } from './courseArchitecture.js';
 import { dependencyStatus, mergeCourseRequirements } from './courseRequirementsStore.js';
 
 const ACHIEVEMENT_KEY = 'bonsai-mooc.prototype.category-achievements.v1';
@@ -31,7 +31,7 @@ const LEGACY_COURSE_ALIASES = {
 };
 
 const TEXT_REPLACEMENTS = [
-  ['Foundation + specialization catalogue', '18 mapped courses · 5 Categories'],
+  ['Foundation + specialization catalogue', '19 mapped courses · 5 Categories'],
   ['Official specialization structure', 'Official learning structure'],
   ['Specialization tracks / learning areas', 'BONSAI Categories'],
   ['specialization tracks', 'Categories'],
@@ -308,8 +308,8 @@ export default function CategoryArchitectureBridge() {
       patchLegacyTerminology();
       if (document.querySelector('.learner-completion-page')) {
         const current = readAchievements();
-        if (!current.completedCourseSlugs.includes('information-systems-knowledge-dissemination')) {
-          setAchievements(writeAchievements({ completedCourseSlugs: [...current.completedCourseSlugs, 'information-systems-knowledge-dissemination'] }));
+        if (!current.completedCourseSlugs.includes(PILOT_COURSE_SLUG)) {
+          setAchievements(writeAchievements({ completedCourseSlugs: [...current.completedCourseSlugs, PILOT_COURSE_SLUG] }));
         }
       }
     }

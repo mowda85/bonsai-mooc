@@ -4,8 +4,116 @@
     "unitId": "pilot-unit-1",
     "unitNumber": 1,
     "lessonNumber": 1,
-    "title": "Data → Information → Knowledge",
+    "title": "Crisis Management and Emergency Response",
     "format": "text",
-    "body": "Data, information and knowledge are closely related, but they are not the same thing. Data are raw observations or recorded facts. In a water-sector project, data might include rainfall measurements, water levels, soil properties, inspection records or survey results. On their own, these values can be difficult to interpret.\n\nData become information when they are organised, processed and presented in a way that gives them meaning. A set of water-level readings, for example, becomes more useful when it is arranged over time, compared with a threshold or displayed on a map. Information helps us understand what is happening and identify patterns, differences or changes.\n\nKnowledge develops when people interpret that information in context and connect it with expertise, experience and other evidence. Knowledge supports decisions: what a result means, why it matters and what action may be appropriate. The pipeline can therefore be summarised as data → information → knowledge: observations are organised into meaningful information, and that information is interpreted so it can support understanding and action.\n\nThis process is especially important in BONSAI because the project brings together 17 partner organisations across four countries. Different partners may collect different datasets, use different tools and contribute different expertise. Without a shared information system, useful material can remain scattered or difficult to compare. Shared structures make it easier to store, find, understand and combine contributions, reduce duplicated effort and preserve the context needed to interpret them. In this way, a common information system helps BONSAI turn distributed project data into information that partners can use together and, ultimately, into shared knowledge that supports collaboration and decision-making."
+    "body": "Flood crisis management brings together preparation, response, recovery and longer-term resilience. During a flood-related crisis, emergency response focuses on the immediate actions needed to protect people, infrastructure and flood-defence systems while the situation is changing.\n\nIn estuarine and flood-prone areas, crisis management requires an understanding of the flood situation, the condition of defences, the possible consequences of changing water levels, and the actions available to responsible organisations. Effective response therefore combines technical information with coordination, communication and timely decisions."
+  },
+  {
+    "id": "pilot-unit-1-lesson-2",
+    "unitId": "pilot-unit-1",
+    "unitNumber": 1,
+    "lessonNumber": 2,
+    "title": "Preparedness, Readiness and Leadership",
+    "format": "text",
+    "body": "Preparedness means developing the capacity to act before a flood crisis occurs. Readiness includes knowing roles, understanding available resources, maintaining communication channels and being able to mobilise people and information when conditions deteriorate.\n\nLeadership supports this process by keeping attention on priorities, clarifying responsibilities and helping organisations make decisions under pressure. Prepared teams are better placed to move from routine monitoring to coordinated emergency action when a flood situation begins to escalate."
+  },
+  {
+    "id": "pilot-unit-1-lesson-3",
+    "unitId": "pilot-unit-1",
+    "unitNumber": 1,
+    "lessonNumber": 3,
+    "title": "Situational Awareness and Decision-Making",
+    "format": "text",
+    "body": "Situational awareness is the shared understanding of what is happening, what may happen next and what the consequences could be. It can draw on observations, forecasts, inspection information, flood-risk assessments and reports from organisations operating in the affected area.\n\nDecision-making during a crisis depends on interpreting this evolving picture rather than relying on one isolated piece of information. Learners should consider how uncertainty, time pressure and changing conditions influence the choice of response actions."
+  },
+  {
+    "id": "pilot-unit-2-lesson-1",
+    "unitId": "pilot-unit-2",
+    "unitNumber": 2,
+    "lessonNumber": 1,
+    "title": "Flood Risk and Resilience Assessment",
+    "format": "text",
+    "body": "Flood risk assessment helps crisis managers consider the likelihood and possible consequences of flooding. Resilience assessment adds the question of how well people, infrastructure, organisations and flood-defence systems can prepare for, withstand and recover from disruptive flood events.\n\nThese assessments support preparedness by helping identify vulnerable areas, possible impacts and priorities for monitoring or intervention. During a crisis, they provide context for interpreting new information and deciding where attention is most urgently needed."
+  },
+  {
+    "id": "pilot-unit-2-lesson-2",
+    "unitId": "pilot-unit-2",
+    "unitNumber": 2,
+    "lessonNumber": 2,
+    "title": "Flood-Wave Propagation and Inundation Forecasting",
+    "format": "text",
+    "body": "Understanding how a flood wave may propagate helps crisis teams anticipate where water could move, how quickly conditions may change and which locations could become affected. Inundation forecasting supports this by estimating the possible spatial extent and development of flooding.\n\nForecast information is most useful when it is interpreted together with local conditions, flood-defence status and the needs of decision-makers. The purpose is not only to predict water movement, but to support timely preparation and response."
+  },
+  {
+    "id": "pilot-unit-2-lesson-3",
+    "unitId": "pilot-unit-2",
+    "unitNumber": 2,
+    "lessonNumber": 3,
+    "title": "Dike and Levee Inspection",
+    "format": "text",
+    "body": "Dike and levee inspection contributes to situational awareness by providing direct information about the condition of flood-defence systems. Observations before, during and after a flood can help teams identify signs that deserve closer attention and communicate the condition of defences to other decision-makers.\n\nInspection information should be considered as part of the wider crisis picture, alongside forecasts, flood levels, modelling and reports from the field. Clear reporting is important so that the meaning and urgency of observations are understood by the organisations coordinating the response."
+  },
+  {
+    "id": "pilot-unit-2-lesson-4",
+    "unitId": "pilot-unit-2",
+    "unitNumber": 2,
+    "lessonNumber": 4,
+    "title": "Dike-Breach Modelling and Climate-Change Effects",
+    "format": "text",
+    "body": "Dike-breach modelling can support crisis planning by exploring how flooding might develop if a flood-defence structure is breached. Scenario outputs can help teams think about possible inundation patterns, affected areas and the consequences that may require emergency action.\n\nClimate change can alter the conditions that flood-defence systems must withstand over time. Crisis management therefore connects immediate emergency response with longer-term resilience, so that lessons from current events can also inform future preparedness and adaptation."
+  },
+  {
+    "id": "pilot-unit-2-lesson-5",
+    "unitId": "pilot-unit-2",
+    "unitNumber": 2,
+    "lessonNumber": 5,
+    "title": "AI-Based Forecasting Approaches",
+    "format": "text",
+    "body": "AI-based approaches can be used alongside other forecasting methods to help analyse data, identify patterns and support flood-inundation forecasting. In a crisis-management context, their value depends on whether the resulting information is timely, understandable and suitable for the decisions that need to be made.\n\nLearners should treat forecasting outputs as decision-support information rather than isolated answers. They need to be interpreted in context, communicated clearly and combined with other evidence about the evolving flood situation."
+  },
+  {
+    "id": "pilot-unit-3-lesson-1",
+    "unitId": "pilot-unit-3",
+    "unitNumber": 3,
+    "lessonNumber": 1,
+    "title": "Crisis Communication",
+    "format": "text",
+    "body": "Crisis communication helps ensure that the people and organisations involved in a flood response understand the situation, priorities and actions being taken. Messages may need to explain changing conditions, uncertainty, expected impacts or decisions that affect multiple stakeholders.\n\nEffective communication is clear, timely and appropriate to the audience. It also supports trust and coordination by reducing confusion about responsibilities, information sources and the next steps in the response."
+  },
+  {
+    "id": "pilot-unit-3-lesson-2",
+    "unitId": "pilot-unit-3",
+    "unitNumber": 3,
+    "lessonNumber": 2,
+    "title": "Stakeholder Coordination",
+    "format": "text",
+    "body": "Flood crises involve organisations with different responsibilities, information and resources. Stakeholder coordination helps connect these contributions so that response actions support a shared understanding of the situation rather than working in isolation.\n\nCoordination includes clarifying roles, exchanging relevant information, identifying dependencies between actions and keeping decisions aligned as the situation evolves. This is especially important when a flood affects multiple jurisdictions, infrastructure systems or communities."
+  },
+  {
+    "id": "pilot-unit-3-lesson-3",
+    "unitId": "pilot-unit-3",
+    "unitNumber": 3,
+    "lessonNumber": 3,
+    "title": "Interpreting Evolving Flood Situations",
+    "format": "text",
+    "body": "A flood situation can change quickly as forecasts are updated, field observations arrive and the condition of flood defences changes. Crisis teams need to compare new information with what was previously understood and recognise when assumptions or priorities need to be revised.\n\nScenario-based thinking helps learners practise this process. Instead of treating a plan as fixed, they consider what new information means for people, infrastructure, flood defences and the actions already under way."
+  },
+  {
+    "id": "pilot-unit-3-lesson-4",
+    "unitId": "pilot-unit-3",
+    "unitNumber": 3,
+    "lessonNumber": 4,
+    "title": "Evaluating Impacts and Response Options",
+    "format": "text",
+    "body": "Evaluating possible impacts means considering what may be affected, how serious the consequences could be and how quickly action may be required. Crisis managers compare this with the response options available and the resources, time and coordination needed to carry them out.\n\nThe purpose is to support proportionate and timely decisions. A useful response option is one that fits the evolving situation, can be coordinated with relevant stakeholders and contributes to reducing harm or strengthening the ability to recover."
+  },
+  {
+    "id": "pilot-unit-3-lesson-5",
+    "unitId": "pilot-unit-3",
+    "unitNumber": 3,
+    "lessonNumber": 5,
+    "title": "Preparedness, Response, Recovery and Long-Term Resilience",
+    "format": "text",
+    "body": "Flood crisis management does not end when the immediate emergency is over. Recovery includes restoring functions, reviewing impacts and learning from what happened. Lessons from the response can then improve future preparedness, coordination, forecasting and flood-defence planning.\n\nLong-term resilience connects these stages. By learning from flood events and exercises, organisations can strengthen their capacity to anticipate future crises, respond more effectively and adapt to changing flood risks in estuarine and flood-prone areas."
   }
 ]

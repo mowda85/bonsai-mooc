@@ -1,8 +1,16 @@
 {
-  "jiraTask": "KAN-43",
-  "slug": "information-systems-knowledge-dissemination",
-  "title": "Information Systems and Knowledge Dissemination",
-  "estimatedDuration": "2–3 hours",
-  "description": "A 2–3 hour course for the water sector that explains how data is collected, managed and transformed into information and knowledge, and how information systems support data-driven decisions. BONSAI is used as a practical case study of building shared knowledge across partner organisations and disseminating that knowledge to partners and the public.",
-  "integrationStatus": "Content approved for later wiring into the prototype screens in KAN-53."
+  "jiraTask": "KAN-67",
+  "slug": "flood-crisis-management-estuarine-areas",
+  "title": "Flood Crisis Management in Estuarine Areas",
+  "category": "Crisis Management",
+  "estimatedDuration": "To be confirmed",
+  "description": "Flood Crisis Management in Estuarine Areas introduces the key principles, tools, and practices used to prepare for and respond to flood-related crises. The course covers the fundamentals of crisis management, emergency response, situational awareness, communication, stakeholder coordination, readiness, leadership, and flood risk assessment. Learners are also introduced to flood inundation forecasting, dike and levee inspection, dike-breach modelling, and the effects of climate change on flood defence systems. Particular attention is given to understanding how flood waves propagate, how flood risk and resilience can be assessed, and how forecasting methods, including AI-based approaches, can support crisis management. Through practical and scenario-based exercises, participants learn how to interpret evolving flood situations, evaluate possible impacts, and support timely decision-making. The course aims to strengthen the capacity of learners to contribute to effective flood preparedness, response, recovery, and long-term resilience in estuarine and flood-prone areas.",
+  "learningObjectives": [
+    "Explain the main phases and principles of flood crisis management in estuarine and flood-prone areas.",
+    "Interpret flood-risk, situational-awareness and forecasting information to support crisis decisions.",
+    "Describe how flood-wave propagation, inundation forecasting, dike and levee inspection, and breach modelling inform emergency response.",
+    "Explain the roles of communication, stakeholder coordination, readiness and leadership during flood crises.",
+    "Evaluate an evolving flood scenario and identify appropriate preparedness, response, recovery and resilience actions."
+  ],
+  "integrationStatus": "Active functional pilot course for the BONSAI-MOOC prototype."
 }

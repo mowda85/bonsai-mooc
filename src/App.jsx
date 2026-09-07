@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import LearnerDashboard from './LearnerDashboard.jsx';
+import { PILOT_COURSE_SLUG, PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
 const mockUsers = [
   { id: 'BNS-1001', username: 'alex', name: 'Alex Johnson', role: 'learner' },
@@ -10,9 +11,9 @@ const mockUsers = [
 const pilotLearnerProgress = {
   learnerId: 'BNS-1001',
   currentCourse: {
-    slug: 'information-systems-knowledge-dissemination',
-    completedUnits: [1],
-    totalUnits: 3,
+    slug: PILOT_COURSE_SLUG,
+    completedUnits: [],
+    totalUnits: PILOT_COURSE_UNITS.length,
     completedActivityIds: [],
     quizResult: null,
   },
