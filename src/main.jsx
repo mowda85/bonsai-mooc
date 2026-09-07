@@ -18,6 +18,7 @@ import TeacherLessonVideoBridge from './TeacherLessonVideoBridge.jsx';
 import StudentNetworkingBridge from './StudentNetworkingBridge.jsx';
 import TeacherNetworkingBridge from './TeacherNetworkingBridge.jsx';
 import CategoryArchitectureBridge from './CategoryArchitectureBridge.jsx';
+import PilotExperienceRestoreBridge from './PilotExperienceRestoreBridge.jsx';
 import './styles.css';
 import './global-sidebar.css';
 import './learning-area.css';
@@ -69,5 +70,6 @@ createRoot(document.getElementById('root')).render(
     <StudentNetworkingBridge />
     <TeacherNetworkingBridge />
     <CategoryArchitectureBridge />
+    <PilotExperienceRestoreBridge />
   </React.StrictMode>,
 );
