@@ -94,7 +94,6 @@ export default function GlobalSidebarBridge() {
       next.push({ label: 'Dashboard', icon: '◫', path: dashboardPath(session.role) });
       const networking = networkPath(session.role);
       if (networking) next.push({ label: 'Networking', icon: '◎', path: networking });
-      if (session.role === 'learner') next.push({ label: 'Foundation', icon: '◇', path: '/foundation' });
       if (session.role === 'teacher') {
         next.push({ label: 'Progress & Results', icon: '↗', path: '/teacher?progress=information-systems-knowledge-dissemination' });
         next.push({ label: 'Feedback overview', icon: '◌', path: '/teacher?feedback=overview' });

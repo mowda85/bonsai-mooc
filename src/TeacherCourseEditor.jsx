@@ -1,14 +1,18 @@
 import { useMemo, useState } from 'react';
 import { CourseLearnerPreview } from './TeacherLearnerPreview.jsx';
 import { getCoursePublicationDisplayStatus, isCoursePublished } from './coursePublicationStore.js';
+import { BONSAI_CATEGORIES, BONSAI_COURSES, normalizeLegacyCategoryName } from './courseArchitecture.js';
+import { getCourseRequirements, saveCourseRequirements } from './courseRequirementsStore.js';
 
-export const teacherLearningAreas = [
-  { name: 'Foundation', note: 'Required common core · not a specialization track' },
-  { name: 'Dike Stability and Erosion', note: 'Specialization track' },
-  { name: 'Animal Activities and Burrows', note: 'Specialization track' },
-  { name: 'Vegetation and Nature-based Solutions', note: 'Specialization track' },
-  { name: 'Flood Risk and Emergency Management', note: 'Specialization track' },
-];
+export const teacherLearningAreas = BONSAI_CATEGORIES.map((category) => ({
+  name: category.name,
+  note: 'Official category',
+}));
+
+function normalizeAreaList(course) {
+  const source = course?.areas?.length ? course.areas : course?.area ? [course.area] : [];
+  return [...new Set(source.map(normalizeLegacyCategoryName).filter(Boolean))];
+}
 
 function initialForm(course, isNew, authorName) {
   if (isNew || !course) {
@@ -20,18 +24,34 @@ function initialForm(course, isNew, authorName) {
       draftFolder: '',
       author: authorName || '',
       coAuthors: [],
+      externalPrerequisites: [],
+      internalDependencies: [],
     };
   }
+
+  const persisted = course.slug ? getCourseRequirements(course.slug) : { externalPrerequisites: [], internalDependencies: [] };
+  const externalPrerequisites = persisted.externalPrerequisites.length
+    ? persisted.externalPrerequisites
+    : Array.isArray(course.externalPrerequisites) ? course.externalPrerequisites : [];
+  const internalDependencies = persisted.internalDependencies.length
+    ? persisted.internalDependencies
+    : Array.isArray(course.internalDependencies) ? course.internalDependencies : [];
 
   return {
     title: course.title || '',
     description: course.description || '',
     objectives: Array.isArray(course.objectives) ? course.objectives.join('\n') : '',
-    areas: course.areas?.length ? course.areas : course.area ? [course.area] : [],
+    areas: normalizeAreaList(course),
     draftFolder: course.draftFolder || '',
     author: course.author || authorName || '',
     coAuthors: Array.isArray(course.coAuthors) ? course.coAuthors : [],
+    externalPrerequisites,
+    internalDependencies,
   };
+}
+
+function nextRequirementId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 export default function TeacherCourseEditor({ course, isNew, onBack, onSave, authorName }) {
@@ -42,6 +62,8 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
   const [areaSearch, setAreaSearch] = useState('');
   const [areaOpen, setAreaOpen] = useState(false);
   const [coAuthorInput, setCoAuthorInput] = useState('');
+  const [externalDraft, setExternalDraft] = useState({ title: '', description: '', level: 'recommended' });
+  const [dependencyDraft, setDependencyDraft] = useState({ targetType: 'course', targetId: '', targetLabel: '', rule: 'complete', required: true });
   const publishedUpdate = !isNew && Boolean(course?.slug) && isCoursePublished(course.slug);
   const workflowDisplayStatus = !isNew && course?.slug
     ? getCoursePublicationDisplayStatus(course.slug, course?.status || 'Draft')
@@ -96,6 +118,48 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
     setErrors([]);
   }
 
+  function addExternalPrerequisite() {
+    const title = externalDraft.title.trim();
+    if (!title) return;
+    const item = {
+      id: nextRequirementId('external'),
+      title,
+      description: externalDraft.description.trim(),
+      level: externalDraft.level === 'required' ? 'required' : 'recommended',
+    };
+    setForm((current) => ({ ...current, externalPrerequisites: [...current.externalPrerequisites, item] }));
+    setExternalDraft({ title: '', description: '', level: 'recommended' });
+    setSavedMessage('');
+  }
+
+  function removeExternalPrerequisite(id) {
+    setForm((current) => ({ ...current, externalPrerequisites: current.externalPrerequisites.filter((item) => item.id !== id) }));
+    setSavedMessage('');
+  }
+
+  function addInternalDependency() {
+    const targetId = dependencyDraft.targetId.trim();
+    if (!targetId) return;
+    const courseTarget = dependencyDraft.targetType === 'course' ? BONSAI_COURSES.find((item) => item.slug === targetId) : null;
+    const targetLabel = courseTarget?.title || dependencyDraft.targetLabel.trim() || targetId;
+    const item = {
+      id: nextRequirementId('internal'),
+      targetType: dependencyDraft.targetType,
+      targetId,
+      targetLabel,
+      rule: dependencyDraft.rule === 'pass' ? 'pass' : 'complete',
+      required: dependencyDraft.required !== false,
+    };
+    setForm((current) => ({ ...current, internalDependencies: [...current.internalDependencies, item] }));
+    setDependencyDraft({ targetType: 'course', targetId: '', targetLabel: '', rule: 'complete', required: true });
+    setSavedMessage('');
+  }
+
+  function removeInternalDependency(id) {
+    setForm((current) => ({ ...current, internalDependencies: current.internalDependencies.filter((item) => item.id !== id) }));
+    setSavedMessage('');
+  }
+
   function validateAndSave() {
     const nextErrors = [];
     if (!form.title.trim()) nextErrors.push('Course Title is required.');
@@ -105,6 +169,10 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
     setErrors(nextErrors);
     if (nextErrors.length) return false;
 
+    const requirementPayload = {
+      externalPrerequisites: form.externalPrerequisites,
+      internalDependencies: form.internalDependencies,
+    };
     const saved = onSave({
       title: form.title.trim(),
       description: form.description.trim(),
@@ -113,7 +181,9 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
       draftFolder: form.draftFolder.trim(),
       author: form.author.trim(),
       coAuthors: form.coAuthors,
+      ...requirementPayload,
     });
+    if (saved?.slug) saveCourseRequirements(saved.slug, requirementPayload);
     setSavedMessage(publishedUpdate ? `Saved as Draft update${saved?.title ? ` · ${saved.title}` : ''}` : `Saved as Draft${saved?.title ? ` · ${saved.title}` : ''}`);
     return true;
   }
@@ -134,9 +204,9 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
         <div className="teacher-breadcrumb"><span>Teacher Dashboard</span><b>/</b><strong>{isNew ? 'Create Course' : 'Edit Course'}</strong></div>
         <div className="teacher-course-editor-heading">
           <div>
-            <div className="teacher-hero-badges"><span className="pill">Course Editor</span><span className="teacher-kicker-badge">KAN-32</span></div>
+            <div className="teacher-hero-badges"><span className="pill">Course Editor</span><span className="teacher-kicker-badge">KAN-64 / KAN-65</span></div>
             <h1>{isNew ? 'Create a new BONSAI course' : `Edit ${course?.title || 'course'}`}</h1>
-            <p>Draft freely, organize your work, add co-authors, and connect the course to official BONSAI tracks when it is ready.</p>
+            <p>Draft freely, organize your work, add co-authors, connect the course to official BONSAI Categories, and define prerequisites only when they are actually needed.</p>
           </div>
           <aside><span>Current status</span><strong>{workflowDisplayStatus}</strong><small>{publishedUpdate ? 'Saving creates a Draft update. The current Published version stays live until the update completes review and is published.' : 'Save keeps this work in Draft until it completes review.'}</small></aside>
         </div>
@@ -144,7 +214,7 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
 
       <form className="teacher-course-editor-body" onSubmit={save}>
         <div className="teacher-editor-main-stack">
-          {publishedUpdate && <section className="teacher-editor-form-card"><span className="section-kicker">Published content update</span><h2>Changes require review again</h2><p>The current learner-visible version will not be replaced by these edits. Saving creates a Draft update that must be submitted, approved by both the Lead Author and Admin, then published by the Lead Author or Admin.</p></section>}
+          {publishedUpdate && <section className="teacher-editor-form-card"><span className="section-kicker">Published content update</span><h2>Changes require review again</h2><p>The current learner-visible version will not be replaced by these edits. Saving creates a Draft update that must complete the publication workflow.</p></section>}
           <section className="teacher-editor-form-card">
             <div className="teacher-editor-card-heading"><div><span className="section-kicker">Course metadata</span><h2>Basic information</h2></div><span className="teacher-required-note">Required fields *</span></div>
             <label className="teacher-editor-field"><span>Course Title *</span><input value={form.title} onChange={(event) => update('title', event.target.value)} placeholder="Enter course title" /></label>
@@ -156,27 +226,54 @@ export default function TeacherCourseEditor({ course, isNew, onBack, onSave, aut
             <span className="section-kicker">Collaboration</span><h2>Authors</h2><p>One teacher is the Primary Author. Add as many co-authors as the course needs.</p>
             <label className="teacher-editor-field"><span>Primary Author *</span><input value={form.author} onChange={(event) => update('author', event.target.value)} placeholder="Teacher name or BONSAI ID" /></label>
             <div className="teacher-editor-field">
-              <span>Co-authors</span><small>Search or enter a teacher name / BONSAI ID, then add them.</small>
+              <span>Co-authors</span><small>Enter a teacher name / BONSAI ID, then add them.</small>
               <div className="teacher-coauthor-entry"><input value={coAuthorInput} onChange={(event) => setCoAuthorInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addCoAuthor(); } }} placeholder="Add a co-author" /><button className="button button-outline" type="button" onClick={addCoAuthor}>Add</button></div>
               {form.coAuthors.length > 0 && <div className="teacher-selected-chips">{form.coAuthors.map((name) => <span key={name}>{name}<button type="button" onClick={() => removeCoAuthor(name)} aria-label={`Remove ${name}`}>×</button></span>)}</div>}
+            </div>
+          </section>
+
+          <section className="teacher-editor-form-card teacher-requirements-card">
+            <span className="section-kicker">Access & progression</span><h2>Prerequisites & Dependencies</h2><p>Leave these empty for open access. Recommended prerequisites never lock a course; explicit required internal dependencies may control progression later.</p>
+
+            <div className="teacher-requirement-block">
+              <div className="teacher-requirement-heading"><div><strong>External prerequisites</strong><small>Prior knowledge, skill, qualification, language level or experience.</small></div><span>{form.externalPrerequisites.length}</span></div>
+              {form.externalPrerequisites.length > 0 ? <div className="teacher-requirement-list">{form.externalPrerequisites.map((item) => <article key={item.id}><div><span className={`teacher-requirement-level ${item.level}`}>{item.level === 'required' ? 'Required' : 'Recommended'}</span><strong>{item.title}</strong>{item.description && <small>{item.description}</small>}</div><button type="button" onClick={() => removeExternalPrerequisite(item.id)} aria-label={`Remove ${item.title}`}>×</button></article>)}</div> : <div className="teacher-requirement-empty">No external prerequisites defined.</div>}
+              <div className="teacher-requirement-entry teacher-external-entry">
+                <input value={externalDraft.title} onChange={(event) => setExternalDraft((current) => ({ ...current, title: event.target.value }))} placeholder="e.g. Basic hydrology knowledge" />
+                <input value={externalDraft.description} onChange={(event) => setExternalDraft((current) => ({ ...current, description: event.target.value }))} placeholder="Optional description" />
+                <select value={externalDraft.level} onChange={(event) => setExternalDraft((current) => ({ ...current, level: event.target.value }))}><option value="recommended">Recommended</option><option value="required">Required</option></select>
+                <button className="button button-outline" type="button" onClick={addExternalPrerequisite}>Add prerequisite</button>
+              </div>
+            </div>
+
+            <div className="teacher-requirement-block">
+              <div className="teacher-requirement-heading"><div><strong>Internal learning dependencies</strong><small>Completion/pass rules for BONSAI courses, units, lessons, activities or assessments.</small></div><span>{form.internalDependencies.length}</span></div>
+              {form.internalDependencies.length > 0 ? <div className="teacher-requirement-list">{form.internalDependencies.map((item) => <article key={item.id}><div><span className={`teacher-requirement-level ${item.required ? 'required' : 'recommended'}`}>{item.required ? 'Required' : 'Optional'}</span><strong>{item.rule === 'pass' ? 'Pass' : 'Complete'} {item.targetLabel}</strong><small>{item.targetType}</small></div><button type="button" onClick={() => removeInternalDependency(item.id)} aria-label={`Remove dependency ${item.targetLabel}`}>×</button></article>)}</div> : <div className="teacher-requirement-empty">No internal dependencies defined. The course is open by default.</div>}
+              <div className="teacher-requirement-entry teacher-dependency-entry">
+                <select value={dependencyDraft.targetType} onChange={(event) => setDependencyDraft((current) => ({ ...current, targetType: event.target.value, targetId: '', targetLabel: '' }))}><option value="course">Course</option><option value="unit">Unit</option><option value="lesson">Lesson</option><option value="activity">Activity</option><option value="assessment">Assessment / quiz</option></select>
+                {dependencyDraft.targetType === 'course' ? <select value={dependencyDraft.targetId} onChange={(event) => setDependencyDraft((current) => ({ ...current, targetId: event.target.value }))}><option value="">Choose a BONSAI course…</option>{BONSAI_COURSES.filter((item) => item.slug !== course?.slug).map((item) => <option key={item.slug} value={item.slug}>{item.title}</option>)}</select> : <><input value={dependencyDraft.targetId} onChange={(event) => setDependencyDraft((current) => ({ ...current, targetId: event.target.value }))} placeholder={`${dependencyDraft.targetType} identifier`} /><input value={dependencyDraft.targetLabel} onChange={(event) => setDependencyDraft((current) => ({ ...current, targetLabel: event.target.value }))} placeholder="Display label" /></>}
+                <select value={dependencyDraft.rule} onChange={(event) => setDependencyDraft((current) => ({ ...current, rule: event.target.value }))}><option value="complete">Complete</option><option value="pass">Pass</option></select>
+                <label className="teacher-requirement-check"><input type="checkbox" checked={dependencyDraft.required} onChange={(event) => setDependencyDraft((current) => ({ ...current, required: event.target.checked }))} /> Required</label>
+                <button className="button button-outline" type="button" onClick={addInternalDependency}>Add dependency</button>
+              </div>
             </div>
           </section>
         </div>
 
         <aside className="teacher-editor-side-stack">
           <section className="teacher-editor-form-card teacher-area-card">
-            <span className="section-kicker">Official structure</span><h2>Track / learning area</h2><p>Optional while Draft. Search the official list and add one or more when appropriate. Official tracks are created and governed by Admin.</p>
+            <span className="section-kicker">Official structure</span><h2>Category assignment</h2><p>Optional while Draft. Search the official list and add one or more Categories when appropriate. Official Categories are governed by Admin.</p>
             {form.areas.length > 0 && <div className="teacher-selected-chips teacher-area-chips">{form.areas.map((area) => <span key={area}>{area}<button type="button" onClick={() => removeArea(area)} aria-label={`Remove ${area}`}>×</button></span>)}</div>}
             <div className="teacher-area-combobox">
-              <input value={areaSearch} onFocus={() => setAreaOpen(true)} onChange={(event) => { setAreaSearch(event.target.value); setAreaOpen(true); }} placeholder="Search official tracks…" aria-label="Search official tracks" />
-              <button type="button" className="teacher-area-toggle" onClick={() => setAreaOpen((current) => !current)} aria-label="Open track list">⌄</button>
-              {areaOpen && <div className="teacher-area-dropdown">{filteredAreas.length ? filteredAreas.map((area) => <button type="button" key={area.name} onClick={() => addArea(area.name)}><strong>{area.name}</strong><small>{area.note}</small></button>) : <div className="teacher-area-empty">No matching official track.</div>}</div>}
+              <input value={areaSearch} onFocus={() => setAreaOpen(true)} onChange={(event) => { setAreaSearch(event.target.value); setAreaOpen(true); }} placeholder="Search official Categories…" aria-label="Search official Categories" />
+              <button type="button" className="teacher-area-toggle" onClick={() => setAreaOpen((current) => !current)} aria-label="Open Category list">⌄</button>
+              {areaOpen && <div className="teacher-area-dropdown">{filteredAreas.length ? filteredAreas.map((area) => <button type="button" key={area.name} onClick={() => addArea(area.name)}><strong>{area.name}</strong><small>{area.note}</small></button>) : <div className="teacher-area-empty">No matching official Category.</div>}</div>}
             </div>
-            {!form.areas.length && <div className="teacher-unassigned-note"><strong>Unassigned Draft</strong><span>You can save now and connect the course to an official track later.</span></div>}
+            {!form.areas.length && <div className="teacher-unassigned-note"><strong>Unassigned Draft</strong><span>You can save now and connect the course to an official Category later.</span></div>}
           </section>
 
           <section className="teacher-editor-form-card teacher-draft-folder-card">
-            <span className="section-kicker">Personal organization</span><h2>Draft folder / category</h2><p>Organize your own drafts however you want. This does not create an official BONSAI track.</p>
+            <span className="section-kicker">Personal organization</span><h2>Draft folder</h2><p>Organize your own drafts however you want. This does not create an official BONSAI Category.</p>
             <label className="teacher-editor-field"><span>Folder name</span><input value={form.draftFolder} onChange={(event) => update('draftFolder', event.target.value)} placeholder="e.g. Future modelling courses" /></label>
           </section>
 
