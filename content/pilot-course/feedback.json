@@ -2,25 +2,25 @@
   {
     "learnerId": "sample-feedback-a",
     "learnerName": "Learner A",
-    "courseSlug": "information-systems-knowledge-dissemination",
-    "courseTitle": "Information Systems and Knowledge Dissemination",
-    "comment": "Clear explanation of the data-to-knowledge pipeline.",
+    "courseSlug": "flood-crisis-management-estuarine-areas",
+    "courseTitle": "Flood Crisis Management in Estuarine Areas",
+    "comment": "The connection between situational awareness, forecasting and crisis decisions was clear.",
     "source": "sample-content"
   },
   {
     "learnerId": "sample-feedback-b",
     "learnerName": "Learner B",
-    "courseSlug": "information-systems-knowledge-dissemination",
-    "courseTitle": "Information Systems and Knowledge Dissemination",
-    "comment": "It would be helpful to see a real screenshot of the BONSAI information system in the case-study unit.",
+    "courseSlug": "flood-crisis-management-estuarine-areas",
+    "courseTitle": "Flood Crisis Management in Estuarine Areas",
+    "comment": "The flood-scenario exercise helped connect forecasting, dike inspection and stakeholder coordination.",
     "source": "sample-content"
   },
   {
     "learnerId": "sample-feedback-c",
     "learnerName": "Learner C",
-    "courseSlug": "information-systems-knowledge-dissemination",
-    "courseTitle": "Information Systems and Knowledge Dissemination",
-    "comment": "The knowledge dissemination unit was very relevant to my role.",
+    "courseSlug": "flood-crisis-management-estuarine-areas",
+    "courseTitle": "Flood Crisis Management in Estuarine Areas",
+    "comment": "I found the preparedness, response, recovery and resilience perspective useful for understanding the full crisis cycle.",
     "source": "sample-content"
   }
 ]
