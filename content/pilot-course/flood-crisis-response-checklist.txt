@@ -1,0 +1,34 @@
+BONSAI Flood Crisis Response Checklist
+Pilot course: Flood Crisis Management in Estuarine Areas
+Unit 3 — Coordination, Communication and Scenario Response
+
+Use this prototype checklist when working through a flood-crisis scenario or exercise.
+
+[ ] 1. Establish situational awareness.
+Summarise what is happening now, what is changing, and what information is still uncertain.
+
+[ ] 2. Review flood-risk and forecast information.
+Consider flood-wave development, inundation forecasts, possible impacts, and how current observations compare with expectations.
+
+[ ] 3. Check flood-defence information.
+Review available dike and levee inspection information and note any issue that may change the response picture.
+
+[ ] 4. Identify priority impacts.
+Consider people, critical infrastructure, flood defences, services, and other exposed or vulnerable elements.
+
+[ ] 5. Coordinate stakeholders.
+Identify which authorities, operational teams, technical specialists, emergency services, and other stakeholders need to exchange information or act together.
+
+[ ] 6. Communicate clearly.
+State the current situation, key uncertainties, decisions, responsibilities, and next update in language appropriate to the audience.
+
+[ ] 7. Select and justify response actions.
+Choose actions that fit the evolving situation and explain how they address the most important risks or impacts.
+
+[ ] 8. Review and adapt.
+Update the situation picture as forecasts, observations, inspections, or impacts change, and revise actions when needed.
+
+[ ] 9. Connect response to recovery and resilience.
+After the immediate crisis, identify lessons that can improve future preparedness, coordination, forecasting, and long-term flood resilience.
+
+Prototype note: This checklist is sample MOOC content, not an official BONSAI emergency procedure.
