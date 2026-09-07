@@ -1,29 +1,17 @@
 import { useState } from 'react';
-import LearnerActivityPage, { UNIT_TWO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
+import LearnerActivityPage, { PILOT_SCENARIO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
 import LearnerQuizPage from './LearnerQuizPage.jsx';
+import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
-const pilotUnits = [
-  {
-    title: 'Introduction to Data, Information and Knowledge',
-    description: 'Build the shared vocabulary for data, information and knowledge used throughout the BONSAI pilot course.',
-    lessons: ['Data', 'Information', 'Knowledge'],
-  },
-  {
-    title: 'Information Systems in BONSAI',
-    description: 'Explore the BONSAI information-system context and the pilot case study that connects information to the wider project.',
-    lessons: ['BONSAI information system', 'BONSAI information-system case study'],
-  },
-  {
-    title: 'Knowledge Dissemination in BONSAI',
-    description: 'Focus on how knowledge is shared and disseminated within the BONSAI context.',
-    lessons: ['Knowledge dissemination in BONSAI'],
-  },
-];
+function unitDescription(unitNumber) {
+  if (unitNumber === 1) return 'Build the core crisis-management foundation: emergency response, preparedness, readiness, leadership, situational awareness and decision-making.';
+  if (unitNumber === 2) return 'Connect flood-risk and resilience assessment with forecasting, flood-wave propagation, dike and levee inspection, breach modelling, climate change and AI-based approaches.';
+  return 'Apply communication, stakeholder coordination and scenario-based thinking to evolving flood situations, impacts, response choices, recovery and long-term resilience.';
+}
 
-function getUnitStatus(unitNumber, completedUnits, totalUnits) {
+function getUnitStatus(unitNumber, completedUnits) {
   if (completedUnits.includes(unitNumber)) return 'Completed · Review';
-  const nextUnitNumber = Array.from({ length: totalUnits }, (_, index) => index + 1).find((number) => !completedUnits.includes(number));
-  return unitNumber === nextUnitNumber ? 'Current · Continue' : 'Upcoming';
+  return 'Available';
 }
 
 function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson }) {
@@ -40,16 +28,16 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
         </div>
         <div className="lesson-content-hero-grid">
           <div>
-            <div className="lesson-content-badges"><span className="pill">Learner lesson</span><span className="lesson-content-status">KAN-24 content shell</span></div>
+            <div className="lesson-content-badges"><span className="pill">Flood crisis pilot lesson</span><span className="lesson-content-status">Pilot content</span></div>
             <span className="learner-unit-kicker">Unit {unitNumber} · Lesson {lessonNumber} of {unit.lessons.length}</span>
             <h1>{lesson}</h1>
-            <p>This page demonstrates the four lesson-content types required by the prototype without inventing teaching material that has not yet been supplied.</p>
+            <p>Study this lesson in the context of an evolving flood crisis in an estuarine or flood-prone area.</p>
           </div>
           <aside className="lesson-content-summary" aria-label={`Lesson ${lessonNumber} summary`}>
             <div><span>Course</span><strong>{course?.title}</strong></div>
             <div><span>Unit</span><strong>{unit.title}</strong></div>
             <div><span>Lesson</span><strong>{lessonNumber} of {unit.lessons.length}</strong></div>
-            <div><span>Content types</span><strong>Text · Image · Video · Download</strong></div>
+            <div><span>Pilot approach</span><strong>Text · visual · scenario support</strong></div>
           </aside>
         </div>
       </section>
@@ -57,38 +45,37 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
       <section className="lesson-content-body">
         <div className="lesson-content-main">
           <section className="lesson-content-block lesson-text-block" aria-labelledby="lesson-text-heading">
-            <div className="lesson-content-block-heading"><span className="lesson-type-icon">T</span><div><span className="section-kicker">Text content</span><h2 id="lesson-text-heading">Lesson text placeholder</h2></div></div>
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">T</span><div><span className="section-kicker">Lesson content</span><h2 id="lesson-text-heading">{lesson}</h2></div></div>
             <div className="lesson-text-placeholder">
-              <strong>Instructional text will appear here.</strong>
-              <p>This block verifies the layout for headings, paragraphs and structured lesson text. Final teaching content will be supplied in KAN-45.</p>
-              <div className="lesson-placeholder-lines" aria-hidden="true"><span /><span /><span className="short" /></div>
+              <strong>{lesson}</strong>
+              <p>The integrated pilot lesson content will appear here.</p>
             </div>
           </section>
 
           <section className="lesson-content-block" aria-labelledby="lesson-image-heading">
-            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▧</span><div><span className="section-kicker">Image content</span><h2 id="lesson-image-heading">Responsive image placeholder</h2></div></div>
-            <div className="lesson-image-placeholder" role="img" aria-label="Placeholder for the final lesson image to be supplied in KAN-46">
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▧</span><div><span className="section-kicker">Visual support</span><h2 id="lesson-image-heading">Flood crisis visual</h2></div></div>
+            <div className="lesson-image-placeholder" role="img" aria-label="Flood crisis learning visual placeholder">
               <div className="lesson-image-symbol" aria-hidden="true">▧</div>
-              <strong>Lesson image placeholder</strong>
-              <span>Final visual content will be supplied in KAN-46.</span>
+              <strong>Flood crisis visual</strong>
+              <span>Relevant pilot visual content appears here when supplied for this lesson.</span>
             </div>
           </section>
 
           <section className="lesson-content-block" aria-labelledby="lesson-video-heading">
-            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▶</span><div><span className="section-kicker">Video content</span><h2 id="lesson-video-heading">Video player placeholder</h2></div></div>
-            <div className="lesson-video-placeholder" aria-label="Placeholder video player for future lesson video">
-              <button className="lesson-video-play" type="button" aria-label="Placeholder play control" onClick={() => {}}>▶</button>
-              <div className="lesson-video-caption"><strong>Video content placeholder</strong><span>Final lesson video will be supplied in KAN-47.</span></div>
-              <div className="lesson-video-controls" aria-hidden="true"><span className="lesson-video-progress"><b /></span><span>0:00</span><span>⚙</span><span>⛶</span></div>
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">▶</span><div><span className="section-kicker">Video support</span><h2 id="lesson-video-heading">Flood crisis video</h2></div></div>
+            <div className="lesson-video-placeholder" aria-label="Flood crisis prototype video player">
+              <button className="lesson-video-play" type="button" aria-label="Prototype play control" onClick={() => {}}>▶</button>
+              <div className="lesson-video-caption"><strong>Prototype video</strong><span>Video content is integrated only where supplied for the pilot lesson.</span></div>
+              <div className="lesson-video-controls" aria-hidden="true"><span className="lesson-video-progress"><b /></span><span>0:00</span><span>Transcript</span></div>
             </div>
           </section>
 
           <section className="lesson-content-block" aria-labelledby="lesson-download-heading">
-            <div className="lesson-content-block-heading"><span className="lesson-type-icon">↓</span><div><span className="section-kicker">Downloadable document</span><h2 id="lesson-download-heading">Lesson resource placeholder</h2></div></div>
+            <div className="lesson-content-block-heading"><span className="lesson-type-icon">↓</span><div><span className="section-kicker">Practical resource</span><h2 id="lesson-download-heading">Flood crisis response resource</h2></div></div>
             <div className="lesson-download-card">
               <div className="lesson-download-file-icon" aria-hidden="true">DOC</div>
-              <div><strong>BONSAI lesson resource placeholder</strong><p>This non-instructional file only verifies the download interaction. Final downloadable teaching material will be supplied in KAN-48.</p><span>TXT · Prototype placeholder</span></div>
-              <a className="button button-primary" href="/lesson-resource-placeholder.txt" download>Download placeholder ↓</a>
+              <div><strong>Flood crisis resource</strong><p>Downloadable material appears here when supplied for this pilot lesson.</p><span>Prototype resource</span></div>
+              <button className="button button-primary" type="button" disabled>Resource pending</button>
             </div>
           </section>
         </div>
@@ -97,7 +84,7 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
           <span className="section-kicker">Lesson position</span>
           <h2>Lesson {lessonNumber} of {unit.lessons.length}</h2>
           <p>{lesson}</p>
-          <div className="lesson-content-type-list"><span>✓ Text shell</span><span>✓ Image shell</span><span>✓ Video shell</span><span>✓ Download shell</span></div>
+          <div className="lesson-content-type-list"><span>✓ Flood crisis lesson</span></div>
           <button className="button button-outline" type="button" onClick={onBack}>Back to Unit {unitNumber}</button>
         </aside>
       </section>
@@ -125,9 +112,10 @@ export default function LearnerUnitPage({
   const [activeLessonIndex, setActiveLessonIndex] = useState(null);
   const [activityOpen, setActivityOpen] = useState(false);
   const [quizOpen, setQuizOpen] = useState(false);
-  const unit = pilotUnits[unitNumber - 1];
-  const totalUnits = pilotUnits.length;
-  const activityComplete = completedActivityIds.includes(UNIT_TWO_ACTIVITY_ID);
+  const units = course?.pilot && Array.isArray(course.units) && course.units.length ? course.units : PILOT_COURSE_UNITS;
+  const unit = units[unitNumber - 1];
+  const totalUnits = units.length;
+  const activityComplete = completedActivityIds.includes(PILOT_SCENARIO_ACTIVITY_ID);
   const unitComplete = completedUnits.includes(unitNumber);
 
   function openLesson(index) {
@@ -162,7 +150,7 @@ export default function LearnerUnitPage({
     return (
       <main className="learner-unit-page">
         <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to course overview</button>
-        <section className="learner-unit-empty"><h1>Unit unavailable</h1><p>This unit has not been supplied for the prototype.</p></section>
+        <section className="learner-unit-empty"><h1>Unit unavailable</h1><p>This unit is not part of the current pilot structure.</p></section>
       </main>
     );
   }
@@ -171,7 +159,7 @@ export default function LearnerUnitPage({
     return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />;
   }
 
-  if (activityOpen && unitNumber === 2) {
+  if (activityOpen && unitNumber === 3) {
     return (
       <LearnerActivityPage
         course={course}
@@ -197,7 +185,7 @@ export default function LearnerUnitPage({
     );
   }
 
-  const status = getUnitStatus(unitNumber, completedUnits, totalUnits);
+  const status = getUnitStatus(unitNumber, completedUnits);
   const coursePercent = totalUnits ? Math.round((completedUnits.length / totalUnits) * 100) : 0;
   const previousUnit = unitNumber > 1 ? unitNumber - 1 : null;
   const nextUnit = unitNumber < totalUnits ? unitNumber + 1 : null;
@@ -211,10 +199,10 @@ export default function LearnerUnitPage({
         </div>
         <div className="learner-unit-hero-grid">
           <div>
-            <div className="learner-unit-badges"><span className="pill">Learner unit</span><span className={`learner-unit-status-pill ${status.startsWith('Completed') ? 'learner-unit-status-complete' : status.startsWith('Current') ? 'learner-unit-status-current' : ''}`}>{status}</span></div>
+            <div className="learner-unit-badges"><span className="pill">Flood crisis pilot unit</span><span className={`learner-unit-status-pill ${status.startsWith('Completed') ? 'learner-unit-status-complete' : 'learner-unit-status-current'}`}>{status}</span></div>
             <span className="learner-unit-kicker">Unit {unitNumber} of {totalUnits}</span>
             <h1>{unit.title}</h1>
-            <p>{unit.description}</p>
+            <p>{unitDescription(unitNumber)}</p>
           </div>
           <aside className="learner-unit-summary" aria-label={`Unit ${unitNumber} summary`}>
             <div><span>Course</span><strong>{course?.title}</strong></div>
@@ -230,12 +218,12 @@ export default function LearnerUnitPage({
           <section className="learner-unit-intro">
             <span className="section-kicker">Unit overview</span>
             <h2>What is in this unit?</h2>
-            <p>{unit.description}</p>
+            <p>{unitDescription(unitNumber)}</p>
           </section>
 
           <section className="learner-unit-lessons" aria-labelledby="learner-unit-lessons-heading">
             <div className="learner-unit-section-heading">
-              <div><span className="section-kicker">Lessons</span><h2 id="learner-unit-lessons-heading">Unit {unitNumber} lessons</h2><p>Select a lesson to open its KAN-24 content page.</p></div>
+              <div><span className="section-kicker">Lessons</span><h2 id="learner-unit-lessons-heading">Unit {unitNumber} lessons</h2><p>Select any lesson to open the pilot learning content. Units are not locked by sequence unless a dependency is explicitly configured.</p></div>
               <span className="course-unit-count">{unit.lessons.length} lesson{unit.lessons.length === 1 ? '' : 's'}</span>
             </div>
             <div className="learner-lesson-list">
@@ -251,26 +239,26 @@ export default function LearnerUnitPage({
             {unitNumber === 1 && (
               <section className="learner-unit-quiz" aria-labelledby="unit-quiz-heading">
                 <div className="learner-unit-quiz-heading">
-                  <div><span className="section-kicker">Quiz</span><h2 id="unit-quiz-heading">Unit 1 prototype quiz</h2><p>Test MCQ scoring, writing responses and the KAN-27 Results page. Final five questions remain KAN-50.</p></div>
-                  <span className="learner-unit-quiz-badge">4 prototype questions</span>
+                  <div><span className="section-kicker">Knowledge check</span><h2 id="unit-quiz-heading">Flood crisis management knowledge check</h2><p>Test the key ideas from the fundamentals unit with five multiple-choice questions.</p></div>
+                  <span className="learner-unit-quiz-badge">5 questions</span>
                 </div>
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
                   <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
-                  <div><small>Prototype quiz</small><strong>MCQ + short writing + project response</strong></div>
+                  <div><small>Pilot quiz</small><strong>Crisis management, situational awareness and forecasting</strong></div>
                   <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
                 </button>
               </section>
             )}
 
-            {unitNumber === 2 && (
+            {unitNumber === 3 && (
               <section className="learner-unit-activity" aria-labelledby="unit-activity-heading">
                 <div className="learner-unit-activity-heading">
-                  <div><span className="section-kicker">Activity</span><h2 id="unit-activity-heading">Unit 2 submission activity</h2><p>Test the free-text submission workflow. Final instructional activity content will be integrated separately.</p></div>
+                  <div><span className="section-kicker">Scenario activity</span><h2 id="unit-activity-heading">Evolving flood situation — response decision exercise</h2><p>Interpret an evolving flood situation, coordinate relevant stakeholders and justify a response decision.</p></div>
                   <span className={`learner-unit-activity-badge ${activityComplete ? 'learner-unit-activity-badge-done' : ''}`}>{activityComplete ? '✓ Completed' : 'To complete'}</span>
                 </div>
                 <button className="learner-unit-activity-card" type="button" onClick={openActivity}>
                   <span className="learner-unit-activity-icon" aria-hidden="true">✎</span>
-                  <div><small>Prototype activity</small><strong>{activityComplete ? 'Submission recorded' : 'Instructions + free-text submission'}</strong></div>
+                  <div><small>Scenario exercise</small><strong>{activityComplete ? 'Submission recorded' : 'Situational awareness + coordination + response decision'}</strong></div>
                   <span className="learner-unit-activity-action">{activityComplete ? 'Review activity' : 'Open activity'} <b aria-hidden="true">→</b></span>
                 </button>
               </section>
@@ -279,16 +267,12 @@ export default function LearnerUnitPage({
         </div>
 
         <aside className="learner-unit-side-panel">
-          <span className="section-kicker">Course position</span>
-          <h2>Unit {unitNumber} of {totalUnits}</h2>
-          <p>{status === 'Upcoming' ? 'This unit follows the current learning step and is available to preview in the prototype.' : status.startsWith('Completed') ? 'This unit is complete and remains available for review.' : 'This is the learner’s current unit.'}</p>
-          <div className="learner-progress-track" aria-label={`Course ${coursePercent}% complete`}><span style={{ width: `${coursePercent}%` }} /></div>
-          <strong className="learner-unit-course-percent">{coursePercent}% course complete</strong>
-          <div className="learner-unit-completion-control">
-            <span className="section-kicker">KAN-28 completion</span>
-            <p>{unitComplete ? 'This unit is already counted in course progress.' : unitNumber === totalUnits ? 'Mark this final unit complete to finish the course when all other units are complete.' : 'Use this prototype action when you have finished this unit.'}</p>
-            <button className={unitComplete ? 'button button-outline' : 'button button-primary'} type="button" disabled={unitComplete} onClick={() => !unitComplete && onCompleteUnit?.(unitNumber)}>{unitComplete ? '✓ Unit completed' : unitNumber === totalUnits ? 'Complete final unit →' : 'Mark Unit complete ✓'}</button>
-          </div>
+          <span className="section-kicker">Course progress</span>
+          <h2>{coursePercent}% complete</h2>
+          <p>{completedUnits.length} of {totalUnits} units are marked complete.</p>
+          <div className="learner-progress-track"><span style={{ width: `${coursePercent}%` }} /></div>
+          <button className="button button-primary" type="button" disabled={unitComplete} onClick={() => !unitComplete && onCompleteUnit(unitNumber)}>{unitComplete ? 'Unit complete ✓' : 'Mark unit complete'}</button>
+          <button className="button button-outline" type="button" onClick={onBack}>Back to course overview</button>
         </aside>
       </section>
 
