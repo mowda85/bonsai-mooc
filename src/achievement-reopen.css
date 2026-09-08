@@ -3,32 +3,37 @@
   cursor: pointer;
   transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
 }
-.achievement-reopen-control:hover,
-.achievement-reopen-control:focus-visible {
+.achievement-reopen-control:hover {
   transform: translateY(-2px);
   border-color: #9fbcda !important;
   box-shadow: 0 12px 28px rgba(15,77,157,.1);
-  outline: none;
 }
-.achievement-reopen-control.specialist:hover,
-.achievement-reopen-control.specialist:focus-visible {
+.achievement-reopen-control.specialist:hover {
   border-color: #9fcea4 !important;
   box-shadow: 0 12px 28px rgba(76,156,83,.12);
 }
 .achievement-reopen-button {
   width: max-content;
   margin-top: 7px;
-  padding: 0;
+  padding: 2px 0;
   border: 0;
+  border-radius: 4px;
   background: transparent;
   color: #0f4d9d;
   font: inherit;
   font-size: .78rem;
   font-weight: 850;
-  pointer-events: none;
+  cursor: pointer;
+}
+.achievement-reopen-button:focus-visible {
+  outline: 3px solid rgba(15,77,157,.16);
+  outline-offset: 3px;
 }
 .achievement-reopen-control.specialist .achievement-reopen-button {
   color: #34753c;
+}
+.achievement-reopen-control.specialist .achievement-reopen-button:focus-visible {
+  outline-color: rgba(76,156,83,.2);
 }
 
 .achievement-preview-backdrop {
