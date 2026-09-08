@@ -41,7 +41,7 @@ function createTextElement(tag, className, text) {
   return element;
 }
 
-function openPreview(card) {
+function openPreview(card, trigger = document.activeElement) {
   const details = achievementDetails(card);
   closePreview();
 
@@ -50,7 +50,7 @@ function openPreview(card) {
   backdrop.className = 'achievement-preview-backdrop';
   backdrop.setAttribute('role', 'presentation');
   backdrop.dataset.previousOverflow = document.body.style.overflow || '';
-  backdrop._returnFocus = document.activeElement;
+  backdrop._returnFocus = trigger;
 
   const dialog = document.createElement('section');
   dialog.className = `achievement-preview-dialog ${details.kind === 'specialist' ? 'is-specialist' : 'is-badge'}`;
@@ -106,9 +106,7 @@ function openPreview(card) {
 
   const footer = document.createElement('div');
   footer.className = 'achievement-preview-footer';
-  footer.append(
-    createTextElement('span', '', 'This achievement remains available from your learner dashboard.'),
-  );
+  footer.append(createTextElement('span', '', 'This achievement remains available from your learner dashboard.'));
   const done = document.createElement('button');
   done.type = 'button';
   done.className = 'button button-primary';
@@ -129,11 +127,9 @@ function openPreview(card) {
 function patchCard(card) {
   if (card.dataset.achievementReopen === 'true') return;
   const kind = achievementKind(card);
+  const awardName = card.querySelector(':scope > strong')?.textContent?.trim() || 'earned achievement';
   card.dataset.achievementReopen = 'true';
   card.classList.add('achievement-reopen-control');
-  card.setAttribute('role', 'button');
-  card.setAttribute('tabindex', '0');
-  card.setAttribute('aria-label', `${kind === 'specialist' ? 'View Specialist Certificate' : 'View Course Badge'}: ${card.querySelector(':scope > strong')?.textContent?.trim() || 'earned achievement'}`);
 
   let action = card.querySelector(':scope > .achievement-reopen-button');
   if (!action) {
@@ -141,8 +137,7 @@ function patchCard(card) {
     action.type = 'button';
     action.className = 'achievement-reopen-button';
     action.textContent = kind === 'specialist' ? 'View certificate →' : 'View badge →';
-    action.setAttribute('aria-hidden', 'true');
-    action.tabIndex = -1;
+    action.setAttribute('aria-label', `${kind === 'specialist' ? 'View Specialist Certificate' : 'View Course Badge'}: ${awardName}`);
     card.append(action);
   }
 }
@@ -169,20 +164,15 @@ export default function AchievementReopenBridge() {
       if (event.target.closest('a')) return;
       event.preventDefault();
       event.stopPropagation();
-      openPreview(card);
+      const trigger = event.target.closest('.achievement-reopen-button') || card.querySelector(':scope > .achievement-reopen-button') || document.activeElement;
+      openPreview(card, trigger);
     }
 
     function handleKeydown(event) {
       if (event.key === 'Escape' && document.getElementById(MODAL_ID)) {
         event.preventDefault();
         closePreview();
-        return;
       }
-      const card = event.target.closest?.(CARD_SELECTOR);
-      if (!card || event.target !== card) return;
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      event.preventDefault();
-      openPreview(card);
     }
 
     const observer = new MutationObserver(scan);
