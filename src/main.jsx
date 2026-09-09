@@ -50,6 +50,7 @@ import './admin-dashboard-layout-fix.css';
 import './workflow-version.css';
 import './role-session.css';
 import './category-architecture.css';
+import './category-course-card-compact.css';
 import './achievement-reopen.css';
 
 createRoot(document.getElementById('root')).render(
