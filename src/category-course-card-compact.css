@@ -1,0 +1,29 @@
+/* KAN-70: keep Category detail course cards compact and consistent.
+   Full course descriptions remain available on the individual course page. */
+.category-v2-detail .category-v2-course-card {
+  box-sizing: border-box;
+  height: 255px;
+  min-height: 255px;
+  overflow: hidden;
+}
+
+.category-v2-detail .category-v2-course-card > p {
+  flex: none;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-v2-detail .category-v2-course-award {
+  margin-top: auto;
+}
+
+@media (max-width: 820px) {
+  .category-v2-detail .category-v2-course-card {
+    height: auto;
+    min-height: 255px;
+  }
+}
