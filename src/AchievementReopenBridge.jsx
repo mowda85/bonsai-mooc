@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 const CARD_SELECTOR = '.category-v2-achievement-list article, .learner-certificate-grid .learner-certificate-card';
 const MODAL_ID = 'bonsai-achievement-preview';
+const ACTIVE_USER_KEY = 'bonsai-mooc.prototype.active-user.v1';
 
 function achievementKind(card) {
   const label = card.querySelector(':scope > span')?.textContent?.trim().toLowerCase() || '';
@@ -24,6 +25,18 @@ function achievementDetails(card) {
   };
 }
 
+function activeLearnerName() {
+  try {
+    const value = JSON.parse(window.sessionStorage.getItem(ACTIVE_USER_KEY) || 'null');
+    if (value?.role === 'learner' && typeof value.name === 'string' && value.name.trim()) {
+      return value.name.trim();
+    }
+  } catch {
+    // The achievement preview still remains usable if session storage is unavailable.
+  }
+  return 'BONSAI Learner';
+}
+
 function closePreview() {
   const modal = document.getElementById(MODAL_ID);
   if (!modal) return;
@@ -43,6 +56,7 @@ function createTextElement(tag, className, text) {
 
 function openPreview(card, trigger = document.activeElement) {
   const details = achievementDetails(card);
+  const learnerName = activeLearnerName();
   closePreview();
 
   const backdrop = document.createElement('div');
@@ -84,12 +98,14 @@ function openPreview(card, trigger = document.activeElement) {
   const kicker = createTextElement('span', 'achievement-preview-kicker', details.kind === 'specialist' ? 'Specialist Certificate' : 'Course Badge');
   const title = createTextElement('h2', '', details.title);
   title.id = 'achievement-preview-title';
+  const awardedLabel = createTextElement('p', 'achievement-preview-awarded-label', 'Awarded to');
+  const learner = createTextElement('h3', 'achievement-preview-learner-name', learnerName);
   const description = createTextElement(
     'p',
     'achievement-preview-description',
     details.kind === 'specialist'
-      ? 'Awarded after completing every course in this BONSAI Category.'
-      : 'Awarded for completing this BONSAI course.',
+      ? 'for completing every course in this BONSAI Category.'
+      : 'for completing this BONSAI course.',
   );
 
   const status = document.createElement('div');
@@ -100,7 +116,7 @@ function openPreview(card, trigger = document.activeElement) {
   );
 
   const record = createTextElement('small', 'achievement-preview-record', details.fullName);
-  cardPreview.append(brand, kicker, title, description);
+  cardPreview.append(brand, kicker, title, awardedLabel, learner, description);
   if (details.context) cardPreview.append(createTextElement('p', 'achievement-preview-context', details.context));
   cardPreview.append(status, record);
 
