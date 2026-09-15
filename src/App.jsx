@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import LearnerDashboard from './LearnerDashboard.jsx';
 import { PILOT_COURSE_SLUG, PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
+const ACTIVE_USER_KEY = 'bonsai-mooc.prototype.active-user.v1';
+
 const mockUsers = [
   { id: 'BNS-1001', username: 'alex', name: 'Alex Johnson', role: 'learner' },
   { id: 'BNS-2001', username: 'anna', name: 'Dr. Anna Kontokosta', role: 'teacher' },
@@ -133,11 +135,26 @@ export default function App() {
 
   function handleLogin(nextUser) {
     setUser(nextUser);
+    try {
+      window.sessionStorage.setItem(ACTIVE_USER_KEY, JSON.stringify({
+        id: nextUser.id,
+        username: nextUser.username,
+        name: nextUser.name,
+        role: nextUser.role,
+      }));
+    } catch {
+      // The in-memory user state still keeps the current prototype session usable.
+    }
     navigate(roleHomePath(nextUser.role));
   }
 
   function handleLogout() {
     setUser(null);
+    try {
+      window.sessionStorage.removeItem(ACTIVE_USER_KEY);
+    } catch {
+      // Ignore storage cleanup failures in the prototype.
+    }
     navigate('/');
   }
 
