@@ -134,11 +134,27 @@
   color: #34753c;
 }
 .achievement-preview-card h2 {
-  margin: 0 auto 14px;
+  margin: 0 auto 18px;
   max-width: 560px;
   color: #173d67;
   font-size: clamp(1.6rem,4vw,2.45rem);
   line-height: 1.15;
+}
+.achievement-preview-awarded-label {
+  margin: 0 auto 4px;
+  color: #71808f;
+  font-size: .88rem;
+  font-weight: 700;
+}
+.achievement-preview-learner-name {
+  margin: 0 auto 8px;
+  max-width: 560px;
+  color: #173d67;
+  font-size: clamp(1.35rem,3vw,1.85rem);
+  line-height: 1.2;
+}
+.achievement-preview-dialog.is-specialist .achievement-preview-learner-name {
+  color: #34753c;
 }
 .achievement-preview-description,
 .achievement-preview-context {
