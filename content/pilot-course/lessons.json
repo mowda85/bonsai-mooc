@@ -38,41 +38,15 @@
     "sections": [
       {
         "heading": "From rainfall to flood maps",
-        "body": "Physics-based forecasting links meteorological and hydrological information to hydraulic simulation. Rainfall and runoff are converted into river discharge, which can then drive 1D, 2D or coupled hydraulic models that estimate water depth, velocity and inundation extent. These models provide detailed spatial information, but high-resolution 2D simulations can be computationally expensive when forecasts must be updated repeatedly during an emergency.",
-        "figures": [
-          {
-            "src": "/pilot/flood-ai/figure-1-modelling-workflow.webp",
-            "alt": "Workflow linking DWD, historical and synthetic rainfall, rainfall uncertainty, LARSIM calibration and uncertainty, model outputs, and 1D and 2D hydraulic modelling.",
-            "caption": "Flood-modelling workflow: rainfall and hydrological uncertainty feed calibrated hydrological and hydraulic models before 1D/2D flood outputs are produced."
-          }
-        ]
+        "body": "Physics-based forecasting links meteorological and hydrological information to hydraulic simulation. Rainfall and runoff are converted into river discharge, which can then drive 1D, 2D or coupled hydraulic models that estimate water depth, velocity and inundation extent. These models provide detailed spatial information, but high-resolution 2D simulations can be computationally expensive when forecasts must be updated repeatedly during an emergency."
       },
       {
         "heading": "Precomputed scenarios, inputs and uncertainty",
-        "body": "Bhola et al. (2018) addressed the real-time computing problem by preparing many hydraulic scenarios in advance. In the Kulmbach case study, 180 synthetic discharge scenarios and their inundation maps were stored in a database. During an event, the real-time discharge forecast was matched to the closest scenario; the selected 12-hour inundation forecast was updated every three hours and could be retrieved in seconds. Rainfall and discharge uncertainty therefore matter both when preparing scenarios and when interpreting the selected forecast.",
-        "figures": [
-          {
-            "src": "/pilot/flood-ai/figure-2-spatial-rainfall.webp",
-            "alt": "Spatial rainfall field dated 28 May 2006 with a blue intensity scale over the model domain.",
-            "caption": "Spatial rainfall forcing is not uniform; its distribution influences the discharge and inundation scenarios used by the forecasting chain."
-          },
-          {
-            "src": "/pilot/flood-ai/figure-3-discharge-uncertainty.webp",
-            "alt": "Trebgast discharge hydrograph showing observed discharge, model results, best-fit models and a red uncertainty band from 100 runs.",
-            "caption": "Forecast and model uncertainty can be represented as a range rather than a single deterministic hydrograph."
-          }
-        ]
+        "body": "Bhola et al. (2018) addressed the real-time computing problem by preparing many hydraulic scenarios in advance. In the Kulmbach case study, 180 synthetic discharge scenarios and their inundation maps were stored in a database. During an event, the real-time discharge forecast was matched to the closest scenario; the selected 12-hour inundation forecast was updated every three hours and could be retrieved in seconds. Rainfall and discharge uncertainty therefore matter both when preparing scenarios and when interpreting the selected forecast."
       },
       {
         "heading": "AI as a rapid inundation-forecast surrogate",
-        "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here.",
-        "figures": [
-          {
-            "src": "/pilot/flood-ai/figure-4-kulmbach-inundation.webp",
-            "alt": "Flood inundation map of Kulmbach with modelled inundated areas highlighted on a city basemap.",
-            "caption": "Inundation forecasts translate model outputs into a spatial picture that crisis teams can interpret for potentially affected areas."
-          }
-        ]
+        "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here."
       },
       {
         "heading": "From forecast to crisis decision",
