@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import test from 'node:test';
 const read = (path) => readFile(new URL('../' + path, import.meta.url), 'utf8');
 const json = async (path) => JSON.parse(await read('content/pilot-course/' + path));
@@ -53,9 +53,29 @@ test('category, pilot identity, prerequisites and assessment links preserved', a
   assert.equal((await json('activity.json')).unitId, 'pilot-unit-3');
 });
 
-test('Unit 2 has no embedded figures and companion handout metadata is present', () => {
+test('Unit 2 has four contextual figures in the intended sections', async () => {
   const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
-  assert.equal(reading.sections.some(section => Object.hasOwn(section, 'figures')), false);
+  assert.equal(reading.sections[0].figures.length, 1);
+  assert.equal(reading.sections[1].figures.length, 2);
+  assert.equal(reading.sections[2].figures.length, 1);
+  assert.equal(reading.sections[3].figures, undefined);
+
+  const figures = reading.sections.flatMap(section => section.figures || []);
+  assert.equal(figures.length, 4);
+  assert.deepEqual(figures.map(figure => figure.src), [
+    '/pilot/flood-ai/figure-1-floodevac-workflow.webp',
+    '/pilot/flood-ai/figure-2-rainfall-uncertainty.webp',
+    '/pilot/flood-ai/figure-3-trebgast-uncertainty.webp',
+    '/pilot/flood-ai/figure-4-2d-uncertainty.webp',
+  ]);
+
+  for (const figure of figures) {
+    assert.ok(figure.alt.length > 20);
+    assert.match(figure.caption, /^Figure [1-4]\./);
+    const info = await stat(new URL('../public' + figure.src, import.meta.url));
+    assert.ok(info.size > 0, figure.src);
+  }
+
   assert.equal(reading.companionResource.title, 'Extended theoretical reading');
   assert.match(reading.companionResource.meta, /DOCX/);
 });
