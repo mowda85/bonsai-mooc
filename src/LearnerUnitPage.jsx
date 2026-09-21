@@ -5,7 +5,7 @@ import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
 function unitDescription(unitNumber) {
   if (unitNumber === 1) return 'Build the core crisis-management foundation: emergency response, preparedness, readiness, leadership, situational awareness and decision-making.';
-  if (unitNumber === 2) return 'Explore flood maps, temporal forecasting, physics-based and AI methods, then use the supplied Urban Flood Forecasting lecture to understand ANN structure, training, validation, testing and generalisation.';
+  if (unitNumber === 2) return 'Explore flood maps, temporal forecasting, physics-based and AI methods, plus ANN structure, training, validation, testing and generalisation.';
   return 'Apply communication, stakeholder coordination and scenario-based thinking to evolving flood situations, impacts, response choices, recovery and long-term resilience.';
 }
 
@@ -236,21 +236,35 @@ export default function LearnerUnitPage({
               ))}
             </div>
 
-            {(unitNumber === 1 || unitNumber === 2) && (
+            {unitNumber === 1 && (
               <section className="learner-unit-quiz" aria-labelledby="unit-quiz-heading">
+                <div className="learner-unit-quiz-heading">
+                  <div><span className="section-kicker">Knowledge check</span><h2 id="unit-quiz-heading">Flood crisis management knowledge check</h2><p>Test the key ideas from the fundamentals unit with five multiple-choice questions.</p></div>
+                  <span className="learner-unit-quiz-badge">5 questions</span>
+                </div>
+                <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
+                  <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
+                  <div><small>Pilot quiz</small><strong>Crisis management, situational awareness and forecasting</strong></div>
+                  <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
+                </button>
+              </section>
+            )}
+
+            {unitNumber === 2 && (
+              <section className="learner-unit-quiz" aria-labelledby="unit-2-quiz-heading">
                 <div className="learner-unit-quiz-heading">
                   <div>
                     <span className="section-kicker">Knowledge check</span>
-                    <h2 id="unit-quiz-heading">{unitNumber === 1 ? 'Flood crisis management knowledge check' : 'Flood forecasting & ANN knowledge check'}</h2>
-                    <p>{unitNumber === 1 ? 'Test the key ideas from the fundamentals unit with five multiple-choice questions.' : 'Check the main ideas from the Unit 2 theory and supplied Urban Flood Forecasting video with seven multiple-choice questions.'}</p>
+                    <h2 id="unit-2-quiz-heading">Flood forecasting &amp; ANN knowledge check</h2>
+                    <p>Check the main ideas from the Unit 2 theory and supplied Urban Flood Forecasting lecture with seven multiple-choice questions.</p>
                   </div>
-                  <span className="learner-unit-quiz-badge">{unitNumber === 1 ? '5 questions' : '7 questions'}</span>
+                  <span className="learner-unit-quiz-badge">7 questions</span>
                 </div>
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
                   <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
                   <div>
-                    <small>{unitNumber === 1 ? 'Required pilot quiz' : 'Unit 2 practice quiz'}</small>
-                    <strong>{unitNumber === 1 ? 'Crisis management, situational awareness and forecasting' : 'Forecast lead time, ANN structure, training and evaluation'}</strong>
+                    <small>Unit 2 practice quiz</small>
+                    <strong>Forecast lead time, ANN structure, training and evaluation</strong>
                   </div>
                   <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
                 </button>
