@@ -144,18 +144,19 @@ function patchLessonContent() {
   const lesson = lessons.find((item) => item.unitNumber === unitNumber && item.lessonNumber === lessonNumber);
   if (!lesson) return;
   const integrationKey = `${unitNumber}-${lessonNumber}`;
+  const suppliedDescription = lesson.source === 'partner-supplied-description';
   if (root.dataset.kan68PilotIntegrated === integrationKey) return;
   root.dataset.kan68PilotIntegrated = integrationKey;
 
   const hero = root.querySelector('.lesson-content-hero-grid > div');
-  setText(hero?.querySelector('.lesson-content-status'), 'Flood crisis pilot content');
+  setText(hero?.querySelector('.lesson-content-status'), suppliedDescription ? 'Supplied course description' : 'Flood crisis pilot content');
   setText(hero?.querySelector('h1'), lesson.title);
-  setText(hero?.querySelector('p'), 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
+  setText(hero?.querySelector('p'), suppliedDescription ? 'Read the supplied overview of Flood Inundation Forecasting Using AI. Videos, slides, datasets and exercises for this unit have not yet been supplied.' : 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
 
   const textSection = root.querySelector('.lesson-text-block');
   setText(textSection?.querySelector('h2'), lesson.title);
   const textBody = textSection?.querySelector('.lesson-text-placeholder');
-  if (textBody) textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}<p><strong>Prototype takeaway:</strong> Connect this lesson to the shared situation picture, the decisions that may be required, and the organisations that would need the information.</p>`;
+  if (textBody) textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}${suppliedDescription ? '' : '<p><strong>Prototype takeaway:</strong> Connect this lesson to the shared situation picture, the decisions that may be required, and the organisations that would need the information.</p>'}`;
 
   const imageSection = root.querySelector('#lesson-image-heading')?.closest('.lesson-content-block');
   if (unitNumber === 1 && lessonNumber === 3 && imageSection) {
@@ -167,7 +168,7 @@ function patchLessonContent() {
   }
 
   const videoSection = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
-  if (unitNumber === 2 && lessonNumber === 2 && videoSection) {
+  if (unitNumber === 3 && lessonNumber === 3 && videoSection) {
     setText(videoSection.querySelector('h2'), video.title);
     const player = videoSection.querySelector('.lesson-video-placeholder');
     if (player) {
@@ -188,9 +189,9 @@ function patchLessonContent() {
 
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
-    const items = ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
+    const items = suppliedDescription ? ['✓ Supplied description', 'Teaching resources pending'] : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
     if (unitNumber === 1 && lessonNumber === 3) items[1] = '✓ Situation-awareness diagram';
-    if (unitNumber === 2 && lessonNumber === 2) items[2] = '✓ Forecast-to-decision video placeholder';
+    if (unitNumber === 3 && lessonNumber === 3) items[2] = '✓ Forecast-to-decision video placeholder';
     if (unitNumber === 3 && lessonNumber === 5) items[3] = '✓ Flood crisis response checklist';
     typeList.innerHTML = items.map((item) => `<span>${item}</span>`).join('');
   }

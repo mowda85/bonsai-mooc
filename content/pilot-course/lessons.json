@@ -31,45 +31,10 @@
     "unitId": "pilot-unit-2",
     "unitNumber": 2,
     "lessonNumber": 1,
-    "title": "Flood Risk and Resilience Assessment",
+    "title": "Flood Inundation Forecasting Using AI",
     "format": "text",
-    "body": "Flood risk assessment helps crisis managers consider the likelihood and possible consequences of flooding. Resilience assessment adds the question of how well people, infrastructure, organisations and flood-defence systems can prepare for, withstand and recover from disruptive flood events.\n\nThese assessments support preparedness by helping identify vulnerable areas, possible impacts and priorities for monitoring or intervention. During a crisis, they provide context for interpreting new information and deciding where attention is most urgently needed."
-  },
-  {
-    "id": "pilot-unit-2-lesson-2",
-    "unitId": "pilot-unit-2",
-    "unitNumber": 2,
-    "lessonNumber": 2,
-    "title": "Flood-Wave Propagation and Inundation Forecasting",
-    "format": "text",
-    "body": "Understanding how a flood wave may propagate helps crisis teams anticipate where water could move, how quickly conditions may change and which locations could become affected. Inundation forecasting supports this by estimating the possible spatial extent and development of flooding.\n\nForecast information is most useful when it is interpreted together with local conditions, flood-defence status and the needs of decision-makers. The purpose is not only to predict water movement, but to support timely preparation and response."
-  },
-  {
-    "id": "pilot-unit-2-lesson-3",
-    "unitId": "pilot-unit-2",
-    "unitNumber": 2,
-    "lessonNumber": 3,
-    "title": "Dike and Levee Inspection",
-    "format": "text",
-    "body": "Dike and levee inspection contributes to situational awareness by providing direct information about the condition of flood-defence systems. Observations before, during and after a flood can help teams identify signs that deserve closer attention and communicate the condition of defences to other decision-makers.\n\nInspection information should be considered as part of the wider crisis picture, alongside forecasts, flood levels, modelling and reports from the field. Clear reporting is important so that the meaning and urgency of observations are understood by the organisations coordinating the response."
-  },
-  {
-    "id": "pilot-unit-2-lesson-4",
-    "unitId": "pilot-unit-2",
-    "unitNumber": 2,
-    "lessonNumber": 4,
-    "title": "Dike-Breach Modelling and Climate-Change Effects",
-    "format": "text",
-    "body": "Dike-breach modelling can support crisis planning by exploring how flooding might develop if a flood-defence structure is breached. Scenario outputs can help teams think about possible inundation patterns, affected areas and the consequences that may require emergency action.\n\nClimate change can alter the conditions that flood-defence systems must withstand over time. Crisis management therefore connects immediate emergency response with longer-term resilience, so that lessons from current events can also inform future preparedness and adaptation."
-  },
-  {
-    "id": "pilot-unit-2-lesson-5",
-    "unitId": "pilot-unit-2",
-    "unitNumber": 2,
-    "lessonNumber": 5,
-    "title": "AI-Based Forecasting Approaches",
-    "format": "text",
-    "body": "AI-based approaches can be used alongside other forecasting methods to help analyse data, identify patterns and support flood-inundation forecasting. In a crisis-management context, their value depends on whether the resulting information is timely, understandable and suitable for the decisions that need to be made.\n\nLearners should treat forecasting outputs as decision-support information rather than isolated answers. They need to be interpreted in context, communicated clearly and combined with other evidence about the evolving flood situation."
+    "source": "partner-supplied-description",
+    "body": "Flood maps showing water depths in the event of flooding are crucial for flood risk management and crisis management. While risk management and crisis management are both essential for mitigating the risk of extreme events, they have different focuses. Risk management focuses on identifying, assessing, and mitigating potential hazards before they occur, and thus aims to prevent crises. Crisis management, on the other hand, focuses on responding to and managing an impending event, as well as dealing with an event that has just occurred.\n\nWhile maximum flood inundation maps are essential for flood risk management, additional information on the temporal sequence is crucial for crisis management. Computationally intensive, physics-based models are the preferred flood simulation tool for risk management. However, due to the high computing time they require, physics-based models for crisis management are only acceptable with the help of high-performance computers (HPC). To counteract this disadvantage, scientists are researching data-driven, multi-stage flood prediction systems based on artificial intelligence (AI) that can be run on any personal computer.\n\nIn this study, we present several forecasting methods for flood prediction based on physically based models, and the latest developments applying AI. The latter include AI methods that, trained on physically based models, make use of convolutional neural networks (CNN), artificial neural networks (ANN), physically informed neural networks (PINNs), and using either recursive or sequential networks, among others. All of which can forecast flood inundation in a matter of seconds."
   },
   {
     "id": "pilot-unit-3-lesson-1",

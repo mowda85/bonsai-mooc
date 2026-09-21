@@ -13,7 +13,7 @@ import {
   PILOT_COURSE_UNITS,
 } from './courseArchitecture.js';
 
-const pilotUnits = PILOT_COURSE_UNITS.map((unit) => ({ id: unit.id, title: unit.title, source: 'pilot' }));
+const pilotUnits = PILOT_COURSE_UNITS.map((unit) => ({ ...unit, source: 'pilot' }));
 
 export const mockTeacherPortfolio = [
   {

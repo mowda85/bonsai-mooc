@@ -1,11 +1,11 @@
 {
-  "id": "pilot-unit-2-video-1",
-  "unitId": "pilot-unit-2",
+  "id": "pilot-unit-3-video-1",
+  "unitId": "pilot-unit-3",
   "type": "video-placeholder",
   "title": "From Forecast to Crisis Decision",
-  "caption": "A short prototype video showing how flood-wave propagation, inundation forecasting, defence-condition information and evolving observations can be brought together to support crisis-management decisions.",
-  "durationLabel": "6 min",
+  "caption": "Optional forecast-to-decision video slot. No video or transcript has been supplied.",
+  "durationLabel": "Not supplied",
   "posterLabel": "Flood crisis decision-support video",
-  "transcriptAvailable": true,
+  "transcriptAvailable": false,
   "source": "prototype-placeholder"
 }
