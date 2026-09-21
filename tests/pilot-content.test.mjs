@@ -53,20 +53,19 @@ test('category, pilot identity, prerequisites and assessment links preserved', a
   assert.equal((await json('activity.json')).unitId, 'pilot-unit-3');
 });
 
-test('Unit 2 has four contextual figures in the intended sections', async () => {
+test('Unit 2 has three contextual figures in the intended sections', async () => {
   const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
   assert.equal(reading.sections[0].figures.length, 1);
   assert.equal(reading.sections[1].figures.length, 2);
-  assert.equal(reading.sections[2].figures.length, 1);
+  assert.equal(reading.sections[2].figures, undefined);
   assert.equal(reading.sections[3].figures, undefined);
 
   const figures = reading.sections.flatMap(section => section.figures || []);
-  assert.equal(figures.length, 4);
+  assert.equal(figures.length, 3);
   assert.deepEqual(figures.map(figure => figure.src), [
     '/pilot/flood-ai/figure-1-floodevac-workflow.webp',
     '/pilot/flood-ai/figure-2-rainfall-uncertainty.webp',
     '/pilot/flood-ai/figure-3-trebgast-uncertainty.webp',
-    '/pilot/flood-ai/figure-4-2d-uncertainty.webp',
   ]);
 
   for (const figure of figures) {
