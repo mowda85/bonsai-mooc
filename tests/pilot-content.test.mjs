@@ -15,8 +15,8 @@ test('three units, one source-based reading in Unit 2, no invented duplicates', 
   const reading = lessons.filter(l => l.unitNumber === 2);
   assert.equal(reading.length, 1);
   assert.equal(reading[0].source, 'source-based-synthesis');
-  assert.equal(reading[0].sections.length, 4);
-  assert.match(reading[0].body, /temporal sequence/i);
+  assert.equal(reading[0].sections.length, 6);
+  assert.match(reading[0].body, /Urban Flood Forecasting lecture/i);
   assert.match(reading[0].sections.map(section => section.body).join(' '), /Bhola et al\. \(2018\)/);
   assert.match(reading[0].sections.map(section => section.body).join(' '), /Lin et al\. \(2020\)/);
   assert.match(reading[0].sections.map(section => section.body).join(' '), /Zhang et al\. \(2016\)/);
@@ -86,6 +86,7 @@ test('Unit 2 companion handout is a real downloadable DOCX', async () => {
   assert.equal(reading.companionResource.fileName, 'Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx');
   assert.equal(reading.companionResource.mimeType, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
   assert.match(reading.companionResource.description, /three retained figures/i);
+  assert.match(reading.companionResource.description, /Urban Flood Forecasting lecture/i);
 
   const bridge = await read('src/Epic5PilotContentBridge.jsx');
   assert.match(bridge, /Download handout/);
@@ -99,4 +100,53 @@ test('Unit 2 companion handout is a real downloadable DOCX', async () => {
   assert.match(generator, /figure-2-rainfall-uncertainty\.webp/);
   assert.match(generator, /figure-3-trebgast-uncertainty\.webp/);
   assert.doesNotMatch(generator, /figure-4-2d-uncertainty/);
+});
+
+
+test('Unit 2 includes the seven-question video-and-theory knowledge check', async () => {
+  const quiz = await json('unit2-quiz.json');
+  assert.equal(quiz.courseSlug, 'flood-crisis-management-estuarine-areas');
+  assert.equal(quiz.unitId, 'pilot-unit-2');
+  assert.equal(quiz.questions.length, 7);
+  assert.ok(quiz.questions.every(question => question.type === 'mcq'));
+  const prompts = quiz.questions.map(question => question.prompt).join(' ');
+  assert.match(prompts, /lead time/i);
+  assert.match(prompts, /input layer/i);
+  assert.match(prompts, /backpropagation/i);
+  assert.match(prompts, /training, validation and test/i);
+  assert.match(prompts, /overfitting/i);
+  assert.match(prompts, /weights and biases/i);
+
+  const store = await read('src/prototypeQuizStore.js');
+  assert.match(store, /pilot-unit-2/);
+  assert.match(store, /unit2-quiz\.json/);
+
+  const unitPage = await read('src/LearnerUnitPage.jsx');
+  assert.match(unitPage, /Flood forecasting & ANN knowledge check/);
+  assert.match(unitPage, /7 questions/);
+
+  const quizPage = await read('src/LearnerQuizPage.jsx');
+  assert.match(quizPage, /Practice assessment/);
+  assert.match(quizPage, /Recommended Unit 2 practice/);
+});
+
+test('video-derived ANN concepts are present in Unit 2 theory and downloadable handout', async () => {
+  const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
+  const theory = reading.sections.map(section => section.heading + ' ' + section.body).join(' ');
+  assert.match(theory, /input layer/i);
+  assert.match(theory, /hidden layers/i);
+  assert.match(theory, /weights/);
+  assert.match(theory, /bias/);
+  assert.match(theory, /activation/);
+  assert.match(theory, /backpropagation/);
+  assert.match(theory, /training, validation and test datasets/i);
+  assert.match(theory, /underfitting/);
+  assert.match(theory, /overfitting/);
+  assert.match(theory, /hyperparameters/);
+
+  const handout = await read('src/pilotHandoutDownload.js');
+  assert.match(handout, /ANN foundations from the supplied Urban Flood Forecasting lecture/);
+  assert.match(handout, /training, validation and test datasets/);
+  assert.match(handout, /underfitting/);
+  assert.match(handout, /overfitting/);
 });
