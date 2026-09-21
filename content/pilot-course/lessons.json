@@ -80,7 +80,10 @@
     "companionResource": {
       "title": "Extended theoretical reading",
       "meta": "DOCX · 3 pages · companion file",
-      "description": "A longer source-based reading with the four supplied figures and compact references has been prepared as the companion document for this lesson."
+      "description": "A longer source-based reading with the three retained figures and compact references, generated as a downloadable Word document.",
+      "fileName": "Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx",
+      "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "downloadable": true
     }
   },
   {
