@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 const read = (path) => readFile(new URL('../' + path, import.meta.url), 'utf8');
 const json = async (path) => JSON.parse(await read('content/pilot-course/' + path));
@@ -16,7 +16,6 @@ test('three units, one source-based reading in Unit 2, no invented duplicates', 
   assert.equal(reading.length, 1);
   assert.equal(reading[0].source, 'source-based-synthesis');
   assert.equal(reading[0].sections.length, 4);
-  assert.equal(reading[0].sections.flatMap(section => section.figures || []).length, 4);
   assert.match(reading[0].body, /temporal sequence/i);
   assert.match(reading[0].sections.map(section => section.body).join(' '), /Bhola et al\. \(2018\)/);
   assert.match(reading[0].sections.map(section => section.body).join(' '), /Lin et al\. \(2020\)/);
@@ -54,13 +53,9 @@ test('category, pilot identity, prerequisites and assessment links preserved', a
   assert.equal((await json('activity.json')).unitId, 'pilot-unit-3');
 });
 
-test('Unit 2 figure assets exist and companion handout metadata is present', async () => {
+test('Unit 2 has no embedded figures and companion handout metadata is present', () => {
   const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
-  const figurePaths = reading.sections.flatMap(section => section.figures || []).map(figure => figure.src.replace(/^\//, 'public/'));
-  for (const path of figurePaths) {
-    const info = await stat(new URL('../' + path, import.meta.url));
-    assert.ok(info.size > 0, path);
-  }
+  assert.equal(reading.sections.some(section => Object.hasOwn(section, 'figures')), false);
   assert.equal(reading.companionResource.title, 'Extended theoretical reading');
   assert.match(reading.companionResource.meta, /DOCX/);
 });
