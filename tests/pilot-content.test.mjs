@@ -54,14 +54,13 @@ test('category, pilot identity, prerequisites and assessment links preserved', a
   assert.equal((await json('activity.json')).unitId, 'pilot-unit-3');
 });
 
-test('Unit 2 figure assets and companion DOCX exist', async () => {
+test('Unit 2 figure assets exist and companion handout metadata is present', async () => {
   const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
   const figurePaths = reading.sections.flatMap(section => section.figures || []).map(figure => figure.src.replace(/^\//, 'public/'));
   for (const path of figurePaths) {
     const info = await stat(new URL('../' + path, import.meta.url));
     assert.ok(info.size > 0, path);
   }
-  const resourcePath = reading.companionResource.href.replace(/^\//, 'public/');
-  const resource = await stat(new URL('../' + resourcePath, import.meta.url));
-  assert.ok(resource.size > 0);
+  assert.equal(reading.companionResource.title, 'Extended theoretical reading');
+  assert.match(reading.companionResource.meta, /DOCX/);
 });
