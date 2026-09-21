@@ -12,7 +12,13 @@ Follow-up to the pilot restructuring work. Keep the existing pilot course identi
 
 The Unit 2 reading is intentionally short in the learner UI. It now explains the chain from hydrological information to physics-based inundation modelling, the real-time computational constraint, precomputed/offline forecasting, ANN-based rapid inundation prediction, uncertainty/lead time, and the use of forecasts in crisis decisions.
 
-The four figures added in KAN-72 were subsequently removed from the learner-facing Unit 2 lesson in KAN-73. The MOOC lesson now presents the concise source-based theory as text only.
+KAN-74 adds the newly supplied figures back into the learner-facing Unit 2 lesson, placed directly beside the theory they support:
+
+- **From rainfall to flood maps** — FloodEvac-Tool workflow.
+- **Precomputed scenarios, inputs and uncertainty** — Rainfall Uncertainty map, followed by the Trebgast discharge-uncertainty hydrograph.
+- **AI as a rapid inundation-forecast surrogate** — 2D inundation-uncertainty map.
+
+Each figure uses a concise caption and accessible alt text. The original white backgrounds and source figure composition are preserved.
 
 A separate three-page DOCX companion reading was produced from the same source base with a longer pedagogical explanation and all four figures. The prototype identifies this as a companion handout but does not host the binary file in the repository.
 
@@ -28,4 +34,4 @@ No unsupplied video, dataset, technical exercise or partner lesson sequence is c
 
 Run `node --test tests/pilot-content.test.mjs` and `npm run build`.
 
-Manual check: open the pilot course, enter Unit 2, verify the concise theory sections render without embedded figures, check the source basis and companion-reading card, then verify Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
+Manual check: open the pilot course, enter Unit 2, verify all four figures render in the intended sections with readable captions, check the source basis and companion-reading card, then verify Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
