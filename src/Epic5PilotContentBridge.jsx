@@ -135,6 +135,70 @@ function patchGenericResource(downloadSection, lesson) {
   card.firstChild.textContent = 'DOC';
 }
 
+function buildTheoryFigure(figure) {
+  const wrapper = document.createElement('figure');
+  wrapper.className = 'lesson-theory-figure';
+
+  const image = document.createElement('img');
+  image.src = figure.src;
+  image.alt = figure.alt || '';
+  image.loading = 'lazy';
+
+  const caption = document.createElement('figcaption');
+  caption.textContent = figure.caption || '';
+
+  wrapper.append(image, caption);
+  return wrapper;
+}
+
+function renderSourceBasedLesson(textBody, lesson) {
+  if (!textBody) return;
+  textBody.replaceChildren();
+  textBody.classList.add('lesson-source-reading');
+
+  const intro = document.createElement('p');
+  intro.className = 'lesson-theory-intro';
+  intro.textContent = lesson.body;
+  textBody.appendChild(intro);
+
+  (lesson.sections || []).forEach((section) => {
+    const block = document.createElement('section');
+    block.className = 'lesson-theory-section';
+
+    const heading = document.createElement('h3');
+    heading.textContent = section.heading;
+    block.appendChild(heading);
+
+    const body = document.createElement('p');
+    body.textContent = section.body;
+    block.appendChild(body);
+
+    if (section.figures?.length) {
+      const figures = document.createElement('div');
+      figures.className = `lesson-theory-figure-grid${section.figures.length > 1 ? ' is-multiple' : ''}`;
+      section.figures.forEach((figure) => figures.appendChild(buildTheoryFigure(figure)));
+      block.appendChild(figures);
+    }
+    textBody.appendChild(block);
+  });
+
+  if (lesson.references?.length) {
+    const referenceBlock = document.createElement('section');
+    referenceBlock.className = 'lesson-theory-references';
+    const heading = document.createElement('h3');
+    heading.textContent = 'Source basis';
+    referenceBlock.appendChild(heading);
+    const list = document.createElement('ul');
+    lesson.references.forEach((reference) => {
+      const item = document.createElement('li');
+      item.textContent = reference;
+      list.appendChild(item);
+    });
+    referenceBlock.appendChild(list);
+    textBody.appendChild(referenceBlock);
+  }
+}
+
 function patchLessonContent() {
   const root = document.querySelector('.lesson-content-page');
   if (!root) return;
@@ -145,20 +209,31 @@ function patchLessonContent() {
   if (!lesson) return;
   const integrationKey = `${unitNumber}-${lessonNumber}`;
   const suppliedDescription = lesson.source === 'partner-supplied-description';
+  const sourceBasedReading = lesson.source === 'source-based-synthesis';
   if (root.dataset.kan68PilotIntegrated === integrationKey) return;
   root.dataset.kan68PilotIntegrated = integrationKey;
 
   const hero = root.querySelector('.lesson-content-hero-grid > div');
-  setText(hero?.querySelector('.lesson-content-status'), suppliedDescription ? 'Supplied course description' : 'Flood crisis pilot content');
+  setText(hero?.querySelector('.lesson-content-status'), sourceBasedReading ? 'Source-based theory' : suppliedDescription ? 'Supplied course description' : 'Flood crisis pilot content');
   setText(hero?.querySelector('h1'), lesson.title);
-  setText(hero?.querySelector('p'), suppliedDescription ? 'Read the supplied overview of Flood Inundation Forecasting Using AI. Videos, slides, datasets and exercises for this unit have not yet been supplied.' : 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
+  setText(hero?.querySelector('p'), sourceBasedReading ? 'A concise source-based reading connecting flood modelling, AI forecasting, uncertainty and crisis decision-making.' : suppliedDescription ? 'Read the supplied overview of Flood Inundation Forecasting Using AI. Videos, slides, datasets and exercises for this unit have not yet been supplied.' : 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
 
   const textSection = root.querySelector('.lesson-text-block');
-  setText(textSection?.querySelector('h2'), lesson.title);
+  setText(textSection?.querySelector('h2'), sourceBasedReading ? 'Theory: from flood model to crisis decision' : lesson.title);
   const textBody = textSection?.querySelector('.lesson-text-placeholder');
-  if (textBody) textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}${suppliedDescription ? '' : '<p><strong>Prototype takeaway:</strong> Connect this lesson to the shared situation picture, the decisions that may be required, and the organisations that would need the information.</p>'}`;
+  if (sourceBasedReading) {
+    renderSourceBasedLesson(textBody, lesson);
+  } else if (textBody) {
+    textBody.classList.remove('lesson-source-reading');
+    textBody.innerHTML = `<strong>${lesson.title}</strong>${paragraphHtml(lesson.body)}${suppliedDescription ? '' : '<p><strong>Prototype takeaway:</strong> Connect this lesson to the shared situation picture, the decisions that may be required, and the organisations that would need the information.</p>'}`;
+  }
 
   const imageSection = root.querySelector('#lesson-image-heading')?.closest('.lesson-content-block');
+  if (sourceBasedReading && imageSection) {
+    imageSection.style.display = 'none';
+  } else if (imageSection) {
+    imageSection.style.display = '';
+  }
   if (unitNumber === 1 && lessonNumber === 3 && imageSection) {
     setText(imageSection.querySelector('h2'), 'Flood crisis situation-awareness flow');
     const placeholder = imageSection.querySelector('.lesson-image-placeholder');
@@ -179,7 +254,11 @@ function patchLessonContent() {
   }
 
   const downloadSection = root.querySelector('#lesson-download-heading')?.closest('.lesson-content-block');
-  if (unitNumber === 3 && lessonNumber === 5 && downloadSection) {
+  if (sourceBasedReading && lesson.companionResource && downloadSection) {
+    setText(downloadSection.querySelector('h2'), lesson.companionResource.title);
+    const card = downloadSection.querySelector('.lesson-download-card');
+    if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">DOCX</div><div><strong>${lesson.companionResource.title}</strong><p>${lesson.companionResource.description}</p><span>${lesson.companionResource.meta}</span></div><button class="button button-outline" type="button" disabled>Companion handout</button>`;
+  } else if (unitNumber === 3 && lessonNumber === 5 && downloadSection) {
     setText(downloadSection.querySelector('h2'), 'BONSAI Flood Crisis Response Checklist');
     const card = downloadSection.querySelector('.lesson-download-card');
     if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">TXT</div><div><strong>BONSAI Flood Crisis Response Checklist</strong><p>A prototype checklist covering situational awareness, forecasting, flood-defence information, impacts, coordination, communication, response actions, review and resilience.</p><span>TXT · Sample MOOC resource</span></div><a class="button button-primary" href="${checklistUrl}" download>Download checklist ↓</a>`;
@@ -189,7 +268,11 @@ function patchLessonContent() {
 
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
-    const items = suppliedDescription ? ['✓ Supplied description', 'Teaching resources pending'] : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
+    const items = sourceBasedReading
+      ? ['✓ Source-based theory', '✓ 4 supplied figures', '✓ Extended DOCX reading', 'Video slot available']
+      : suppliedDescription
+        ? ['✓ Supplied description', 'Teaching resources pending']
+        : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
     if (unitNumber === 1 && lessonNumber === 3) items[1] = '✓ Situation-awareness diagram';
     if (unitNumber === 3 && lessonNumber === 3) items[2] = '✓ Forecast-to-decision video placeholder';
     if (unitNumber === 3 && lessonNumber === 5) items[3] = '✓ Flood crisis response checklist';

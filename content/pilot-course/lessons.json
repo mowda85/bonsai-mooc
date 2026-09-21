@@ -32,9 +32,63 @@
     "unitNumber": 2,
     "lessonNumber": 1,
     "title": "Flood Inundation Forecasting Using AI",
-    "format": "text",
-    "source": "partner-supplied-description",
-    "body": "Flood maps showing water depths in the event of flooding are crucial for flood risk management and crisis management. While risk management and crisis management are both essential for mitigating the risk of extreme events, they have different focuses. Risk management focuses on identifying, assessing, and mitigating potential hazards before they occur, and thus aims to prevent crises. Crisis management, on the other hand, focuses on responding to and managing an impending event, as well as dealing with an event that has just occurred.\n\nWhile maximum flood inundation maps are essential for flood risk management, additional information on the temporal sequence is crucial for crisis management. Computationally intensive, physics-based models are the preferred flood simulation tool for risk management. However, due to the high computing time they require, physics-based models for crisis management are only acceptable with the help of high-performance computers (HPC). To counteract this disadvantage, scientists are researching data-driven, multi-stage flood prediction systems based on artificial intelligence (AI) that can be run on any personal computer.\n\nIn this study, we present several forecasting methods for flood prediction based on physically based models, and the latest developments applying AI. The latter include AI methods that, trained on physically based models, make use of convolutional neural networks (CNN), artificial neural networks (ANN), physically informed neural networks (PINNs), and using either recursive or sequential networks, among others. All of which can forecast flood inundation in a matter of seconds."
+    "format": "source-based-reading",
+    "source": "source-based-synthesis",
+    "body": "Flood inundation forecasting turns hydrological forecasts into spatial information about where water may spread, how deep it may become, and how that picture changes with time. Maximum inundation maps are valuable for flood-risk management; during a crisis, the temporal sequence is equally important because forecast lead time supports warning, coordination, response and evacuation decisions.",
+    "sections": [
+      {
+        "heading": "From rainfall to flood maps",
+        "body": "Physics-based forecasting links meteorological and hydrological information to hydraulic simulation. Rainfall and runoff are converted into river discharge, which can then drive 1D, 2D or coupled hydraulic models that estimate water depth, velocity and inundation extent. These models provide detailed spatial information, but high-resolution 2D simulations can be computationally expensive when forecasts must be updated repeatedly during an emergency.",
+        "figures": [
+          {
+            "src": "/pilot/flood-ai/figure-1-modelling-workflow.webp",
+            "alt": "Workflow linking DWD, historical and synthetic rainfall, rainfall uncertainty, LARSIM calibration and uncertainty, model outputs, and 1D and 2D hydraulic modelling.",
+            "caption": "Flood-modelling workflow: rainfall and hydrological uncertainty feed calibrated hydrological and hydraulic models before 1D/2D flood outputs are produced."
+          }
+        ]
+      },
+      {
+        "heading": "Precomputed scenarios, inputs and uncertainty",
+        "body": "Bhola et al. (2018) addressed the real-time computing problem by preparing many hydraulic scenarios in advance. In the Kulmbach case study, 180 synthetic discharge scenarios and their inundation maps were stored in a database. During an event, the real-time discharge forecast was matched to the closest scenario; the selected 12-hour inundation forecast was updated every three hours and could be retrieved in seconds. Rainfall and discharge uncertainty therefore matter both when preparing scenarios and when interpreting the selected forecast.",
+        "figures": [
+          {
+            "src": "/pilot/flood-ai/figure-2-spatial-rainfall.webp",
+            "alt": "Spatial rainfall field dated 28 May 2006 with a blue intensity scale over the model domain.",
+            "caption": "Spatial rainfall forcing is not uniform; its distribution influences the discharge and inundation scenarios used by the forecasting chain."
+          },
+          {
+            "src": "/pilot/flood-ai/figure-3-discharge-uncertainty.webp",
+            "alt": "Trebgast discharge hydrograph showing observed discharge, model results, best-fit models and a red uncertainty band from 100 runs.",
+            "caption": "Forecast and model uncertainty can be represented as a range rather than a single deterministic hydrograph."
+          }
+        ]
+      },
+      {
+        "heading": "AI as a rapid inundation-forecast surrogate",
+        "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here.",
+        "figures": [
+          {
+            "src": "/pilot/flood-ai/figure-4-kulmbach-inundation.webp",
+            "alt": "Flood inundation map of Kulmbach with modelled inundated areas highlighted on a city basemap.",
+            "caption": "Inundation forecasts translate model outputs into a spatial picture that crisis teams can interpret for potentially affected areas."
+          }
+        ]
+      },
+      {
+        "heading": "From forecast to crisis decision",
+        "body": "Zhang et al. (2016) place hydrological forecasting, risk assessment and decision-making at the beginning of an emergency-management sequence that continues through warning, response and evacuation or sheltering. A useful crisis forecast therefore balances four things: spatial detail, temporal evolution, speed and communicated uncertainty. Flood maps should be treated as decision-support information that is updated as new forecasts and observations become available, not as an exact boundary of what will happen."
+      }
+    ],
+    "references": [
+      "Bhola, P. K., Leandro, J., & Disse, M. (2018). Framework for Offline Flood Inundation Forecasts for Two-Dimensional Hydrodynamic Models. Geosciences, 8, 346.",
+      "Lin, Q., Leandro, J., Gerber, S., & Disse, M. (2020). Multistep Flood Inundation Forecasts with Resilient Backpropagation Neural Networks: Kulmbach Case Study. Water, 12, 3568.",
+      "Zhang, L., Peng, M., Chang, D., & Xu, Y. (2016). Dam Failure Mechanisms and Risk Assessment. Chapter 13: Dam Failure Contingency Risk Management. Wiley."
+    ],
+    "companionResource": {
+      "title": "Extended theoretical reading",
+      "meta": "DOCX · 3 pages · companion file",
+      "description": "A longer source-based reading with the four supplied figures and compact references has been prepared as the companion document for this lesson."
+    }
   },
   {
     "id": "pilot-unit-3-lesson-1",
