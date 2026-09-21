@@ -5,7 +5,7 @@ import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
 function unitDescription(unitNumber) {
   if (unitNumber === 1) return 'Build the core crisis-management foundation: emergency response, preparedness, readiness, leadership, situational awareness and decision-making.';
-  if (unitNumber === 2) return 'Explore flood maps, temporal forecasting, physics-based models and AI methods. Read the supplied description; additional teaching resources have not yet been supplied.';
+  if (unitNumber === 2) return 'Explore flood maps, temporal forecasting, physics-based and AI methods, plus ANN structure, training, validation, testing and generalisation.';
   return 'Apply communication, stakeholder coordination and scenario-based thinking to evolving flood situations, impacts, response choices, recovery and long-term resilience.';
 }
 
@@ -155,7 +155,7 @@ export default function LearnerUnitPage({
     );
   }
 
-  if (quizOpen && unitNumber === 1) {
+  if (quizOpen && (unitNumber === 1 || unitNumber === 2)) {
     return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />;
   }
 
@@ -245,6 +245,27 @@ export default function LearnerUnitPage({
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
                   <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
                   <div><small>Pilot quiz</small><strong>Crisis management, situational awareness and forecasting</strong></div>
+                  <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
+                </button>
+              </section>
+            )}
+
+            {unitNumber === 2 && (
+              <section className="learner-unit-quiz" aria-labelledby="unit-2-quiz-heading">
+                <div className="learner-unit-quiz-heading">
+                  <div>
+                    <span className="section-kicker">Knowledge check</span>
+                    <h2 id="unit-2-quiz-heading">Flood forecasting &amp; ANN knowledge check</h2>
+                    <p>Check the main ideas from the Unit 2 theory and supplied Urban Flood Forecasting lecture with seven multiple-choice questions.</p>
+                  </div>
+                  <span className="learner-unit-quiz-badge">7 questions</span>
+                </div>
+                <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
+                  <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
+                  <div>
+                    <small>Unit 2 practice quiz</small>
+                    <strong>Forecast lead time, ANN structure, training and evaluation</strong>
+                  </div>
                   <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
                 </button>
               </section>

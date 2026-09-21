@@ -1,0 +1,91 @@
+{
+  "courseSlug": "flood-crisis-management-estuarine-areas",
+  "unitId": "pilot-unit-2",
+  "source": "pilot-content-video-text",
+  "questions": [
+    {
+      "id": "pilot-u2-q1",
+      "type": "mcq",
+      "prompt": "Why is forecast lead time important in flood emergency management?",
+      "options": [
+        "It creates time to interpret the situation, warn people and organise response actions before conditions worsen",
+        "It guarantees that the flood will follow one exact inundation boundary",
+        "It removes the need for observations and field information",
+        "It is useful only after the flood has ended"
+      ],
+      "answer": "It creates time to interpret the situation, warn people and organise response actions before conditions worsen"
+    },
+    {
+      "id": "pilot-u2-q2",
+      "type": "mcq",
+      "prompt": "Which sequence describes the main layers of the artificial neural network introduced in the lecture?",
+      "options": [
+        "Input layer → hidden layer → output layer",
+        "Output layer → input layer → hidden layer",
+        "Validation layer → test layer → training layer",
+        "Rainfall layer → evacuation layer → recovery layer"
+      ],
+      "answer": "Input layer → hidden layer → output layer"
+    },
+    {
+      "id": "pilot-u2-q3",
+      "type": "mcq",
+      "prompt": "What does an artificial neuron do with its incoming values?",
+      "options": [
+        "It combines weighted inputs and a bias, then applies an activation function to produce an output",
+        "It converts every input directly into an identical output without parameters",
+        "It stores only the largest input and ignores the others",
+        "It replaces the training data with hydraulic maps"
+      ],
+      "answer": "It combines weighted inputs and a bias, then applies an activation function to produce an output"
+    },
+    {
+      "id": "pilot-u2-q4",
+      "type": "mcq",
+      "prompt": "What is the purpose of backpropagation during ANN training?",
+      "options": [
+        "To use prediction error and the loss function to adjust model parameters so the error is reduced",
+        "To divide the river into one-dimensional and two-dimensional reaches",
+        "To select the final test dataset before any training takes place",
+        "To make uncertainty disappear from the forecast"
+      ],
+      "answer": "To use prediction error and the loss function to adjust model parameters so the error is reduced"
+    },
+    {
+      "id": "pilot-u2-q5",
+      "type": "mcq",
+      "prompt": "Which statement correctly distinguishes training, validation and test datasets?",
+      "options": [
+        "Training fits the model, validation supports model/configuration choices, and the test set is reserved for final evaluation",
+        "All three datasets are used for exactly the same purpose",
+        "The test set should be repeatedly used to adjust the model during training",
+        "Validation data replace the need for a training dataset"
+      ],
+      "answer": "Training fits the model, validation supports model/configuration choices, and the test set is reserved for final evaluation"
+    },
+    {
+      "id": "pilot-u2-q6",
+      "type": "mcq",
+      "prompt": "What best describes overfitting?",
+      "options": [
+        "The model follows the training data too closely and does not generalise well to new data",
+        "The model is too simple to capture meaningful patterns in the training data",
+        "The model has no input layer",
+        "The forecast is updated every three hours"
+      ],
+      "answer": "The model follows the training data too closely and does not generalise well to new data"
+    },
+    {
+      "id": "pilot-u2-q7",
+      "type": "mcq",
+      "prompt": "Which pair is identified in the lecture as learned ANN model parameters rather than hyperparameters?",
+      "options": [
+        "Weights and biases",
+        "Number of neurons and activation function",
+        "Loss function and training algorithm",
+        "Training and validation datasets"
+      ],
+      "answer": "Weights and biases"
+    }
+  ]
+}

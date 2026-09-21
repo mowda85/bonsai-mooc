@@ -219,7 +219,7 @@ function patchLessonContent() {
   const hero = root.querySelector('.lesson-content-hero-grid > div');
   setText(hero?.querySelector('.lesson-content-status'), sourceBasedReading ? 'Source-based theory' : suppliedDescription ? 'Supplied course description' : 'Flood crisis pilot content');
   setText(hero?.querySelector('h1'), lesson.title);
-  setText(hero?.querySelector('p'), sourceBasedReading ? 'A concise source-based reading connecting flood modelling, AI forecasting, uncertainty and crisis decision-making.' : suppliedDescription ? 'Read the supplied overview of Flood Inundation Forecasting Using AI. Videos, slides, datasets and exercises for this unit have not yet been supplied.' : 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
+  setText(hero?.querySelector('p'), sourceBasedReading ? 'A concise source-based reading connecting flood modelling, AI forecasting, ANN foundations, uncertainty and crisis decision-making.' : suppliedDescription ? 'Read the supplied overview of Flood Inundation Forecasting Using AI. Videos, slides, datasets and exercises for this unit have not yet been supplied.' : 'Study this prototype lesson, review the visual/video/resource placeholders, and connect the content to the wider flood-crisis scenario.');
 
   const textSection = root.querySelector('.lesson-text-block');
   setText(textSection?.querySelector('h2'), sourceBasedReading ? 'Theory: from flood model to crisis decision' : lesson.title);
@@ -293,7 +293,7 @@ function patchLessonContent() {
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
     const items = sourceBasedReading
-      ? ['✓ Source-based theory', '✓ 3 contextual figures', '✓ Extended DOCX reading', 'Source references']
+      ? ['✓ Source-based theory', '✓ 3 contextual figures', '✓ Extended DOCX reading', '✓ Unit 2 practice quiz']
       : suppliedDescription
         ? ['✓ Supplied description', 'Teaching resources pending']
         : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];

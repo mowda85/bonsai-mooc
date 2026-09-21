@@ -34,7 +34,7 @@
     "title": "Flood Inundation Forecasting Using AI",
     "format": "source-based-reading",
     "source": "source-based-synthesis",
-    "body": "Flood inundation forecasting turns hydrological forecasts into spatial information about where water may spread, how deep it may become, and how that picture changes with time. Maximum inundation maps are valuable for flood-risk management; during a crisis, the temporal sequence is equally important because forecast lead time supports warning, coordination, response and evacuation decisions.",
+    "body": "Flood inundation forecasting turns hydrological forecasts into spatial information about where water may spread, how deep it may become, and how that picture changes with time. Maximum inundation maps are valuable for flood-risk management; during a crisis, the temporal sequence is equally important because forecast lead time supports warning, coordination, response and evacuation decisions. The supplied Urban Flood Forecasting lecture reinforces this emergency-management role and introduces the basic structure, training and evaluation of artificial neural networks (ANNs).",
     "sections": [
       {
         "heading": "From rainfall to flood maps",
@@ -68,22 +68,44 @@
         "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here."
       },
       {
+        "heading": "How an ANN turns inputs into a forecast",
+        "body": "The supplied Urban Flood Forecasting lecture introduces a standard ANN as an input layer, one or more hidden layers and an output layer. Inside a neuron, incoming values are multiplied by weights, combined with a bias in a weighted sum, and passed through an activation (transfer) function to produce an output. During training, the difference between predicted and target values is quantified with a loss function. Backpropagation propagates information about that error through the network so that learned parameters—especially weights and biases—can be adjusted to reduce the loss."
+      },
+      {
+        "heading": "Training, validation, testing and generalisation",
+        "body": "The lecture separates data into training, validation and test datasets. Training data are used to fit the ANN; validation data are used while selecting or configuring the model; and the test set is held back for final evaluation on unseen data. This separation helps identify underfitting, where a model is too simple to capture the pattern, and overfitting, where it follows the training data too closely and generalises poorly. The lecture distinguishes hyperparameters—such as the number of neurons, activation/transfer function, loss function and training algorithm—from learned model parameters such as weights and biases."
+      },
+      {
         "heading": "From forecast to crisis decision",
-        "body": "Zhang et al. (2016) place hydrological forecasting, risk assessment and decision-making at the beginning of an emergency-management sequence that continues through warning, response and evacuation or sheltering. A useful crisis forecast therefore balances four things: spatial detail, temporal evolution, speed and communicated uncertainty. Flood maps should be treated as decision-support information that is updated as new forecasts and observations become available, not as an exact boundary of what will happen."
+        "body": "Zhang et al. (2016) place hydrological forecasting, risk assessment and decision-making at the beginning of an emergency-management sequence that continues through warning, response and evacuation or sheltering. The supplied lecture similarly frames urban flood forecasting as an emergency-management tool and illustrates why early detection and usable lead time can change response possibilities. A useful crisis forecast therefore balances four things: spatial detail, temporal evolution, speed and communicated uncertainty. Flood maps should be treated as decision-support information that is updated as new forecasts and observations become available, not as an exact boundary of what will happen."
       }
     ],
     "references": [
       "Bhola, P. K., Leandro, J., & Disse, M. (2018). Framework for Offline Flood Inundation Forecasts for Two-Dimensional Hydrodynamic Models. Geosciences, 8, 346.",
       "Lin, Q., Leandro, J., Gerber, S., & Disse, M. (2020). Multistep Flood Inundation Forecasts with Resilient Backpropagation Neural Networks: Kulmbach Case Study. Water, 12, 3568.",
-      "Zhang, L., Peng, M., Chang, D., & Xu, Y. (2016). Dam Failure Mechanisms and Risk Assessment. Chapter 13: Dam Failure Contingency Risk Management. Wiley."
+      "Zhang, L., Peng, M., Chang, D., & Xu, Y. (2016). Dam Failure Mechanisms and Risk Assessment. Chapter 13: Dam Failure Contingency Risk Management. Wiley.",
+      "Supplied lecture video: Urban Flood Forecasting, Univ.-Prof. Jorge Leandro, Universität Siegen."
     ],
     "companionResource": {
       "title": "Extended theoretical reading",
-      "meta": "DOCX · 3 pages · companion file",
-      "description": "A longer source-based reading with the three retained figures and compact references, generated as a downloadable Word document.",
+      "meta": "DOCX · extended theory · companion file",
+      "description": "A longer source-based reading combining the research sources with ANN concepts from the supplied Urban Flood Forecasting lecture, including the three retained figures and compact references.",
       "fileName": "Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx",
       "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "downloadable": true
+    },
+    "videoResource": {
+      "title": "Urban Flood Forecasting — ANN foundations",
+      "speaker": "Univ.-Prof. Jorge Leandro",
+      "provider": "Universität Siegen",
+      "durationLabel": "10:37",
+      "source": "user-supplied-video",
+      "description": "A supplied lecture excerpt explaining why flood forecasting matters for emergency management and introducing ANN components, backpropagation, dataset splitting, underfitting/overfitting, and ANN hyperparameters versus learned parameters.",
+      "summary": [
+        "Flood forecasting is presented as an emergency-management tool: useful forecasts provide information early enough to support warning and response decisions.",
+        "The ANN introduction covers input, hidden and output layers; weighted inputs, biases and activation functions; and backpropagation driven by prediction error.",
+        "The lecture separates training, validation and test datasets, explains underfitting and overfitting, and distinguishes hyperparameters from learned weights and biases."
+      ]
     }
   },
   {
