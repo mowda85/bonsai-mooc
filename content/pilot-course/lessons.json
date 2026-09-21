@@ -65,14 +65,7 @@
       },
       {
         "heading": "AI as a rapid inundation-forecast surrogate",
-        "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here.",
-        "figures": [
-          {
-            "src": "/pilot/flood-ai/figure-4-2d-uncertainty.webp",
-            "alt": "Kulmbach map showing shaded two-dimensional flood inundation uncertainty zones over the urban area with low, medium and high classes.",
-            "caption": "Figure 4. Example 2D inundation-uncertainty map showing spatial variation in forecasted flooding."
-          }
-        ]
+        "body": "Lin et al. (2020) trained artificial neural networks (ANNs) on synthetic hydraulic-model events to produce high-resolution multistep inundation forecasts for Kulmbach. The study used 4 m × 4 m output grids, 120 synthetic events for training and 60 for testing before applying the model to historical floods. Short-horizon forecasts were generally strongest, while accuracy tended to decline as lead time increased. The lesson is that AI can reproduce useful flood-map information very quickly, but its skill still has to be validated by event, lead time and location. The supplied course description also points to CNNs and PINNs as broader AI approaches beyond the ANN case study used here."
       },
       {
         "heading": "From forecast to crisis decision",
