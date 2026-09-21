@@ -135,22 +135,6 @@ function patchGenericResource(downloadSection, lesson) {
   card.firstChild.textContent = 'DOC';
 }
 
-function buildTheoryFigure(figure) {
-  const wrapper = document.createElement('figure');
-  wrapper.className = 'lesson-theory-figure';
-
-  const image = document.createElement('img');
-  image.src = figure.src;
-  image.alt = figure.alt || '';
-  image.loading = 'lazy';
-
-  const caption = document.createElement('figcaption');
-  caption.textContent = figure.caption || '';
-
-  wrapper.append(image, caption);
-  return wrapper;
-}
-
 function renderSourceBasedLesson(textBody, lesson) {
   if (!textBody) return;
   textBody.replaceChildren();
@@ -172,13 +156,6 @@ function renderSourceBasedLesson(textBody, lesson) {
     const body = document.createElement('p');
     body.textContent = section.body;
     block.appendChild(body);
-
-    if (section.figures?.length) {
-      const figures = document.createElement('div');
-      figures.className = `lesson-theory-figure-grid${section.figures.length > 1 ? ' is-multiple' : ''}`;
-      section.figures.forEach((figure) => figures.appendChild(buildTheoryFigure(figure)));
-      block.appendChild(figures);
-    }
     textBody.appendChild(block);
   });
 
@@ -269,7 +246,7 @@ function patchLessonContent() {
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
     const items = sourceBasedReading
-      ? ['✓ Source-based theory', '✓ 4 supplied figures', '✓ Extended DOCX reading', 'Video slot available']
+      ? ['✓ Source-based theory', '✓ Extended DOCX reading', 'Video slot available', 'Source references']
       : suppliedDescription
         ? ['✓ Supplied description', 'Teaching resources pending']
         : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
