@@ -257,7 +257,7 @@ function patchLessonContent() {
   if (sourceBasedReading && lesson.companionResource && downloadSection) {
     setText(downloadSection.querySelector('h2'), lesson.companionResource.title);
     const card = downloadSection.querySelector('.lesson-download-card');
-    if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">DOCX</div><div><strong>${lesson.companionResource.title}</strong><p>${lesson.companionResource.description}</p><span>${lesson.companionResource.meta}</span></div><a class="button button-primary" href="${lesson.companionResource.href}" download>Download reading ↓</a>`;
+    if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">DOCX</div><div><strong>${lesson.companionResource.title}</strong><p>${lesson.companionResource.description}</p><span>${lesson.companionResource.meta}</span></div><button class="button button-outline" type="button" disabled>Companion handout</button>`;
   } else if (unitNumber === 3 && lessonNumber === 5 && downloadSection) {
     setText(downloadSection.querySelector('h2'), 'BONSAI Flood Crisis Response Checklist');
     const card = downloadSection.querySelector('.lesson-download-card');
