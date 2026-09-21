@@ -1,14 +1,13 @@
 import pilotQuiz from '../content/pilot-course/quiz.json';
+import pilotUnit2Quiz from '../content/pilot-course/unit2-quiz.json';
 import { getLiveCourseContent, stageQuizContent } from './crossRoleCourseStore.js';
 import { PILOT_COURSE_SLUG } from './courseArchitecture.js';
 
 export const PROTOTYPE_QUIZ_STORAGE_KEY = 'bonsai-mooc.prototype.quizzes.v2';
 
-const PILOT_QUIZ_UNIT_ID = 'pilot-unit-1';
-
-const PILOT_QUIZ_FALLBACK = {
-  ...pilotQuiz,
-  source: 'pilot-content',
+const PILOT_QUIZ_FALLBACKS = {
+  'pilot-unit-1': { ...pilotQuiz, source: 'pilot-content' },
+  'pilot-unit-2': { ...pilotUnit2Quiz, source: 'pilot-content-video-text' },
 };
 
 function cloneQuiz(quiz) {
@@ -35,13 +34,13 @@ export function getPrototypeQuiz(courseSlug, unitId) {
   if (learnerFacingRoute()) {
     const liveQuiz = getLiveCourseContent(courseSlug)?.quizzes?.[unitId];
     if (liveQuiz) return cloneQuiz({ ...liveQuiz, source: 'teacher' });
-    if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_QUIZ_UNIT_ID) return cloneQuiz(PILOT_QUIZ_FALLBACK);
+    if (courseSlug === PILOT_COURSE_SLUG && PILOT_QUIZ_FALLBACKS[unitId]) return cloneQuiz(PILOT_QUIZ_FALLBACKS[unitId]);
     return null;
   }
 
   const stored = readStoredQuizzes().find((quiz) => quiz.courseSlug === courseSlug && quiz.unitId === unitId);
   if (stored) return cloneQuiz(stored);
-  if (courseSlug === PILOT_COURSE_SLUG && unitId === PILOT_QUIZ_UNIT_ID) return cloneQuiz(PILOT_QUIZ_FALLBACK);
+  if (courseSlug === PILOT_COURSE_SLUG && PILOT_QUIZ_FALLBACKS[unitId]) return cloneQuiz(PILOT_QUIZ_FALLBACKS[unitId]);
   return null;
 }
 
