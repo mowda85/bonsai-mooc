@@ -125,7 +125,7 @@ export async function buildPilotHandoutBlob() {
       spacing: { after: 220 },
       children: [new TextRun({ text: 'BONSAI-MOOC pilot course — extended theoretical reading', italics: true, size: 20, font: 'Arial' })],
     }),
-    body('Purpose. This short reading connects the pilot description with the supplied research material. It explains why flood-inundation forecasts matter for crisis management, how physics-based and data-driven methods produce them, and why speed, lead time and uncertainty are central to operational decision-making.'),
+    body('Purpose. This reading connects the pilot description, the supplied research material and the supplied Urban Flood Forecasting lecture. It explains why flood-inundation forecasts matter for crisis management, how physics-based and data-driven methods produce them, how an artificial neural network is structured and trained, and why speed, lead time, uncertainty and generalisation are central to operational decision-making.'),
 
     heading('1. Why inundation forecasting matters'),
     body('Flood maps translate a hydrological event into spatial information: where water may spread, which areas may be exposed and how deep the water may become. For long-term flood-risk management, maximum inundation maps are valuable because they help identify vulnerable locations and support preparedness. Crisis management needs an additional dimension: time. Responders need to know not only the possible maximum extent, but also how the inundation may evolve over the next hours so that warning, coordination and protective actions can be taken before conditions worsen.'),
@@ -145,7 +145,11 @@ export async function buildPilotHandoutBlob() {
     body('A second route to faster forecasts is to train data-driven models on the relationship between hydraulic inputs and inundation outputs. Lin et al. (2020) used artificial neural networks (ANNs) for high-resolution multistep flood-inundation forecasting in Kulmbach. Their model learned from synthetic events generated with a hydraulic model and mapped discharge inputs to inundation water-depth grids. The study used a 4 m × 4 m spatial resolution, trained on 120 synthetic events and tested on 60 additional synthetic events before application to historical floods.'),
     body('The motivation is operational speed: once trained, the ANN can produce inundation forecasts much faster than repeatedly running a full 2D model. In the study, short-horizon forecasts were generally the most reliable, while forecast accuracy tended to decrease as the lead time increased or the prediction moved further from the interval used for training. This is an important operational principle: AI can accelerate flood mapping, but forecast skill still needs to be evaluated by lead time, event type and location.'),
 
-    heading('5. Uncertainty, lead time and crisis decisions'),
+    heading('5. ANN foundations from the supplied Urban Flood Forecasting lecture'),
+    body('The supplied lecture introduces a standard artificial neural network as an input layer, one or more hidden layers and an output layer. Inside a neuron, incoming values are multiplied by weights, combined with a bias in a weighted sum, and passed through an activation or transfer function to produce an output. Training compares the predicted output with the target, measures the prediction error with a loss function and uses backpropagation to propagate information about that error through the network so that learned parameters—especially weights and biases—can be adjusted to reduce the loss.'),
+    body('The lecture separates the available data into training, validation and test datasets. Training data are used to fit the network, validation data support model and configuration choices, and the test set is reserved for final evaluation on unseen data. This separation helps identify underfitting, where a model is too simple to capture the relevant pattern, and overfitting, where the model follows the training data too closely and performs poorly on new data. The lecture also distinguishes ANN hyperparameters—such as number of neurons, activation or transfer function, loss function and training algorithm—from model parameters learned during training, notably weights and biases.'),
+
+    heading('6. Uncertainty, lead time and crisis decisions'),
     body('Flood forecasts are not exact predictions of the future. Rainfall uncertainty, errors in discharge forecasts, simplified model physics, limited training scenarios and changing conditions all affect the result. A hydrograph uncertainty band, such as the one in Figure 3, is therefore as important as the central forecast because it shows that more than one future trajectory is plausible. Similarly, an inundation forecast should be interpreted as decision-support information rather than as a guaranteed boundary of where flooding will occur.'),
     body('For crisis management, the most useful forecast combines four qualities: enough spatial detail to identify potentially affected areas; enough temporal detail to show how conditions may evolve; enough speed to be available before key decisions must be made; and clear communication of uncertainty. This is where AI and precomputed approaches can complement physics-based modelling. Physics-based simulations provide the process-based reference and training data, while data-driven or database-retrieval methods can deliver fast operational estimates.'),
 
@@ -153,12 +157,14 @@ export async function buildPilotHandoutBlob() {
     bullet('Risk management needs maximum inundation maps; crisis management also needs the temporal evolution of flooding.'),
     bullet('Physics-based 2D models give detailed maps, while precomputed and AI approaches can return operational forecasts much faster.'),
     bullet('Shorter lead times are generally easier to forecast accurately, and uncertainty should remain visible.'),
+    bullet('ANN performance depends not only on the training algorithm but also on sound separation of training, validation and test data and on avoiding underfitting and overfitting.'),
     bullet('Forecasts support earlier warning, coordination and response; they do not replace expert judgement.'),
 
     heading('References used for this synthesis', HeadingLevel.HEADING_2),
     body('Bhola, P. K., Leandro, J., & Disse, M. (2018). Framework for Offline Flood Inundation Forecasts for Two-Dimensional Hydrodynamic Models. Geosciences, 8, 346.'),
     body('Lin, Q., Leandro, J., Gerber, S., & Disse, M. (2020). Multistep Flood Inundation Forecasts with Resilient Backpropagation Neural Networks: Kulmbach Case Study. Water, 12, 3568.'),
     body('Zhang, L., Peng, M., Chang, D., & Xu, Y. (2016). Dam Failure Mechanisms and Risk Assessment. Chapter 13: Dam Failure Contingency Risk Management. Wiley.'),
+    body('Supplied lecture video: Urban Flood Forecasting, Univ.-Prof. Jorge Leandro, Universität Siegen.'),
   ];
 
   const doc = new Document({
