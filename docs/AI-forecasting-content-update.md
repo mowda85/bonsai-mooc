@@ -5,7 +5,7 @@ Follow-up to the pilot restructuring work. Keep the existing pilot course identi
 ## Current pilot structure
 
 1. **Flood Crisis Management Fundamentals** — existing introductory lessons and required quiz.
-2. **Flood Inundation Forecasting Using AI** — one source-based reading combining the partner-supplied description with the supplied Lin et al. (2020), Bhola et al. (2018) and Zhang et al. (2016) material.
+2. **Flood Inundation Forecasting Using AI** — one source-based reading combining the partner-supplied description, Lin et al. (2020), Bhola et al. (2018), Zhang et al. (2016), and concepts extracted from the supplied 10:37 *Urban Flood Forecasting* lecture.
 3. **From Forecast to Crisis Decision** — existing communication, coordination, interpretation, impact and recovery lessons plus required scenario activity.
 
 ## KAN-72 lesson update
@@ -20,16 +20,21 @@ Each retained figure uses a concise caption and accessible alt text. KAN-76 remo
 
 A downloadable DOCX companion reading is available directly from the Unit 2 learner lesson. KAN-77 turns the former disabled companion-handout button into a working **Download handout** action. The Word document is generated in the learner's browser from the extended source-based reading and the three retained figures, then saved as `Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx`.
 
-No unsupplied video, dataset, technical exercise or partner lesson sequence is claimed. The optional video area remains a prototype slot.
+KAN-79 integrates the supplied lecture into the **theory and assessment**. The learner reading and downloadable DOCX now introduce ANN input/hidden/output layers, weighted inputs, biases, activation functions, backpropagation, training/validation/test datasets, underfitting/overfitting, and hyperparameters versus learned parameters.
+
+KAN-79 also adds a visible **Unit 2 practice knowledge check** with seven multiple-choice questions based jointly on the written theory and the supplied lecture. It is intentionally separate from the required Unit 1 quiz, so it does not alter the Unit 1 completion gate or the Unit 3 scenario requirement.
+
+The playable-video binary is tracked separately in KAN-78; KAN-79 does not claim that the video player is complete.
 
 ## Sources used
 
 - Bhola, P. K., Leandro, J., & Disse, M. (2018). *Framework for Offline Flood Inundation Forecasts for Two-Dimensional Hydrodynamic Models*. Geosciences, 8, 346.
 - Lin, Q., Leandro, J., Gerber, S., & Disse, M. (2020). *Multistep Flood Inundation Forecasts with Resilient Backpropagation Neural Networks: Kulmbach Case Study*. Water, 12, 3568.
 - Zhang, L., Peng, M., Chang, D., & Xu, Y. (2016). *Dam Failure Mechanisms and Risk Assessment*. Chapter 13: Dam Failure Contingency Risk Management. Wiley.
+- Supplied lecture video: *Urban Flood Forecasting*, Univ.-Prof. Jorge Leandro, Universität Siegen.
 
 ## Verification
 
 Run `node --test tests/pilot-content.test.mjs` and `npm run build`.
 
-Manual check: open the pilot course, enter Unit 2, verify the three retained figures render in the intended sections with readable captions and that the former final 2D uncertainty figure is absent. Click **Download handout**, confirm a DOCX named `Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx` is produced, and verify the download can be retried if generation fails. Then verify Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
+Manual check: open the pilot course, enter Unit 2, verify the expanded ANN theory and the three retained figures. Open the **Flood forecasting & ANN knowledge check**, answer and submit all seven questions, and verify it is labelled as a practice assessment. Click **Download handout** and confirm the generated DOCX contains the new ANN training/evaluation section. Then verify the required Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
