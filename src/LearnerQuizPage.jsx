@@ -16,8 +16,9 @@ function questionTypeLabel(type) {
 
 function saveQuizCompletion(courseSlug, unitNumber, result) {
   const record = { courseSlug, unitNumber, result, completedAt: new Date().toISOString() };
+  const storageKey = unitNumber === 1 ? PILOT_QUIZ_COMPLETION_KEY : `${PILOT_QUIZ_COMPLETION_KEY}.unit-${unitNumber}`;
   try {
-    window.sessionStorage.setItem(PILOT_QUIZ_COMPLETION_KEY, JSON.stringify(record));
+    window.sessionStorage.setItem(storageKey, JSON.stringify(record));
   } catch {
     // The in-memory learner state still records the submitted result.
   }
@@ -66,7 +67,7 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
       writtenResponseCount,
     };
     setResult(submittedResult);
-    onQuizSubmitted?.(submittedResult);
+    onQuizSubmitted?.({ ...submittedResult, unitNumber });
     saveQuizCompletion(course?.slug, unitNumber, submittedResult);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -111,6 +112,8 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
   }
 
   const mcqCount = questions.filter((item) => item.type === 'mcq').length;
+  const required = unitNumber === 1;
+  const quizTitle = unitNumber === 2 ? 'Flood Forecasting & ANN Knowledge Check' : 'Flood Crisis Management Knowledge Check';
 
   return (
     <main className="learner-quiz-page">
@@ -121,16 +124,16 @@ export default function LearnerQuizPage({ course, unitTitle, unitNumber = 1, onB
         </div>
         <div className="learner-quiz-hero-grid">
           <div>
-            <div className="learner-unit-badges"><span className="pill">Flood crisis knowledge check</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">Required pilot assessment</span></div>
+            <div className="learner-unit-badges"><span className="pill">{unitNumber === 2 ? 'Flood forecasting knowledge check' : 'Flood crisis knowledge check'}</span>{teacherConfigured && <span className="learner-unit-status-pill learner-unit-status-current">Teacher configured</span>}<span className="learner-unit-status-pill learner-unit-status-current">{required ? 'Required pilot assessment' : 'Practice assessment'}</span></div>
             <span className="learner-unit-kicker">Unit {unitNumber} · Knowledge check</span>
-            <h1>Flood Crisis Management Knowledge Check</h1>
-            <p>{teacherConfigured ? 'These questions were configured by the teacher for this course. Complete every question and submit to see the result.' : 'Check your understanding of crisis management, situational awareness, flood forecasting, flood-defence information and decision support.'}</p>
+            <h1>{quizTitle}</h1>
+            <p>{teacherConfigured ? 'These questions were configured by the teacher for this course. Complete every question and submit to see the result.' : unitNumber === 2 ? 'Check your understanding of the supplied Urban Flood Forecasting lecture and the written Unit 2 theory, including forecast lead time, ANN structure, training and evaluation.' : 'Check your understanding of crisis management, situational awareness, flood forecasting, flood-defence information and decision support.'}</p>
           </div>
           <aside className="learner-quiz-summary">
             <div><span>Questions</span><strong>{questions.length}</strong></div>
             <div><span>Answered</span><strong>{answeredCount} / {questions.length}</strong></div>
             <div><span>Auto-scored</span><strong>{mcqCount} MCQ{mcqCount === 1 ? '' : 's'}</strong></div>
-            <div><span>Completion</span><strong>Required for Unit 1</strong></div>
+            <div><span>Completion</span><strong>{required ? 'Required for Unit 1' : 'Recommended Unit 2 practice'}</strong></div>
           </aside>
         </div>
       </section>
