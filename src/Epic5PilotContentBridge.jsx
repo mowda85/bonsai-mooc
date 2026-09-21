@@ -10,6 +10,7 @@ import video from '../content/pilot-course/video-placeholder.json';
 import diagramUrl from '../content/pilot-course/flood-crisis-situation-awareness.svg?url';
 import checklistUrl from '../content/pilot-course/flood-crisis-response-checklist.txt?url';
 import { saveCourseFeedback } from './feedbackStore.js';
+import { downloadPilotHandout } from './pilotHandoutDownload.js';
 
 const PILOT_SLUG = courseMetadata.slug;
 const unitTitles = unitData.units.map((unit) => unit.title);
@@ -259,7 +260,28 @@ function patchLessonContent() {
   if (sourceBasedReading && lesson.companionResource && downloadSection) {
     setText(downloadSection.querySelector('h2'), lesson.companionResource.title);
     const card = downloadSection.querySelector('.lesson-download-card');
-    if (card) card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">DOCX</div><div><strong>${lesson.companionResource.title}</strong><p>${lesson.companionResource.description}</p><span>${lesson.companionResource.meta}</span></div><button class="button button-outline" type="button" disabled>Companion handout</button>`;
+    if (card) {
+      card.innerHTML = `<div class="lesson-download-file-icon" aria-hidden="true">DOCX</div><div><strong>${lesson.companionResource.title}</strong><p>${lesson.companionResource.description}</p><span>${lesson.companionResource.meta}</span></div><button class="button button-primary" type="button">Download handout ↓</button>`;
+      const button = card.querySelector('button');
+      button?.addEventListener('click', async () => {
+        if (button.disabled) return;
+        button.disabled = true;
+        button.textContent = 'Preparing DOCX…';
+        try {
+          await downloadPilotHandout();
+          button.textContent = 'Downloaded ✓';
+          window.setTimeout(() => {
+            if (!button.isConnected) return;
+            button.disabled = false;
+            button.textContent = 'Download handout ↓';
+          }, 1600);
+        } catch (error) {
+          console.error('BONSAI companion handout download failed', error);
+          button.disabled = false;
+          button.textContent = 'Download failed — retry';
+        }
+      });
+    }
   } else if (unitNumber === 3 && lessonNumber === 5 && downloadSection) {
     setText(downloadSection.querySelector('h2'), 'BONSAI Flood Crisis Response Checklist');
     const card = downloadSection.querySelector('.lesson-download-card');
