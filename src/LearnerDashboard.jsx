@@ -194,7 +194,7 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
   }
 
   function recordQuizResult(result) {
-    setQuizResult(result);
+    if (!result?.unitNumber || result.unitNumber === 1) setQuizResult(result);
   }
 
   function completeUnit(unitNumber) {
