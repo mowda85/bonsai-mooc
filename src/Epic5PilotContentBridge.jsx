@@ -271,7 +271,7 @@ function patchLessonContent() {
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
     const items = sourceBasedReading
-      ? ['✓ Source-based theory', '✓ 4 contextual figures', '✓ Extended DOCX reading', 'Source references']
+      ? ['✓ Source-based theory', '✓ 3 contextual figures', '✓ Extended DOCX reading', 'Source references']
       : suppliedDescription
         ? ['✓ Supplied description', 'Teaching resources pending']
         : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
