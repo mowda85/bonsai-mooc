@@ -5,7 +5,7 @@ import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
 
 function unitDescription(unitNumber) {
   if (unitNumber === 1) return 'Build the core crisis-management foundation: emergency response, preparedness, readiness, leadership, situational awareness and decision-making.';
-  if (unitNumber === 2) return 'Connect flood-risk and resilience assessment with forecasting, flood-wave propagation, dike and levee inspection, breach modelling, climate change and AI-based approaches.';
+  if (unitNumber === 2) return 'Explore flood maps, temporal forecasting, physics-based models and AI methods. Read the supplied description; additional teaching resources have not yet been supplied.';
   return 'Apply communication, stakeholder coordination and scenario-based thinking to evolving flood situations, impacts, response choices, recovery and long-term resilience.';
 }
 

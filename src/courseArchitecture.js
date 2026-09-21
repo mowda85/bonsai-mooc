@@ -1,11 +1,13 @@
+import floodForecastingDescription from '../content/pilot-course/flood-inundation-ai-description.json';
+
 export const PILOT_COURSE_SLUG = 'flood-crisis-management-estuarine-areas';
 export const PILOT_COURSE_TITLE = 'Flood Crisis Management in Estuarine Areas';
-export const PILOT_COURSE_DESCRIPTION = 'Flood Crisis Management in Estuarine Areas introduces the key principles, tools, and practices used to prepare for and respond to flood-related crises. The course covers the fundamentals of crisis management, emergency response, situational awareness, communication, stakeholder coordination, readiness, leadership, and flood risk assessment. Learners are also introduced to flood inundation forecasting, dike and levee inspection, dike-breach modelling, and the effects of climate change on flood defence systems. Particular attention is given to understanding how flood waves propagate, how flood risk and resilience can be assessed, and how forecasting methods, including AI-based approaches, can support crisis management. Through practical and scenario-based exercises, participants learn how to interpret evolving flood situations, evaluate possible impacts, and support timely decision-making. The course aims to strengthen the capacity of learners to contribute to effective flood preparedness, response, recovery, and long-term resilience in estuarine and flood-prone areas.';
+export const PILOT_COURSE_DESCRIPTION = 'Flood Crisis Management in Estuarine Areas connects crisis-management fundamentals with flood inundation forecasting and decision-making. The technical core, Flood Inundation Forecasting Using AI, introduces the different information needed for flood risk and crisis management, physics-based modelling, computational constraints, and AI-based forecasting approaches including CNN, ANN and PINNs. Learners then connect forecasts, their temporal sequence and uncertainty to communication, stakeholder coordination and scenario-based response, recovery and resilience.';
 export const PILOT_COURSE_DURATION = 'To be confirmed';
 export const PILOT_COURSE_OBJECTIVES = [
   'Explain the main phases and principles of flood crisis management in estuarine and flood-prone areas.',
   'Interpret flood-risk, situational-awareness and forecasting information to support crisis decisions.',
-  'Describe how flood-wave propagation, inundation forecasting, dike and levee inspection, and breach modelling inform emergency response.',
+  'Distinguish maximum inundation maps from time-dependent forecasts and describe the role of physics-based models and AI in flood forecasting.',
   'Explain the roles of communication, stakeholder coordination, readiness and leadership during flood crises.',
   'Evaluate an evolving flood scenario and identify appropriate preparedness, response, recovery and resilience actions.',
 ];
@@ -21,18 +23,13 @@ export const PILOT_COURSE_UNITS = [
   },
   {
     id: 'pilot-unit-2',
-    title: 'Flood Risk, Forecasting and Defence Systems',
-    lessons: [
-      'Flood Risk and Resilience Assessment',
-      'Flood-Wave Propagation and Inundation Forecasting',
-      'Dike and Levee Inspection',
-      'Dike-Breach Modelling and Climate-Change Effects',
-      'AI-Based Forecasting Approaches',
-    ],
+    title: 'Flood Inundation Forecasting Using AI',
+    description: floodForecastingDescription,
+    lessons: ['Flood Inundation Forecasting Using AI'],
   },
   {
     id: 'pilot-unit-3',
-    title: 'Coordination, Communication and Scenario Response',
+    title: 'From Forecast to Crisis Decision',
     lessons: [
       'Crisis Communication',
       'Stakeholder Coordination',
