@@ -78,3 +78,25 @@ test('Unit 2 has three contextual figures in the intended sections', async () =>
   assert.equal(reading.companionResource.title, 'Extended theoretical reading');
   assert.match(reading.companionResource.meta, /DOCX/);
 });
+
+
+test('Unit 2 companion handout is a real downloadable DOCX', async () => {
+  const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
+  assert.equal(reading.companionResource.downloadable, true);
+  assert.equal(reading.companionResource.fileName, 'Flood_Inundation_Forecasting_Using_AI_BONSAI_handout.docx');
+  assert.equal(reading.companionResource.mimeType, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  assert.match(reading.companionResource.description, /three retained figures/i);
+
+  const bridge = await read('src/Epic5PilotContentBridge.jsx');
+  assert.match(bridge, /Download handout/);
+  assert.match(bridge, /downloadPilotHandout/);
+  assert.doesNotMatch(bridge, /disabled>Companion handout<\/button>/);
+
+  const generator = await read('src/pilotHandoutDownload.js');
+  assert.match(generator, /Packer\.toBlob/);
+  assert.match(generator, /Flood_Inundation_Forecasting_Using_AI_BONSAI_handout\.docx/);
+  assert.match(generator, /figure-1-floodevac-workflow\.webp/);
+  assert.match(generator, /figure-2-rainfall-uncertainty\.webp/);
+  assert.match(generator, /figure-3-trebgast-uncertainty\.webp/);
+  assert.doesNotMatch(generator, /figure-4-2d-uncertainty/);
+});
