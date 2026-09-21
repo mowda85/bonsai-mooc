@@ -16,9 +16,7 @@ KAN-74 adds the newly supplied figures back into the learner-facing Unit 2 lesso
 
 - **From rainfall to flood maps** — FloodEvac-Tool workflow.
 - **Precomputed scenarios, inputs and uncertainty** — Rainfall Uncertainty map, followed by the Trebgast discharge-uncertainty hydrograph.
-- **AI as a rapid inundation-forecast surrogate** — 2D inundation-uncertainty map.
-
-Each figure uses a concise caption and accessible alt text. The original white backgrounds and source figure composition are preserved.
+Each retained figure uses a concise caption and accessible alt text. KAN-76 removes the final 2D uncertainty figure from the learner-facing Unit 2 lesson while keeping Figures 1–3 unchanged.
 
 A separate three-page DOCX companion reading was produced from the same source base with a longer pedagogical explanation and all four figures. The prototype identifies this as a companion handout but does not host the binary file in the repository.
 
@@ -34,4 +32,4 @@ No unsupplied video, dataset, technical exercise or partner lesson sequence is c
 
 Run `node --test tests/pilot-content.test.mjs` and `npm run build`.
 
-Manual check: open the pilot course, enter Unit 2, verify all four figures render in the intended sections with readable captions, check the source basis and companion-reading card, then verify Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
+Manual check: open the pilot course, enter Unit 2, verify the three retained figures render in the intended sections with readable captions and that the former final 2D uncertainty figure is absent, check the source basis and companion-reading card, then verify Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
