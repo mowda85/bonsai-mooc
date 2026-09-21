@@ -269,7 +269,7 @@ export default function LearnerUnitPage({
                   <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
                 </button>
               </section>
-            ))}
+            )}
 
             {unitNumber === 3 && (
               <section className="learner-unit-activity" aria-labelledby="unit-activity-heading">
