@@ -170,3 +170,20 @@ test('Unit 2 uses the supplied YouTube lecture in a privacy-enhanced embed', asy
   assert.match(css, /lesson-youtube-frame/);
   assert.match(css, /aspect-ratio:16\/9/);
 });
+
+
+test('Unit 2 puts the playable lecture before the theory block', async () => {
+  const bridge = await read('src/Epic5PilotContentBridge.jsx');
+  assert.match(bridge, /textSection\.before\(videoSection\)/);
+  const reorderIndex = bridge.indexOf('textSection.before(videoSection)');
+  const youtubeIndex = bridge.indexOf("youtube-nocookie.com/embed/");
+  assert.ok(reorderIndex > -1);
+  assert.ok(youtubeIndex > reorderIndex);
+});
+
+test('Unit 1 and Unit 2 quiz cards use Q instead of a question mark icon', async () => {
+  const unitPage = await read('src/LearnerUnitPage.jsx');
+  const qIcons = unitPage.match(/learner-unit-quiz-icon" aria-hidden="true">Q<\/span>/g) || [];
+  assert.equal(qIcons.length, 2);
+  assert.doesNotMatch(unitPage, /learner-unit-quiz-icon" aria-hidden="true">\?<\/span>/);
+});
