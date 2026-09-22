@@ -95,10 +95,13 @@ function CourseOutlineSidebar({
   );
 }
 
-function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson }) {
+function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson, onOpenQuiz, onOpenActivity, onOpenNextUnit }) {
   const lesson = unit.lessons[lessonNumber - 1];
   const previousLesson = lessonNumber > 1 ? lessonNumber - 1 : null;
   const nextLesson = lessonNumber < unit.lessons.length ? lessonNumber + 1 : null;
+  const finalLesson = !nextLesson;
+  const hasQuiz = unitNumber === 1 || unitNumber === 2;
+  const hasActivity = unitNumber === 3;
 
   return (
     <main className="lesson-content-page">
@@ -173,7 +176,20 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
       <nav className="lesson-content-navigation" aria-label="Lesson navigation">
         <button className="button button-outline" type="button" disabled={!previousLesson} onClick={() => previousLesson && onNavigateLesson(previousLesson)}>← {previousLesson ? `Previous Lesson · ${previousLesson}` : 'Previous Lesson'}</button>
         <button className="button button-outline" type="button" onClick={onBack}>Unit {unitNumber} overview</button>
-        <button className="button button-primary" type="button" disabled={!nextLesson} onClick={() => nextLesson && onNavigateLesson(nextLesson)}>{nextLesson ? `Next Lesson · ${nextLesson}` : 'Final Lesson'} →</button>
+        {nextLesson ? (
+          <button className="button button-primary" type="button" onClick={() => onNavigateLesson(nextLesson)}>Next Lesson · {nextLesson} →</button>
+        ) : hasQuiz ? (
+          <div className="lesson-final-actions" data-native-final-actions="true">
+            <button className="button button-outline" type="button" onClick={onOpenQuiz}>Go to quiz →</button>
+            {onOpenNextUnit && <button className="button button-primary" type="button" onClick={onOpenNextUnit}>Next Unit · {unitNumber + 1} →</button>}
+          </div>
+        ) : hasActivity ? (
+          <div className="lesson-final-actions" data-native-final-actions="true">
+            <button className="button button-primary" type="button" onClick={onOpenActivity}>Go to scenario activity →</button>
+          </div>
+        ) : (
+          <button className="button button-primary" type="button" disabled>Final Lesson</button>
+        )}
       </nav>
     </main>
   );
