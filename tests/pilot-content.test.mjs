@@ -212,10 +212,9 @@ test('learner workspace shows the full pilot outline with lessons and assessment
   assert.match(unitPage, /onOpenAssessment\(outlineUnitNumber, assessment\.type\)/);
   assert.match(unitPage, /learner-course-workspace/);
 
-  const architecture = PILOT_COURSE_UNITS;
-  assert.equal(architecture[0].lessons.length, 3);
-  assert.equal(architecture[1].lessons.length, 1);
-  assert.equal(architecture[2].lessons.length, 5);
+  assert.equal(architecture.PILOT_COURSE_UNITS[0].lessons.length, 3);
+  assert.equal(architecture.PILOT_COURSE_UNITS[1].lessons.length, 1);
+  assert.equal(architecture.PILOT_COURSE_UNITS[2].lessons.length, 5);
 });
 
 test('final lessons offer quiz handoff or next-unit navigation without removing the Unit 1 completion gate', async () => {
