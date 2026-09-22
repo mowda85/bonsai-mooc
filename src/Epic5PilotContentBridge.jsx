@@ -246,13 +246,41 @@ function patchLessonContent() {
   }
 
   const videoSection = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
-  if (unitNumber === 3 && lessonNumber === 3 && videoSection) {
+  if (sourceBasedReading && lesson.videoResource?.youtubeId && videoSection) {
+    setText(videoSection.querySelector('h2'), lesson.videoResource.title);
+    const player = videoSection.querySelector('.lesson-video-placeholder');
+    if (player) {
+      player.classList.add('lesson-video-youtube');
+      player.replaceChildren();
+
+      const frame = document.createElement('iframe');
+      frame.className = 'lesson-youtube-frame';
+      frame.src = `https://www.youtube-nocookie.com/embed/${lesson.videoResource.youtubeId}`;
+      frame.title = lesson.videoResource.title;
+      frame.loading = 'lazy';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      frame.allowFullscreen = true;
+
+      const caption = document.createElement('div');
+      caption.className = 'lesson-video-caption';
+      const strong = document.createElement('strong');
+      strong.textContent = lesson.videoResource.title;
+      const meta = document.createElement('span');
+      meta.textContent = `${lesson.videoResource.speaker} · ${lesson.videoResource.provider} · ${lesson.videoResource.durationLabel}`;
+      caption.append(strong, meta);
+
+      player.append(frame, caption);
+    }
+  } else if (unitNumber === 3 && lessonNumber === 3 && videoSection) {
     setText(videoSection.querySelector('h2'), video.title);
     const player = videoSection.querySelector('.lesson-video-placeholder');
     if (player) {
+      player.classList.remove('lesson-video-youtube');
       player.innerHTML = `<button class="lesson-video-play" type="button" aria-label="Prototype video placeholder" disabled>▶</button><div class="lesson-video-caption"><strong>${video.title}</strong><span>${video.caption}</span></div><div class="lesson-video-controls"><span class="lesson-video-progress"><b></b></span><span>${video.durationLabel}</span><span>${video.transcriptAvailable ? 'Transcript available' : 'Transcript unavailable'}</span></div>`;
     }
   } else {
+    videoSection?.querySelector('.lesson-video-placeholder')?.classList.remove('lesson-video-youtube');
     patchGenericVideo(videoSection, lesson);
   }
 
@@ -293,7 +321,7 @@ function patchLessonContent() {
   const typeList = root.querySelector('.lesson-content-type-list');
   if (typeList) {
     const items = sourceBasedReading
-      ? ['✓ Source-based theory', '✓ 3 contextual figures', '✓ Extended DOCX reading', '✓ Unit 2 practice quiz']
+      ? ['✓ Source-based theory', '✓ 3 contextual figures', '✓ 10:37 YouTube lecture', '✓ Extended DOCX reading', '✓ Unit 2 practice quiz']
       : suppliedDescription
         ? ['✓ Supplied description', 'Teaching resources pending']
         : ['✓ Prototype text content', '✓ Visual content slot', '✓ Video content slot', '✓ Resource slot'];
