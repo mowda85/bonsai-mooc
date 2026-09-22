@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import LearnerActivityPage, { PILOT_SCENARIO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
 import LearnerQuizPage from './LearnerQuizPage.jsx';
 import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
@@ -208,9 +207,9 @@ export default function LearnerUnitPage({
   onBack,
   onOpenUnit,
 }) {
-  const [activeLessonIndex, setActiveLessonIndex] = useState(initialLessonNumber ? Math.max(0, initialLessonNumber - 1) : null);
-  const [activityOpen, setActivityOpen] = useState(initialAssessment === 'activity');
-  const [quizOpen, setQuizOpen] = useState(initialAssessment === 'quiz');
+  const activeLessonIndex = initialLessonNumber ? Math.max(0, initialLessonNumber - 1) : null;
+  const activityOpen = initialAssessment === 'activity';
+  const quizOpen = initialAssessment === 'quiz';
   const units = course?.pilot && Array.isArray(course.units) && course.units.length ? course.units : PILOT_COURSE_UNITS;
   const unit = units[unitNumber - 1];
   const totalUnits = units.length;
@@ -218,55 +217,30 @@ export default function LearnerUnitPage({
   const unitComplete = completedUnits.includes(unitNumber);
 
   function openLesson(index) {
-    setActivityOpen(false);
-    setQuizOpen(false);
-    setActiveLessonIndex(index);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { lessonNumber: index + 1 });
   }
 
   function openActivity() {
-    setActiveLessonIndex(null);
-    setQuizOpen(false);
-    setActivityOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { assessment: 'activity' });
   }
 
   function openQuiz() {
-    setActiveLessonIndex(null);
-    setActivityOpen(false);
-    setQuizOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { assessment: 'quiz' });
   }
 
   function backToUnit() {
-    setActiveLessonIndex(null);
-    setActivityOpen(false);
-    setQuizOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber);
   }
 
   function openOutlineUnit(targetUnitNumber) {
-    if (targetUnitNumber === unitNumber) {
-      backToUnit();
-      return;
-    }
     onOpenUnit(targetUnitNumber);
   }
 
   function openOutlineLesson(targetUnitNumber, targetLessonNumber) {
-    if (targetUnitNumber === unitNumber) {
-      openLesson(targetLessonNumber - 1);
-      return;
-    }
     onOpenUnit(targetUnitNumber, { lessonNumber: targetLessonNumber });
   }
 
   function openOutlineAssessment(targetUnitNumber, assessmentType) {
-    if (targetUnitNumber === unitNumber) {
-      if (assessmentType === 'quiz') openQuiz();
-      if (assessmentType === 'activity') openActivity();
-      return;
-    }
     onOpenUnit(targetUnitNumber, { assessment: assessmentType });
   }
 
