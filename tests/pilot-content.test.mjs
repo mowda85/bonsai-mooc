@@ -239,3 +239,18 @@ test('course outline is responsive and remains usable on smaller screens', async
   assert.match(css, /@media\(max-width:900px\)\{\.learner-course-workspace\{grid-template-columns:1fr\}/);
   assert.match(css, /max-height:390px/);
 });
+
+
+test('course outline units are collapsible dropdowns', async () => {
+  const unitPage = await read('src/LearnerUnitPage.jsx');
+  assert.match(unitPage, /<details/);
+  assert.match(unitPage, /open=\{unitActive\}/);
+  assert.match(unitPage, /<summary className="pilot-outline-unit-header">/);
+  assert.match(unitPage, /pilot-outline-chevron/);
+  assert.match(unitPage, /Unit overview/);
+
+  const css = await read('src/learner-unit.css');
+  assert.match(css, /pilot-outline-unit>summary/);
+  assert.match(css, /pilot-outline-unit\[open\] \.pilot-outline-chevron/);
+  assert.match(css, /pilot-outline-unit:not\(\[open\]\) \.pilot-outline-items/);
+});
