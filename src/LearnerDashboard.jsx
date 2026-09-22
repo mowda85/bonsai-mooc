@@ -61,7 +61,7 @@ function LearnerCourseOverview({ course, progress, onBackDashboard, onPublicInfo
             <h1>{course?.title}</h1>
             <p>{course?.description}</p>
             <div className="learner-course-overview-actions">
-              {percent >= 100 ? <button className="button button-primary" type="button" onClick={onOpenCompletion}>View completion & certificate →</button> : <button className="button button-primary" type="button" disabled={!nextUnitNumber} onClick={() => nextUnitNumber && onOpenUnit(nextUnitNumber)}>{completedCount ? 'Continue Course →' : 'Start Course →'}</button>}
+              {percent >= 100 ? <button className="button button-primary" type="button" onClick={onOpenCompletion}>View completion & certificate →</button> : <button className="button button-primary" type="button" disabled={!nextUnitNumber} onClick={() => nextUnitNumber && onOpenUnit(nextUnitNumber)}>{completedCount ? 'Continue next unit →' : 'Open Unit 1 →'}</button>}
               <button className="button button-outline" type="button" onClick={onPublicInfo}>Public course information</button>
             </div>
           </div>
@@ -153,9 +153,13 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
   const query = new URLSearchParams(window.location.search);
   const initialCourseOpen = query.get('course') === courseProgress.slug;
   const initialUnit = Number(query.get('unit')) || null;
+  const initialLesson = Number(query.get('lesson')) || null;
+  const initialAssessment = query.get('assessment') || null;
   const initialCompletion = query.get('completion') === '1';
   const [workspaceView, setWorkspaceView] = useState(initialCompletion ? 'completion' : initialUnit ? 'unit' : initialCourseOpen ? 'course' : 'dashboard');
   const [activeUnit, setActiveUnit] = useState(initialUnit);
+  const [activeLesson, setActiveLesson] = useState(initialLesson);
+  const [activeAssessment, setActiveAssessment] = useState(initialAssessment);
 
   useEffect(() => {
     const sync = () => setAchievements(readAchievements());
@@ -170,13 +174,22 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
   function openCourseOverview() {
     setLearnerUrl(`?course=${courseProgress.slug}`);
     setActiveUnit(null);
+    setActiveLesson(null);
+    setActiveAssessment(null);
     setWorkspaceView('course');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function openUnit(unitNumber) {
-    setLearnerUrl(`?course=${courseProgress.slug}&unit=${unitNumber}`);
+  function openUnit(unitNumber, target = {}) {
+    const lessonNumber = Number(target?.lessonNumber) || null;
+    const assessment = target?.assessment || null;
+    const params = new URLSearchParams({ course: courseProgress.slug, unit: String(unitNumber) });
+    if (lessonNumber) params.set('lesson', String(lessonNumber));
+    if (assessment) params.set('assessment', assessment);
+    setLearnerUrl(`?${params.toString()}`);
     setActiveUnit(unitNumber);
+    setActiveLesson(lessonNumber);
+    setActiveAssessment(assessment);
     setWorkspaceView('unit');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -185,6 +198,8 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
     if (!courseComplete) return;
     setLearnerUrl(`?course=${courseProgress.slug}&completion=1`);
     setActiveUnit(null);
+    setActiveLesson(null);
+    setActiveAssessment(null);
     setWorkspaceView('completion');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -223,6 +238,8 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
   function backToDashboard() {
     setLearnerUrl('');
     setActiveUnit(null);
+    setActiveLesson(null);
+    setActiveAssessment(null);
     setWorkspaceView('dashboard');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -238,7 +255,8 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
   }
 
   if (workspaceView === 'unit') {
-    return <LearnerUnitPage course={currentCourse} unitNumber={activeUnit || 1} completedUnits={courseProgress.completedUnits} completedActivityIds={completedActivityIds} onCompleteActivity={completeActivity} onCompleteUnit={completeUnit} onQuizSubmitted={recordQuizResult} onBack={openCourseOverview} onOpenUnit={openUnit} />;
+    const unitNumber = activeUnit || 1;
+    return <LearnerUnitPage key={`${unitNumber}-${activeLesson || 0}-${activeAssessment || 'overview'}`} course={currentCourse} unitNumber={unitNumber} initialLessonNumber={activeLesson} initialAssessment={activeAssessment} completedUnits={courseProgress.completedUnits} completedActivityIds={completedActivityIds} onCompleteActivity={completeActivity} onCompleteUnit={completeUnit} onQuizSubmitted={recordQuizResult} onBack={openCourseOverview} onOpenUnit={openUnit} />;
   }
 
   if (workspaceView === 'course') {
