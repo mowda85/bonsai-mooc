@@ -150,3 +150,23 @@ test('video-derived ANN concepts are present in Unit 2 theory and downloadable h
   assert.match(handout, /underfitting/);
   assert.match(handout, /overfitting/);
 });
+
+
+test('Unit 2 uses the supplied YouTube lecture in a privacy-enhanced embed', async () => {
+  const reading = lessons.find(l => l.unitNumber === 2 && l.lessonNumber === 1);
+  assert.equal(reading.videoResource.source, 'youtube');
+  assert.equal(reading.videoResource.youtubeId, 'jlLDjy6_5AM');
+  assert.equal(reading.videoResource.youtubeUrl, 'https://youtu.be/jlLDjy6_5AM');
+  assert.equal(reading.videoResource.privacyEnhancedEmbed, true);
+  assert.equal(reading.videoResource.durationLabel, '10:37');
+
+  const bridge = await read('src/Epic5PilotContentBridge.jsx');
+  assert.match(bridge, /youtube-nocookie\.com\/embed/);
+  assert.match(bridge, /lesson-video-youtube/);
+  assert.match(bridge, /allowFullscreen/);
+  assert.doesNotMatch(bridge, /pilotVideoLoader/);
+
+  const css = await read('src/lesson-content.css');
+  assert.match(css, /lesson-youtube-frame/);
+  assert.match(css, /aspect-ratio:16\/9/);
+});

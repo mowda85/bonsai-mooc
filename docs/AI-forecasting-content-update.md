@@ -24,7 +24,7 @@ KAN-79 integrates the supplied lecture into the **theory and assessment**. The l
 
 KAN-79 also adds a visible **Unit 2 practice knowledge check** with seven multiple-choice questions based jointly on the written theory and the supplied lecture. It is intentionally separate from the required Unit 1 quiz, so it does not alter the Unit 1 completion gate or the Unit 3 scenario requirement.
 
-The playable-video binary is tracked separately in KAN-78; KAN-79 does not claim that the video player is complete.
+KAN-78 completes the playable-video integration by using the supplied YouTube URL `https://youtu.be/jlLDjy6_5AM`. Unit 2 now embeds the 10:37 lecture through YouTube's privacy-enhanced `youtube-nocookie.com` player. The earlier experimental binary/chunk transfer is not used in production.
 
 ## Sources used
 
@@ -37,4 +37,4 @@ The playable-video binary is tracked separately in KAN-78; KAN-79 does not claim
 
 Run `node --test tests/pilot-content.test.mjs` and `npm run build`.
 
-Manual check: open the pilot course, enter Unit 2, verify the expanded ANN theory and the three retained figures. Open the **Flood forecasting & ANN knowledge check**, answer and submit all seven questions, and verify it is labelled as a practice assessment. Click **Download handout** and confirm the generated DOCX contains the new ANN training/evaluation section. Then verify the required Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
+Manual check: open the pilot course, enter Unit 2, verify the expanded ANN theory and the three retained figures, then play the embedded 10:37 YouTube lecture and test pause/seek/fullscreen. Open the **Flood forecasting & ANN knowledge check**, answer and submit all seven questions, and verify it is labelled as a practice assessment. Click **Download handout** and confirm the generated DOCX contains the ANN training/evaluation section. Then verify the required Unit 1 quiz, Unit 3 scenario and achievement behavior remain intact.
