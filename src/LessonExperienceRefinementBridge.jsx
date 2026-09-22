@@ -73,6 +73,7 @@ function patchFinalLessonQuiz() {
   const lessonTotal = Number(match[3]);
   if (unitNumber !== 1 || lessonNumber !== lessonTotal) return;
   const nav = root.querySelector('.lesson-content-navigation');
+  if (nav?.querySelector('[data-native-final-actions]')) return;
   const nextButton = nav?.querySelector('button:last-child');
   if (!nav || !nextButton || nextButton.dataset.kan63QuizHandoff === 'true') return;
   nextButton.dataset.kan63QuizHandoff = 'true';
