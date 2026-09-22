@@ -99,13 +99,16 @@
       "speaker": "Univ.-Prof. Jorge Leandro",
       "provider": "Universität Siegen",
       "durationLabel": "10:37",
-      "source": "user-supplied-video",
+      "source": "youtube",
       "description": "A supplied lecture excerpt explaining why flood forecasting matters for emergency management and introducing ANN components, backpropagation, dataset splitting, underfitting/overfitting, and ANN hyperparameters versus learned parameters.",
       "summary": [
         "Flood forecasting is presented as an emergency-management tool: useful forecasts provide information early enough to support warning and response decisions.",
         "The ANN introduction covers input, hidden and output layers; weighted inputs, biases and activation functions; and backpropagation driven by prediction error.",
         "The lecture separates training, validation and test datasets, explains underfitting and overfitting, and distinguishes hyperparameters from learned weights and biases."
-      ]
+      ],
+      "youtubeId": "jlLDjy6_5AM",
+      "youtubeUrl": "https://youtu.be/jlLDjy6_5AM",
+      "privacyEnhancedEmbed": true
     }
   },
   {
