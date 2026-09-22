@@ -46,18 +46,28 @@ function CourseOutlineSidebar({
           const unitActive = outlineUnitNumber === activeUnitNumber;
           const completed = completedUnits.includes(outlineUnitNumber);
           const assessment = assessmentForUnit(outlineUnitNumber);
+          const overviewCurrent = unitActive && !activeLessonNumber && !activeAssessment;
           return (
-            <section className={`pilot-outline-unit ${unitActive ? 'is-active' : ''} ${completed ? 'is-complete' : ''}`} key={outlineUnit.id || outlineUnit.title}>
-              <button
-                type="button"
-                className="pilot-outline-unit-header"
-                onClick={() => onOpenUnit(outlineUnitNumber)}
-                aria-current={unitActive && !activeLessonNumber && !activeAssessment ? 'page' : undefined}
-              >
+            <details
+              className={`pilot-outline-unit ${unitActive ? 'is-active' : ''} ${completed ? 'is-complete' : ''}`}
+              key={outlineUnit.id || outlineUnit.title}
+              open={unitActive}
+            >
+              <summary className="pilot-outline-unit-header">
                 <span>{completed ? '✓' : outlineUnitNumber}</span>
                 <div><small>Unit {outlineUnitNumber}</small><strong>{outlineUnit.title}</strong></div>
-              </button>
+                <b className="pilot-outline-chevron" aria-hidden="true">⌄</b>
+              </summary>
               <div className="pilot-outline-items">
+                <button
+                  type="button"
+                  className={`pilot-outline-item pilot-outline-overview-item ${overviewCurrent ? 'is-current' : ''}`}
+                  onClick={() => onOpenUnit(outlineUnitNumber)}
+                  aria-current={overviewCurrent ? 'page' : undefined}
+                >
+                  <span className="pilot-outline-item-marker">U</span>
+                  <span><small>Unit</small><strong>Unit overview</strong></span>
+                </button>
                 {outlineUnit.lessons.map((lesson, lessonIndex) => {
                   const lessonNumber = lessonIndex + 1;
                   const current = unitActive && activeLessonNumber === lessonNumber && !activeAssessment;
@@ -86,7 +96,7 @@ function CourseOutlineSidebar({
                   </button>
                 )}
               </div>
-            </section>
+            </details>
           );
         })}
       </div>

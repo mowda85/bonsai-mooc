@@ -38,3 +38,13 @@
 @media(max-width:1180px){.learner-course-workspace{grid-template-columns:270px minmax(0,1fr)}}
 @media(max-width:900px){.learner-course-workspace{grid-template-columns:1fr}.pilot-course-outline{position:static;max-height:390px;border-right:0;border-bottom:1px solid #0e2439}.pilot-course-outline-header{padding:18px}.pilot-outline-unit-header{padding-top:13px;padding-bottom:13px}.lesson-final-actions{justify-content:stretch}.lesson-final-actions .button{flex:1 1 180px}}
 @media(max-width:640px){.pilot-course-outline{max-height:330px}.lesson-final-actions{display:grid}.lesson-final-actions .button{width:100%}}
+
+
+/* KAN-82: make each course-outline unit a collapsible dropdown. */
+.pilot-outline-unit>summary{list-style:none}
+.pilot-outline-unit>summary::-webkit-details-marker{display:none}
+.pilot-outline-unit .pilot-outline-unit-header{grid-template-columns:34px minmax(0,1fr) 24px}
+.pilot-outline-chevron{align-self:center;justify-self:end;color:#b9c8d6;font-size:1rem;line-height:1;transition:transform .18s ease}
+.pilot-outline-unit[open] .pilot-outline-chevron{transform:rotate(180deg)}
+.pilot-outline-unit:not([open]) .pilot-outline-items{display:none}
+.pilot-outline-overview-item{background:rgba(255,255,255,.025)}
