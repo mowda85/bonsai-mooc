@@ -246,6 +246,9 @@ function patchLessonContent() {
   }
 
   const videoSection = root.querySelector('#lesson-video-heading')?.closest('.lesson-content-block');
+  if (sourceBasedReading && videoSection && textSection) {
+    textSection.before(videoSection);
+  }
   if (sourceBasedReading && lesson.videoResource?.youtubeId && videoSection) {
     setText(videoSection.querySelector('h2'), lesson.videoResource.title);
     const player = videoSection.querySelector('.lesson-video-placeholder');
