@@ -230,6 +230,8 @@ export default function LearnerDashboard({ user, progress, onNavigate }) {
       setAchievements(nextAchievements);
       setLearnerUrl(`?course=${courseProgress.slug}&completion=1`);
       setActiveUnit(null);
+      setActiveLesson(null);
+      setActiveAssessment(null);
       setWorkspaceView('completion');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
