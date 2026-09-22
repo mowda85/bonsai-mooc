@@ -216,7 +216,8 @@ function CoursePage({ baseCourse, completedCourseSlugs, onCompletePrototype, sta
     if (status.locked) return;
     const sessionText = document.querySelector('.mock-session-chip')?.textContent || '';
     if (!sessionText) {
-      navigate('/login');
+      const next = course.pilot ? `/learner?course=${course.slug}` : null;
+      navigate(next ? `/login?next=${encodeURIComponent(next)}` : '/login');
       return;
     }
     if (!sessionText.includes('Learner session')) {
@@ -224,7 +225,7 @@ function CoursePage({ baseCourse, completedCourseSlugs, onCompletePrototype, sta
       return;
     }
     if (course.pilot) {
-      navigate(`/learn/${course.slug}/unit-1`);
+      navigate(`/learner?course=${course.slug}`);
       return;
     }
     navigate(`/courses/${course.slug}?started=1`);

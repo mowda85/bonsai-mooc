@@ -187,3 +187,55 @@ test('Unit 1 and Unit 2 quiz cards use Q instead of a question mark icon', async
   assert.equal(qIcons.length, 2);
   assert.doesNotMatch(unitPage, /learner-unit-quiz-icon" aria-hidden="true">\?<\/span>/);
 });
+
+
+test('pilot course start opens the units overview instead of Unit 1 directly', async () => {
+  const categoryBridge = await read('src/CategoryArchitectureBridge.jsx');
+  assert.match(categoryBridge, /navigate\(\`\/learner\?course=\$\{course\.slug\}\`\)/);
+  assert.doesNotMatch(categoryBridge, /navigate\(\`\/learn\/\$\{course\.slug\}\/unit-1\`\)/);
+  assert.match(categoryBridge, /\/login\?next=/);
+
+  const dashboard = await read('src/LearnerDashboard.jsx');
+  assert.match(dashboard, /Open Unit 1 →/);
+  assert.match(dashboard, /initialLesson/);
+  assert.match(dashboard, /initialAssessment/);
+});
+
+test('learner workspace shows the full pilot outline with lessons and assessments', async () => {
+  const unitPage = await read('src/LearnerUnitPage.jsx');
+  assert.match(unitPage, /CourseOutlineSidebar/);
+  assert.match(unitPage, /Course contents/);
+  assert.match(unitPage, /Required knowledge check/);
+  assert.match(unitPage, /Practice knowledge check/);
+  assert.match(unitPage, /Scenario activity/);
+  assert.match(unitPage, /onOpenLesson\(outlineUnitNumber, lessonNumber\)/);
+  assert.match(unitPage, /onOpenAssessment\(outlineUnitNumber, assessment\.type\)/);
+  assert.match(unitPage, /learner-course-workspace/);
+
+  assert.equal(architecture.PILOT_COURSE_UNITS[0].lessons.length, 3);
+  assert.equal(architecture.PILOT_COURSE_UNITS[1].lessons.length, 1);
+  assert.equal(architecture.PILOT_COURSE_UNITS[2].lessons.length, 5);
+});
+
+test('final lessons offer quiz handoff or next-unit navigation without removing the Unit 1 completion gate', async () => {
+  const unitPage = await read('src/LearnerUnitPage.jsx');
+  assert.match(unitPage, /Go to quiz →/);
+  assert.match(unitPage, /Next Unit · \{unitNumber \+ 1\} →/);
+  assert.match(unitPage, /data-native-final-actions="true"/);
+  assert.match(unitPage, /Go to scenario activity →/);
+
+  const refinement = await read('src/LessonExperienceRefinementBridge.jsx');
+  assert.match(refinement, /querySelector\('\[data-native-final-actions\]'\)/);
+
+  const restore = await read('src/PilotExperienceRestoreBridge.jsx');
+  assert.match(restore, /Complete the knowledge check before marking Unit 1 complete\./);
+  assert.match(restore, /Complete quiz to finish Unit 1/);
+});
+
+test('course outline is responsive and remains usable on smaller screens', async () => {
+  const css = await read('src/learner-unit.css');
+  assert.match(css, /\.learner-course-workspace\{display:grid;grid-template-columns:310px/);
+  assert.match(css, /\.pilot-course-outline/);
+  assert.match(css, /@media\(max-width:900px\)\{\.learner-course-workspace\{grid-template-columns:1fr\}/);
+  assert.match(css, /max-height:390px/);
+});

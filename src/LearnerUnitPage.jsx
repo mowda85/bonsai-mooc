@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import LearnerActivityPage, { PILOT_SCENARIO_ACTIVITY_ID } from './LearnerActivityPage.jsx';
 import LearnerQuizPage from './LearnerQuizPage.jsx';
 import { PILOT_COURSE_UNITS } from './courseArchitecture.js';
@@ -14,10 +13,94 @@ function getUnitStatus(unitNumber, completedUnits) {
   return 'Available';
 }
 
-function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson }) {
+function assessmentForUnit(unitNumber) {
+  if (unitNumber === 1) return { type: 'quiz', marker: 'Q', label: 'Required knowledge check' };
+  if (unitNumber === 2) return { type: 'quiz', marker: 'Q', label: 'Practice knowledge check' };
+  if (unitNumber === 3) return { type: 'activity', marker: 'A', label: 'Scenario activity' };
+  return null;
+}
+
+function CourseOutlineSidebar({
+  course,
+  units,
+  activeUnitNumber,
+  activeLessonNumber = null,
+  activeAssessment = null,
+  completedUnits = [],
+  onCourseOverview,
+  onOpenUnit,
+  onOpenLesson,
+  onOpenAssessment,
+}) {
+  return (
+    <aside className="pilot-course-outline" aria-label="Course units, lessons and assessments">
+      <div className="pilot-course-outline-header">
+        <span className="section-kicker">Course contents</span>
+        <strong>{course?.title || 'BONSAI pilot course'}</strong>
+        <small>{completedUnits.length} of {units.length} units complete</small>
+        <button type="button" className="pilot-outline-overview-button" onClick={onCourseOverview}>Units overview</button>
+      </div>
+      <div className="pilot-course-outline-units">
+        {units.map((outlineUnit, unitIndex) => {
+          const outlineUnitNumber = unitIndex + 1;
+          const unitActive = outlineUnitNumber === activeUnitNumber;
+          const completed = completedUnits.includes(outlineUnitNumber);
+          const assessment = assessmentForUnit(outlineUnitNumber);
+          return (
+            <section className={`pilot-outline-unit ${unitActive ? 'is-active' : ''} ${completed ? 'is-complete' : ''}`} key={outlineUnit.id || outlineUnit.title}>
+              <button
+                type="button"
+                className="pilot-outline-unit-header"
+                onClick={() => onOpenUnit(outlineUnitNumber)}
+                aria-current={unitActive && !activeLessonNumber && !activeAssessment ? 'page' : undefined}
+              >
+                <span>{completed ? '✓' : outlineUnitNumber}</span>
+                <div><small>Unit {outlineUnitNumber}</small><strong>{outlineUnit.title}</strong></div>
+              </button>
+              <div className="pilot-outline-items">
+                {outlineUnit.lessons.map((lesson, lessonIndex) => {
+                  const lessonNumber = lessonIndex + 1;
+                  const current = unitActive && activeLessonNumber === lessonNumber && !activeAssessment;
+                  return (
+                    <button
+                      type="button"
+                      className={`pilot-outline-item ${current ? 'is-current' : ''}`}
+                      key={`${outlineUnitNumber}-lesson-${lessonNumber}`}
+                      onClick={() => onOpenLesson(outlineUnitNumber, lessonNumber)}
+                      aria-current={current ? 'page' : undefined}
+                    >
+                      <span className="pilot-outline-item-marker">{lessonNumber}</span>
+                      <span><small>Lesson {lessonNumber}</small><strong>{lesson}</strong></span>
+                    </button>
+                  );
+                })}
+                {assessment && (
+                  <button
+                    type="button"
+                    className={`pilot-outline-item pilot-outline-assessment ${unitActive && activeAssessment === assessment.type ? 'is-current' : ''}`}
+                    onClick={() => onOpenAssessment(outlineUnitNumber, assessment.type)}
+                    aria-current={unitActive && activeAssessment === assessment.type ? 'page' : undefined}
+                  >
+                    <span className="pilot-outline-item-marker">{assessment.marker}</span>
+                    <span><small>{assessment.type === 'quiz' ? 'Quiz' : 'Activity'}</small><strong>{assessment.label}</strong></span>
+                  </button>
+                )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </aside>
+  );
+}
+
+function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson, onOpenQuiz, onOpenActivity, onOpenNextUnit }) {
   const lesson = unit.lessons[lessonNumber - 1];
   const previousLesson = lessonNumber > 1 ? lessonNumber - 1 : null;
   const nextLesson = lessonNumber < unit.lessons.length ? lessonNumber + 1 : null;
+  const finalLesson = !nextLesson;
+  const hasQuiz = unitNumber === 1 || unitNumber === 2;
+  const hasActivity = unitNumber === 3;
 
   return (
     <main className="lesson-content-page">
@@ -92,7 +175,20 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
       <nav className="lesson-content-navigation" aria-label="Lesson navigation">
         <button className="button button-outline" type="button" disabled={!previousLesson} onClick={() => previousLesson && onNavigateLesson(previousLesson)}>← {previousLesson ? `Previous Lesson · ${previousLesson}` : 'Previous Lesson'}</button>
         <button className="button button-outline" type="button" onClick={onBack}>Unit {unitNumber} overview</button>
-        <button className="button button-primary" type="button" disabled={!nextLesson} onClick={() => nextLesson && onNavigateLesson(nextLesson)}>{nextLesson ? `Next Lesson · ${nextLesson}` : 'Final Lesson'} →</button>
+        {nextLesson ? (
+          <button className="button button-primary" type="button" onClick={() => onNavigateLesson(nextLesson)}>Next Lesson · {nextLesson} →</button>
+        ) : hasQuiz ? (
+          <div className="lesson-final-actions" data-native-final-actions="true">
+            <button className="button button-outline" type="button" onClick={onOpenQuiz}>Go to quiz →</button>
+            {onOpenNextUnit && <button className="button button-primary" type="button" onClick={onOpenNextUnit}>Next Unit · {unitNumber + 1} →</button>}
+          </div>
+        ) : hasActivity ? (
+          <div className="lesson-final-actions" data-native-final-actions="true">
+            <button className="button button-primary" type="button" onClick={onOpenActivity}>Go to scenario activity →</button>
+          </div>
+        ) : (
+          <button className="button button-primary" type="button" disabled>Final Lesson</button>
+        )}
       </nav>
     </main>
   );
@@ -101,6 +197,8 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
 export default function LearnerUnitPage({
   course,
   unitNumber,
+  initialLessonNumber = null,
+  initialAssessment = null,
   completedUnits = [],
   completedActivityIds = [],
   onCompleteActivity,
@@ -109,9 +207,9 @@ export default function LearnerUnitPage({
   onBack,
   onOpenUnit,
 }) {
-  const [activeLessonIndex, setActiveLessonIndex] = useState(null);
-  const [activityOpen, setActivityOpen] = useState(false);
-  const [quizOpen, setQuizOpen] = useState(false);
+  const activeLessonIndex = initialLessonNumber ? Math.max(0, initialLessonNumber - 1) : null;
+  const activityOpen = initialAssessment === 'activity';
+  const quizOpen = initialAssessment === 'quiz';
   const units = course?.pilot && Array.isArray(course.units) && course.units.length ? course.units : PILOT_COURSE_UNITS;
   const unit = units[unitNumber - 1];
   const totalUnits = units.length;
@@ -119,31 +217,51 @@ export default function LearnerUnitPage({
   const unitComplete = completedUnits.includes(unitNumber);
 
   function openLesson(index) {
-    setActivityOpen(false);
-    setQuizOpen(false);
-    setActiveLessonIndex(index);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { lessonNumber: index + 1 });
   }
 
   function openActivity() {
-    setActiveLessonIndex(null);
-    setQuizOpen(false);
-    setActivityOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { assessment: 'activity' });
   }
 
   function openQuiz() {
-    setActiveLessonIndex(null);
-    setActivityOpen(false);
-    setQuizOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber, { assessment: 'quiz' });
   }
 
   function backToUnit() {
-    setActiveLessonIndex(null);
-    setActivityOpen(false);
-    setQuizOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onOpenUnit(unitNumber);
+  }
+
+  function openOutlineUnit(targetUnitNumber) {
+    onOpenUnit(targetUnitNumber);
+  }
+
+  function openOutlineLesson(targetUnitNumber, targetLessonNumber) {
+    onOpenUnit(targetUnitNumber, { lessonNumber: targetLessonNumber });
+  }
+
+  function openOutlineAssessment(targetUnitNumber, assessmentType) {
+    onOpenUnit(targetUnitNumber, { assessment: assessmentType });
+  }
+
+  function renderWithOutline(content, active = {}) {
+    return (
+      <div className="learner-course-workspace">
+        <CourseOutlineSidebar
+          course={course}
+          units={units}
+          activeUnitNumber={unitNumber}
+          activeLessonNumber={active.lessonNumber ?? null}
+          activeAssessment={active.assessment ?? null}
+          completedUnits={completedUnits}
+          onCourseOverview={onBack}
+          onOpenUnit={openOutlineUnit}
+          onOpenLesson={openOutlineLesson}
+          onOpenAssessment={openOutlineAssessment}
+        />
+        <div className="learner-course-workspace-content">{content}</div>
+      </div>
+    );
   }
 
   if (!unit) {
@@ -156,11 +274,14 @@ export default function LearnerUnitPage({
   }
 
   if (quizOpen && (unitNumber === 1 || unitNumber === 2)) {
-    return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />;
+    return renderWithOutline(
+      <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />,
+      { assessment: 'quiz' },
+    );
   }
 
   if (activityOpen && unitNumber === 3) {
-    return (
+    return renderWithOutline(
       <LearnerActivityPage
         course={course}
         unitTitle={unit.title}
@@ -168,20 +289,27 @@ export default function LearnerUnitPage({
         completed={activityComplete}
         onBack={backToUnit}
         onComplete={onCompleteActivity}
-      />
+      />,
+      { assessment: 'activity' },
     );
   }
 
   if (activeLessonIndex !== null) {
-    return (
+    const activeLessonNumber = activeLessonIndex + 1;
+    const nextUnitNumber = unitNumber < totalUnits ? unitNumber + 1 : null;
+    return renderWithOutline(
       <LessonContentPage
         course={course}
         unit={unit}
         unitNumber={unitNumber}
-        lessonNumber={activeLessonIndex + 1}
+        lessonNumber={activeLessonNumber}
         onBack={backToUnit}
         onNavigateLesson={(lessonNumber) => openLesson(lessonNumber - 1)}
-      />
+        onOpenQuiz={openQuiz}
+        onOpenActivity={openActivity}
+        onOpenNextUnit={nextUnitNumber ? () => onOpenUnit(nextUnitNumber) : null}
+      />,
+      { lessonNumber: activeLessonNumber },
     );
   }
 
@@ -190,7 +318,7 @@ export default function LearnerUnitPage({
   const previousUnit = unitNumber > 1 ? unitNumber - 1 : null;
   const nextUnit = unitNumber < totalUnits ? unitNumber + 1 : null;
 
-  return (
+  return renderWithOutline((
     <main className="learner-unit-page">
       <section className="learner-unit-hero">
         <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to course overview</button>
@@ -303,5 +431,5 @@ export default function LearnerUnitPage({
         <button className="button button-primary" type="button" disabled={!nextUnit} onClick={() => nextUnit && onOpenUnit(nextUnit)}>{nextUnit ? `Next Unit · ${nextUnit}` : 'Final Unit'} →</button>
       </nav>
     </main>
-  );
+  ));
 }
