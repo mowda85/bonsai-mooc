@@ -14,6 +14,87 @@ function getUnitStatus(unitNumber, completedUnits) {
   return 'Available';
 }
 
+function assessmentForUnit(unitNumber) {
+  if (unitNumber === 1) return { type: 'quiz', marker: 'Q', label: 'Required knowledge check' };
+  if (unitNumber === 2) return { type: 'quiz', marker: 'Q', label: 'Practice knowledge check' };
+  if (unitNumber === 3) return { type: 'activity', marker: 'A', label: 'Scenario activity' };
+  return null;
+}
+
+function CourseOutlineSidebar({
+  course,
+  units,
+  activeUnitNumber,
+  activeLessonNumber = null,
+  activeAssessment = null,
+  completedUnits = [],
+  onCourseOverview,
+  onOpenUnit,
+  onOpenLesson,
+  onOpenAssessment,
+}) {
+  return (
+    <aside className="pilot-course-outline" aria-label="Course units, lessons and assessments">
+      <div className="pilot-course-outline-header">
+        <span className="section-kicker">Course contents</span>
+        <strong>{course?.title || 'BONSAI pilot course'}</strong>
+        <small>{completedUnits.length} of {units.length} units complete</small>
+        <button type="button" className="pilot-outline-overview-button" onClick={onCourseOverview}>Units overview</button>
+      </div>
+      <div className="pilot-course-outline-units">
+        {units.map((outlineUnit, unitIndex) => {
+          const outlineUnitNumber = unitIndex + 1;
+          const unitActive = outlineUnitNumber === activeUnitNumber;
+          const completed = completedUnits.includes(outlineUnitNumber);
+          const assessment = assessmentForUnit(outlineUnitNumber);
+          return (
+            <section className={`pilot-outline-unit ${unitActive ? 'is-active' : ''} ${completed ? 'is-complete' : ''}`} key={outlineUnit.id || outlineUnit.title}>
+              <button
+                type="button"
+                className="pilot-outline-unit-header"
+                onClick={() => onOpenUnit(outlineUnitNumber)}
+                aria-current={unitActive && !activeLessonNumber && !activeAssessment ? 'page' : undefined}
+              >
+                <span>{completed ? '✓' : outlineUnitNumber}</span>
+                <div><small>Unit {outlineUnitNumber}</small><strong>{outlineUnit.title}</strong></div>
+              </button>
+              <div className="pilot-outline-items">
+                {outlineUnit.lessons.map((lesson, lessonIndex) => {
+                  const lessonNumber = lessonIndex + 1;
+                  const current = unitActive && activeLessonNumber === lessonNumber && !activeAssessment;
+                  return (
+                    <button
+                      type="button"
+                      className={`pilot-outline-item ${current ? 'is-current' : ''}`}
+                      key={`${outlineUnitNumber}-lesson-${lessonNumber}`}
+                      onClick={() => onOpenLesson(outlineUnitNumber, lessonNumber)}
+                      aria-current={current ? 'page' : undefined}
+                    >
+                      <span className="pilot-outline-item-marker">{lessonNumber}</span>
+                      <span><small>Lesson {lessonNumber}</small><strong>{lesson}</strong></span>
+                    </button>
+                  );
+                })}
+                {assessment && (
+                  <button
+                    type="button"
+                    className={`pilot-outline-item pilot-outline-assessment ${unitActive && activeAssessment === assessment.type ? 'is-current' : ''}`}
+                    onClick={() => onOpenAssessment(outlineUnitNumber, assessment.type)}
+                    aria-current={unitActive && activeAssessment === assessment.type ? 'page' : undefined}
+                  >
+                    <span className="pilot-outline-item-marker">{assessment.marker}</span>
+                    <span><small>{assessment.type === 'quiz' ? 'Quiz' : 'Activity'}</small><strong>{assessment.label}</strong></span>
+                  </button>
+                )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </aside>
+  );
+}
+
 function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onNavigateLesson }) {
   const lesson = unit.lessons[lessonNumber - 1];
   const previousLesson = lessonNumber > 1 ? lessonNumber - 1 : null;
