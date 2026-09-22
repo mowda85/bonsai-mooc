@@ -243,7 +243,7 @@ export default function LearnerUnitPage({
                   <span className="learner-unit-quiz-badge">5 questions</span>
                 </div>
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
-                  <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
+                  <span className="learner-unit-quiz-icon" aria-hidden="true">Q</span>
                   <div><small>Pilot quiz</small><strong>Crisis management, situational awareness and forecasting</strong></div>
                   <span className="learner-unit-quiz-action">Open quiz <b aria-hidden="true">→</b></span>
                 </button>
@@ -261,7 +261,7 @@ export default function LearnerUnitPage({
                   <span className="learner-unit-quiz-badge">7 questions</span>
                 </div>
                 <button className="learner-unit-quiz-card" type="button" onClick={openQuiz}>
-                  <span className="learner-unit-quiz-icon" aria-hidden="true">?</span>
+                  <span className="learner-unit-quiz-icon" aria-hidden="true">Q</span>
                   <div>
                     <small>Unit 2 practice quiz</small>
                     <strong>Forecast lead time, ANN structure, training and evaluation</strong>
