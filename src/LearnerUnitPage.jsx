@@ -198,6 +198,8 @@ function LessonContentPage({ course, unit, unitNumber, lessonNumber, onBack, onN
 export default function LearnerUnitPage({
   course,
   unitNumber,
+  initialLessonNumber = null,
+  initialAssessment = null,
   completedUnits = [],
   completedActivityIds = [],
   onCompleteActivity,
@@ -206,9 +208,9 @@ export default function LearnerUnitPage({
   onBack,
   onOpenUnit,
 }) {
-  const [activeLessonIndex, setActiveLessonIndex] = useState(null);
-  const [activityOpen, setActivityOpen] = useState(false);
-  const [quizOpen, setQuizOpen] = useState(false);
+  const [activeLessonIndex, setActiveLessonIndex] = useState(initialLessonNumber ? Math.max(0, initialLessonNumber - 1) : null);
+  const [activityOpen, setActivityOpen] = useState(initialAssessment === 'activity');
+  const [quizOpen, setQuizOpen] = useState(initialAssessment === 'quiz');
   const units = course?.pilot && Array.isArray(course.units) && course.units.length ? course.units : PILOT_COURSE_UNITS;
   const unit = units[unitNumber - 1];
   const totalUnits = units.length;
@@ -243,6 +245,51 @@ export default function LearnerUnitPage({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function openOutlineUnit(targetUnitNumber) {
+    if (targetUnitNumber === unitNumber) {
+      backToUnit();
+      return;
+    }
+    onOpenUnit(targetUnitNumber);
+  }
+
+  function openOutlineLesson(targetUnitNumber, targetLessonNumber) {
+    if (targetUnitNumber === unitNumber) {
+      openLesson(targetLessonNumber - 1);
+      return;
+    }
+    onOpenUnit(targetUnitNumber, { lessonNumber: targetLessonNumber });
+  }
+
+  function openOutlineAssessment(targetUnitNumber, assessmentType) {
+    if (targetUnitNumber === unitNumber) {
+      if (assessmentType === 'quiz') openQuiz();
+      if (assessmentType === 'activity') openActivity();
+      return;
+    }
+    onOpenUnit(targetUnitNumber, { assessment: assessmentType });
+  }
+
+  function renderWithOutline(content, active = {}) {
+    return (
+      <div className="learner-course-workspace">
+        <CourseOutlineSidebar
+          course={course}
+          units={units}
+          activeUnitNumber={unitNumber}
+          activeLessonNumber={active.lessonNumber ?? null}
+          activeAssessment={active.assessment ?? null}
+          completedUnits={completedUnits}
+          onCourseOverview={onBack}
+          onOpenUnit={openOutlineUnit}
+          onOpenLesson={openOutlineLesson}
+          onOpenAssessment={openOutlineAssessment}
+        />
+        <div className="learner-course-workspace-content">{content}</div>
+      </div>
+    );
+  }
+
   if (!unit) {
     return (
       <main className="learner-unit-page">
@@ -253,11 +300,14 @@ export default function LearnerUnitPage({
   }
 
   if (quizOpen && (unitNumber === 1 || unitNumber === 2)) {
-    return <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />;
+    return renderWithOutline(
+      <LearnerQuizPage course={course} unitTitle={unit.title} unitNumber={unitNumber} onBack={backToUnit} onQuizSubmitted={onQuizSubmitted} />,
+      { assessment: 'quiz' },
+    );
   }
 
   if (activityOpen && unitNumber === 3) {
-    return (
+    return renderWithOutline(
       <LearnerActivityPage
         course={course}
         unitTitle={unit.title}
@@ -265,20 +315,27 @@ export default function LearnerUnitPage({
         completed={activityComplete}
         onBack={backToUnit}
         onComplete={onCompleteActivity}
-      />
+      />,
+      { assessment: 'activity' },
     );
   }
 
   if (activeLessonIndex !== null) {
-    return (
+    const activeLessonNumber = activeLessonIndex + 1;
+    const nextUnitNumber = unitNumber < totalUnits ? unitNumber + 1 : null;
+    return renderWithOutline(
       <LessonContentPage
         course={course}
         unit={unit}
         unitNumber={unitNumber}
-        lessonNumber={activeLessonIndex + 1}
+        lessonNumber={activeLessonNumber}
         onBack={backToUnit}
         onNavigateLesson={(lessonNumber) => openLesson(lessonNumber - 1)}
-      />
+        onOpenQuiz={openQuiz}
+        onOpenActivity={openActivity}
+        onOpenNextUnit={nextUnitNumber ? () => onOpenUnit(nextUnitNumber) : null}
+      />,
+      { lessonNumber: activeLessonNumber },
     );
   }
 
