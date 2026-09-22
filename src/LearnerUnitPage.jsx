@@ -344,7 +344,7 @@ export default function LearnerUnitPage({
   const previousUnit = unitNumber > 1 ? unitNumber - 1 : null;
   const nextUnit = unitNumber < totalUnits ? unitNumber + 1 : null;
 
-  return (
+  return renderWithOutline((
     <main className="learner-unit-page">
       <section className="learner-unit-hero">
         <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to course overview</button>
@@ -457,5 +457,5 @@ export default function LearnerUnitPage({
         <button className="button button-primary" type="button" disabled={!nextUnit} onClick={() => nextUnit && onOpenUnit(nextUnit)}>{nextUnit ? `Next Unit · ${nextUnit}` : 'Final Unit'} →</button>
       </nav>
     </main>
-  );
+  ));
 }
